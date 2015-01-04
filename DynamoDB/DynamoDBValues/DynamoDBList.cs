@@ -1,0 +1,108 @@
+﻿// Copyright 2015 Adamantworks.  All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Aws = Amazon.DynamoDBv2.Model;
+
+namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
+{
+	public sealed class DynamoDBList : DynamoDBValue, IList<DynamoDBValue>
+	{
+		private readonly IList<DynamoDBValue> values;
+
+		public DynamoDBList()
+		{
+			values = new List<DynamoDBValue>();
+		}
+
+		public DynamoDBList(IEnumerable<DynamoDBValue> values)
+		{
+			this.values = values.ToList();
+		}
+
+		public override DynamoDBValueType Type
+		{
+			get { return DynamoDBValueType.List; }
+		}
+
+		protected override DynamoDBValue DeepCopy()
+		{
+			return new DynamoDBList(values.Select(v => v != null ? v.DeepClone() : null));
+		}
+
+		internal override Aws.AttributeValue ToAws()
+		{
+			return new Aws.AttributeValue() { L = values.Select(v => v == null ? new Aws.AttributeValue() { NULL = true } : v.ToAws()).ToList() };
+		}
+
+		public IEnumerator<DynamoDBValue> GetEnumerator()
+		{
+			return values.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		public void Add(DynamoDBValue item)
+		{
+			values.Add(item);
+		}
+
+		public void Clear()
+		{
+			values.Clear();
+		}
+
+		public bool Contains(DynamoDBValue item)
+		{
+			return values.Contains(item);
+		}
+
+		public void CopyTo(DynamoDBValue[] array, int arrayIndex)
+		{
+			values.CopyTo(array, arrayIndex);
+		}
+
+		public bool Remove(DynamoDBValue item)
+		{
+			return values.Remove(item);
+		}
+
+		public int Count { get { return values.Count; } }
+		public bool IsReadOnly { get { return values.IsReadOnly; } }
+		public int IndexOf(DynamoDBValue item)
+		{
+			return values.IndexOf(item);
+		}
+
+		public void Insert(int index, DynamoDBValue item)
+		{
+			values.Insert(index, item);
+		}
+
+		public void RemoveAt(int index)
+		{
+			values.RemoveAt(index);
+		}
+
+		public DynamoDBValue this[int index]
+		{
+			get { return values[index]; }
+			set { values[index] = value; }
+		}
+	}
+}
