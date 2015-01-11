@@ -122,6 +122,18 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			return values.TryGetValue(key, out value);
 		}
+		public DynamoDBValue TryGetValue(string key)
+		{
+			DynamoDBValue value;
+			values.TryGetValue(key, out value);
+			return value;
+		}
+		public DynamoDBValue TryGetValue(params string[] keys)
+		{
+			DynamoDBValue value;
+			values.TryGetValue(ItemKey.CompositeName(keys), out value);
+			return value;
+		}
 
 		public DynamoDBValue this[string key]
 		{

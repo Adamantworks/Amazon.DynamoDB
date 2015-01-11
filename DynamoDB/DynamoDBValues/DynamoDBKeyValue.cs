@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 using System;
+using System.Collections.Generic;
+using Adamantworks.Amazon.DynamoDB.Schema;
+using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {
@@ -204,5 +207,13 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return (decimal)number;
 		}
 		#endregion
+
+		internal Dictionary<string, Aws.Condition> ToAws(AttributeSchema hashKeySchema)
+		{
+			if(Type != hashKeySchema.Type)
+				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", Type, hashKeySchema.Name, hashKeySchema.Type));
+
+			return new Dictionary<string, Aws.Condition>() { { hashKeySchema.Name, new Aws.Condition() { ComparisonOperator = "EQ", AttributeValueList = new List<Aws.AttributeValue>() { ToAws() } } } };
+		}
 	}
 }

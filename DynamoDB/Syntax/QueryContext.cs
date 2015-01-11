@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
@@ -31,6 +32,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		private readonly Region region;
 		private readonly string tableName;
 		private readonly string indexName;
+		private readonly KeySchema keySchema;
 		private readonly DynamoDBKeyValue hashKey;
 		private readonly ProjectionExpression projection;
 		private readonly PredicateExpression filter;
@@ -44,6 +46,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			Region region,
 			string tableName,
 			string indexName,
+			KeySchema keySchema,
 			DynamoDBKeyValue hashKey,
 			ProjectionExpression projection,
 			PredicateExpression filter,
@@ -54,6 +57,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			this.region = region;
 			this.tableName = tableName;
 			this.indexName = indexName;
+			this.keySchema = keySchema;
 			this.hashKey = hashKey;
 			this.projection = projection;
 			this.filter = filter;
@@ -78,6 +82,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			{
 				TableName = tableName,
 				IndexName = indexName,
+				KeyConditions = hashKey.ToAws(keySchema.HashKey),
 				ExpressionAttributeNames = AwsAttributeNames.GetCombined(projection, filter),
 				ConsistentRead = consistent,
 			};
