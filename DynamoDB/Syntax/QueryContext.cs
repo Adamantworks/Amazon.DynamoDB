@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public interface IQueryContext
 	{
 		IQueryContext LimitTo(int? limit);
-		IAsyncEnumerable<DynamoDBMap> RangeKeysAll();
+		IAsyncEnumerable<DynamoDBMap> RangeKeysAllAsync();
 	}
 
 	internal class QueryContext : IQueryContext
@@ -76,7 +77,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			return this;
 		}
 
-		public IAsyncEnumerable<DynamoDBMap> RangeKeysAll()
+		public IAsyncEnumerable<DynamoDBMap> RangeKeysAllAsync()
 		{
 			var request = new Aws.QueryRequest()
 			{

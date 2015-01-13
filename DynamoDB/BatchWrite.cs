@@ -12,14 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
+
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IBatchWrite
+	public interface IBatchWriteAsync
 	{
-
+		Task Submit();
 	}
 
-	internal class BatchWrite : IBatchWrite
+	internal class BatchWriteAsync : IBatchWriteAsync
 	{
+		public Task Submit()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

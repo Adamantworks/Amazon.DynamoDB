@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public interface IScanContext
 	{
 		IScanContext LimitTo(int? limit);
-		IAsyncEnumerable<DynamoDBMap> All();
+		IAsyncEnumerable<DynamoDBMap> AllAsync();
 		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
 		// TODO: BeginsWith() // use last key to create a key begins with query
 		// TODO: Between() // use last key to create a key between query
@@ -67,7 +68,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			return this;
 		}
 
-		public IAsyncEnumerable<DynamoDBMap> All()
+		public IAsyncEnumerable<DynamoDBMap> AllAsync()
 		{
 			var request = new Aws.ScanRequest()
 			{

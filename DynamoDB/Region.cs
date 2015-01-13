@@ -21,12 +21,12 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public interface IDynamoDBRegion
 	{
-		IBatchGet BeginBatchGet();
-		IBatchWrite BeginBatchWrite();
-		IAsyncEnumerable<string> ListTables(CancellationToken cancellationToken = default(CancellationToken));
-		Task<ITable> CreateTable(CancellationToken cancellationToken = default(CancellationToken));
-		Task<ITable> LoadTable(string tableName, CancellationToken cancellationToken = default(CancellationToken));
-		Task DeleteTable(CancellationToken cancellationToken = default(CancellationToken));
+		IBatchGetAsync BeginBatchGetAsync();
+		IBatchWriteAsync BeginBatchWriteAsync();
+		IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<ITable> CreateTableAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
+		Task DeleteTableAsync(CancellationToken cancellationToken = default(CancellationToken));
 	}
 
 	internal class Region : IDynamoDBRegion
@@ -38,33 +38,33 @@ namespace Adamantworks.Amazon.DynamoDB
 			DB = db;
 		}
 
-		IBatchGet IDynamoDBRegion.BeginBatchGet()
+		public IBatchGetAsync BeginBatchGetAsync()
 		{
 			throw new System.NotImplementedException();
 		}
 
-		IBatchWrite IDynamoDBRegion.BeginBatchWrite()
+		public IBatchWriteAsync BeginBatchWriteAsync()
 		{
 			throw new System.NotImplementedException();
 		}
 
-		IAsyncEnumerable<string> IDynamoDBRegion.ListTables(CancellationToken cancellationToken)
+		public IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		Task<ITable> IDynamoDBRegion.CreateTable(CancellationToken cancellationToken)
+		public Task<ITable> CreateTableAsync(CancellationToken cancellationToken)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		async Task<ITable> IDynamoDBRegion.LoadTable(string tableName, CancellationToken cancellationToken)
+		public async Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken)
 		{
 			var response = await DB.DescribeTableAsync(new Aws.DescribeTableRequest(tableName), cancellationToken).ConfigureAwait(false);
 			return new Table(this, response.Table);
 		}
 
-		Task IDynamoDBRegion.DeleteTable(CancellationToken cancellationToken)
+		public Task DeleteTableAsync(CancellationToken cancellationToken)
 		{
 			throw new System.NotImplementedException();
 		}

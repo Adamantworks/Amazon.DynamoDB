@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using Amazon;
 using Amazon.Runtime;
 using AwsEnums = Amazon.DynamoDBv2;
@@ -19,52 +20,52 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public static class DynamoDBRegion
 	{
-		public static IDynamoDBRegion Load(AwsEnums.IAmazonDynamoDB db)
+		public static IDynamoDBRegion Connect(AwsEnums.IAmazonDynamoDB db)
 		{
 			return new Region(db);
 		}
 
-		public static IDynamoDBRegion Load()
+		public static IDynamoDBRegion Connect()
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient());
 		}
-		public static IDynamoDBRegion Load(RegionEndpoint region)
+		public static IDynamoDBRegion Connect(RegionEndpoint region)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(region));
 		}
 
-		public static IDynamoDBRegion Load(AwsEnums.AmazonDynamoDBConfig config)
+		public static IDynamoDBRegion Connect(AwsEnums.AmazonDynamoDBConfig config)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(config));
 		}
 
-		public static IDynamoDBRegion Load(AWSCredentials credentials)
+		public static IDynamoDBRegion Connect(AWSCredentials credentials)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(credentials));
 		}
-		public static IDynamoDBRegion Load(AWSCredentials credentials, RegionEndpoint region)
+		public static IDynamoDBRegion Connect(AWSCredentials credentials, RegionEndpoint region)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(credentials, region));
 		}
 
-		public static IDynamoDBRegion Load(string accessKeyId, string secretAccessKey)
+		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey));
 		}
-		public static IDynamoDBRegion Load(string accessKeyId, string secretAccessKey, RegionEndpoint region)
+		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, RegionEndpoint region)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey, region));
 		}
 
-		public static IDynamoDBRegion Load(string accessKeyId, string secretAccessKey, string awsSessionToken)
+		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, string awsSessionToken)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey, awsSessionToken));
 		}
-		public static IDynamoDBRegion Load(string accessKeyId, string secretAccessKey, string awsSessionToken, RegionEndpoint region)
+		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, string awsSessionToken, RegionEndpoint region)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey, awsSessionToken, region));
 		}
-		public static IDynamoDBRegion Load(string accessKeyId, string secretAccessKey, string awsSessionToken, AwsEnums.AmazonDynamoDBConfig config)
+		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, string awsSessionToken, AwsEnums.AmazonDynamoDBConfig config)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey, awsSessionToken, config));
 		}

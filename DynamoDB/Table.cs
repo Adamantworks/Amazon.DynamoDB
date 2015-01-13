@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -34,33 +35,33 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughput ProvisionedThroughput { get; }
 
-		Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> Get(ItemKey key, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> Get(ItemKey key, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
+		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 
-		// TODO:Task<Item> Get(IBatchGet batch);
-		// TODO:Task Put(Item item);
-		// TODO:Task Put(IBatchWrite batch, Item item);
-		// TODO:Task Insert() // does a put with a condition that the row doesn't exist
-		Task Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task Update(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		// TODO:Task<Item> GetAsync(IBatchGetAsync batch);
+		// TODO:Task PutAsync(Item item);
+		// TODO:Task PutAsync(IBatchWriteAsync batch, Item item);
+		// TODO:Task InsertAsync() // does a put with a condition that the row doesn't exist
+		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateAsync(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
 
-		Task<bool> TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdate(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
 
-		// TODO:Task Delete();
-		// TODO:Task Delete(IBatchWrite batch);
+		// TODO:Task DeleteAsync();
+		// TODO:Task DeleteAsync(IBatchWriteAsync batch);
 
 		// TODO:IAsyncEnumerable<Item> Query();
 		// TODO: QueryBeginsWtih etc
@@ -134,27 +135,27 @@ namespace Adamantworks.Amazon.DynamoDB
 		public TableStatus Status { get; private set; }
 		public IProvisionedThroughput ProvisionedThroughput { get; private set; }
 
-		public Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken)
 		{
-			return Get(new ItemKey(hashKey), null, consistent, cancellationToken);
+			return GetAsync(new ItemKey(hashKey), null, consistent, cancellationToken);
 		}
-		public Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent, CancellationToken cancellationToken)
 		{
-			return Get(new ItemKey(hashKey, rangeKey), null, consistent, cancellationToken);
+			return GetAsync(new ItemKey(hashKey, rangeKey), null, consistent, cancellationToken);
 		}
-		public Task<DynamoDBMap> Get(ItemKey key, bool consistent, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent, CancellationToken cancellationToken)
 		{
-			return Get(key, null, consistent, cancellationToken);
+			return GetAsync(key, null, consistent, cancellationToken);
 		}
-		public Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
 		{
-			return Get(new ItemKey(hashKey), projection, consistent, cancellationToken);
+			return GetAsync(new ItemKey(hashKey), projection, consistent, cancellationToken);
 		}
-		public Task<DynamoDBMap> Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
 		{
-			return Get(new ItemKey(hashKey, rangeKey), projection, consistent, cancellationToken);
+			return GetAsync(new ItemKey(hashKey, rangeKey), projection, consistent, cancellationToken);
 		}
-		public async Task<DynamoDBMap> Get(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
+		public async Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
 		{
 			var request = new Aws.GetItemRequest()
 			{
@@ -171,27 +172,27 @@ namespace Adamantworks.Amazon.DynamoDB
 			return result.Item.ToValue();
 		}
 
-		public Task Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		public Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
 		{
-			return Update(new ItemKey(hashKey), update, null, values, cancellationToken);
+			return UpdateAsync(new ItemKey(hashKey), update, null, values, cancellationToken);
 		}
-		public Task Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		public Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
 		{
-			return Update(new ItemKey(hashKey, rangeKey), update, null, values, cancellationToken);
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, cancellationToken);
 		}
-		public Task Update(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		public Task UpdateAsync(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken)
 		{
-			return Update(key, update, null, values, cancellationToken);
+			return UpdateAsync(key, update, null, values, cancellationToken);
 		}
-		public Task Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		public Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
 		{
-			return Update(new ItemKey(hashKey), update, condition, values, cancellationToken);
+			return UpdateAsync(new ItemKey(hashKey), update, condition, values, cancellationToken);
 		}
-		public Task Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		public Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
 		{
-			return Update(new ItemKey(hashKey, rangeKey), update, condition, values, cancellationToken); ;
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, cancellationToken); ;
 		}
-		public async Task Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		public async Task UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
 		{
 			var request = new Aws.UpdateItemRequest()
 			{
@@ -207,31 +208,31 @@ namespace Adamantworks.Amazon.DynamoDB
 			await Region.DB.UpdateItemAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
-		public Task<bool> TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
 		{
-			return TryUpdate(new ItemKey(hashKey), update, null, values, cancellationToken);
+			return TryUpdateAsync(new ItemKey(hashKey), update, null, values, cancellationToken);
 		}
-		public Task<bool> TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
 		{
-			return TryUpdate(new ItemKey(hashKey, rangeKey), update, null, values, cancellationToken);
+			return TryUpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, cancellationToken);
 		}
-		public Task<bool> TryUpdate(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		public Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken)
 		{
-			return TryUpdate(key, update, null, values, cancellationToken);
+			return TryUpdateAsync(key, update, null, values, cancellationToken);
 		}
-		public Task<bool> TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
 		{
-			return TryUpdate(new ItemKey(hashKey), update, condition, values, cancellationToken);
+			return TryUpdateAsync(new ItemKey(hashKey), update, condition, values, cancellationToken);
 		}
-		public Task<bool> TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
 		{
-			return TryUpdate(new ItemKey(hashKey, rangeKey), update, condition, values, cancellationToken);
+			return TryUpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, cancellationToken);
 		}
-		public async Task<bool> TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		public async Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
 		{
 			try
 			{
-				await Update(key, update, condition, values, cancellationToken);
+				await UpdateAsync(key, update, condition, values, cancellationToken);
 				return true;
 			}
 			catch(Aws.ConditionalCheckFailedException)
