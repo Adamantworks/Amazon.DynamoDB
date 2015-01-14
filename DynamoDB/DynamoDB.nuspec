@@ -4,12 +4,11 @@
 		<id>Adamantworks.Amazon.DynamoDB</id>
 		<version>0.1.0-alpha001</version>
 		<title>Adamantworks Amazon DynamoDB Alternate SDK</title>
-		<authors>Adamantworks</authors>
-		<owners>Adamantworks LLC</owners>
+		<authors>Adamantworks LLC</authors>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
 		<projectUrl>https://github.com/Adamantworks/Amazon.DynamoDB</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>An alternate SDK for Amazon DynamoDB with a cleaner API and advanced operations. Support async and sync.</description>
+		<description>An alternate SDK for Amazon DynamoDB with a cleaner API and advanced operations. Supports async and sync.</description>
 		<releaseNotes>Initial attempt to make a nuget package</releaseNotes>
 		<copyright>Copyright © 2015 Adamantworks.  All Rights Reserved.</copyright>
 		<tags>AWS Amazon cloud DynamoDB</tags>
