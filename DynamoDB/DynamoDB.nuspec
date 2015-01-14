@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>Adamantworks.Amazon.DynamoDB</id>
+		<version>0.1.0-alpha001</version>
+		<title>Adamantworks Amazon DynamoDB Alternate SDK</title>
+		<authors>Adamantworks</authors>
+		<owners>Adamantworks LLC</owners>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+		<projectUrl>https://github.com/Adamantworks/Amazon.DynamoDB</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>An alternate SDK for Amazon DynamoDB with a cleaner API and advanced operations. Support async and sync.</description>
+		<releaseNotes>Initial attempt to make a nuget package</releaseNotes>
+		<copyright>Copyright © 2015 Adamantworks.  All Rights Reserved.</copyright>
+		<tags>AWS Amazon cloud DynamoDB</tags>
+		<dependencies>
+			<dependency id="AWSSDK" version="2.3.15.0" />
+			<dependency id="Ix-Async" version="1.2.2" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Release\Adamantworks.Amazon.DynamoDB.dll" target="lib\net45" />
+		<file src="bin\Release\Adamantworks.Amazon.DynamoDB.pdb" target="lib\net45" />
+	</files>
+</package>

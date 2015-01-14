@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Admantworks.Amazon.DynamoDB")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An alternate SDK for Amazon DynamoDB with a cleaner API and advanced operations. Support async and sync.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adamantworks")]
 [assembly: AssemblyProduct("Admantworks DynamoDB API")]
@@ -33,6 +33,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
 
 [assembly: CLSCompliant(true)]
