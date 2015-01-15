@@ -86,12 +86,12 @@ namespace Adamantworks.Amazon.DynamoDB
 		// TODO: QueryBeginsWtih etc
 		// TODO: Could combine queries as Query(hashKey, consistent...).BeginsWith
 
-		IScanContext Scan(ReadAhead readAhead = ReadAhead.Some);
-		IScanContext Scan(PredicateExpression filter, ReadAhead readAhead = ReadAhead.Some);
-		IScanContext Scan(PredicateExpression filter, Values values, ReadAhead readAhead = ReadAhead.Some);
-		IScanContext Scan(ProjectionExpression projection, ReadAhead readAhead = ReadAhead.Some);
-		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, ReadAhead readAhead = ReadAhead.Some);
-		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values, ReadAhead readAhead = ReadAhead.Some);
+		IScanContext Scan();
+		IScanContext Scan(PredicateExpression filter);
+		IScanContext Scan(PredicateExpression filter, Values values);
+		IScanContext Scan(ProjectionExpression projection);
+		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter);
+		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values);
 
 		// TODO: Count()
 		// TODO: Task GetStatus(); // TODO maybe this is part of some larger op
@@ -364,29 +364,31 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
-		public IScanContext Scan(ReadAhead readAhead)
+		#region Scan
+		public IScanContext Scan()
 		{
-			return new ScanContext(Region, Name, null, null, null, readAhead);
+			return new ScanContext(Region, Name, null, null, null);
 		}
-		public IScanContext Scan(PredicateExpression filter, ReadAhead readAhead)
+		public IScanContext Scan(PredicateExpression filter)
 		{
-			return new ScanContext(Region, Name, null, filter, null, readAhead);
+			return new ScanContext(Region, Name, null, filter, null);
 		}
-		public IScanContext Scan(PredicateExpression filter, Values values, ReadAhead readAhead)
+		public IScanContext Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(Region, Name, null, filter, values, readAhead);
+			return new ScanContext(Region, Name, null, filter, values);
 		}
-		public IScanContext Scan(ProjectionExpression projection, ReadAhead readAhead)
+		public IScanContext Scan(ProjectionExpression projection)
 		{
-			return new ScanContext(Region, Name, projection, null, null, readAhead);
+			return new ScanContext(Region, Name, projection, null, null);
 		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, ReadAhead readAhead)
+		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter)
 		{
-			return new ScanContext(Region, Name, projection, filter, null, readAhead);
+			return new ScanContext(Region, Name, projection, filter, null);
 		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values, ReadAhead readAhead)
+		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values)
 		{
-			return new ScanContext(Region, Name, projection, filter, values, readAhead);
+			return new ScanContext(Region, Name, projection, filter, values);
 		}
+		#endregion
 	}
 }

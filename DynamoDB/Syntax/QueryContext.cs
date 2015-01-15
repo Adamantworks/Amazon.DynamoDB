@@ -25,7 +25,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public interface IQueryContext
 	{
 		IQueryContext LimitTo(int? limit);
-		IAsyncEnumerable<DynamoDBMap> RangeKeysAllAsync();
+		IAsyncEnumerable<DynamoDBMap> AllRangeKeysAsync();
 	}
 
 	internal class QueryContext : IQueryContext
@@ -77,7 +77,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			return this;
 		}
 
-		public IAsyncEnumerable<DynamoDBMap> RangeKeysAllAsync()
+		public IAsyncEnumerable<DynamoDBMap> AllRangeKeysAsync()
 		{
 			var request = new Aws.QueryRequest()
 			{
