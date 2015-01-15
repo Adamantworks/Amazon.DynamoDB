@@ -41,6 +41,12 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, bool consistent = false);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false);
+		DynamoDBMap Get(ItemKey key, bool consistent = false);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent = false);
+		DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent = false);
 
 		// TODO:Task<Item> GetAsync(IBatchGetAsync batch);
 		// TODO:Task PutAsync(Item item);
@@ -135,6 +141,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public TableStatus Status { get; private set; }
 		public IProvisionedThroughput ProvisionedThroughput { get; private set; }
 
+		#region Get
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken)
 		{
 			return GetAsync(new ItemKey(hashKey), null, consistent, cancellationToken);
@@ -157,6 +164,39 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public async Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
 		{
+			var request = BuildGetRequest(key, projection, consistent);
+			var result = await Region.DB.GetItemAsync(request, cancellationToken).ConfigureAwait(false);
+			return result.Item.ToValue();
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, bool consistent)
+		{
+			return Get(new ItemKey(hashKey), null, consistent);
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent)
+		{
+			return Get(new ItemKey(hashKey, rangeKey), null, consistent);
+		}
+		public DynamoDBMap Get(ItemKey key, bool consistent)
+		{
+			return Get(key, null, consistent);
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
+		{
+			return Get(new ItemKey(hashKey), projection, consistent);
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent)
+		{
+			return Get(new ItemKey(hashKey, rangeKey), projection, consistent);
+		}
+		public DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent)
+		{
+			var request = BuildGetRequest(key, projection, consistent);
+			var result =  Region.DB.GetItem(request);
+			return result.Item.ToValue();
+		}
+
+		private Aws.GetItemRequest BuildGetRequest(ItemKey key, ProjectionExpression projection, bool consistent)
+		{
 			var request = new Aws.GetItemRequest()
 			{
 				TableName = Name,
@@ -168,9 +208,9 @@ namespace Adamantworks.Amazon.DynamoDB
 				request.ProjectionExpression = projection.Expression;
 				request.ExpressionAttributeNames = AwsAttributeNames.Get(projection);
 			}
-			var result = await Region.DB.GetItemAsync(request, cancellationToken).ConfigureAwait(false);
-			return result.Item.ToValue();
+			return request;
 		}
+		#endregion
 
 		public Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
 		{
@@ -245,23 +285,23 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new ScanContext(Region, Name, null, null, null, readAhead);
 		}
-		public IScanContext Scan(PredicateExpression filter, ReadAhead readAhead )
+		public IScanContext Scan(PredicateExpression filter, ReadAhead readAhead)
 		{
 			return new ScanContext(Region, Name, null, filter, null, readAhead);
 		}
-		public IScanContext Scan(PredicateExpression filter, Values values, ReadAhead readAhead )
+		public IScanContext Scan(PredicateExpression filter, Values values, ReadAhead readAhead)
 		{
 			return new ScanContext(Region, Name, null, filter, values, readAhead);
 		}
-		public IScanContext Scan(ProjectionExpression projection, ReadAhead readAhead )
+		public IScanContext Scan(ProjectionExpression projection, ReadAhead readAhead)
 		{
 			return new ScanContext(Region, Name, projection, null, null, readAhead);
 		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, ReadAhead readAhead )
+		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, ReadAhead readAhead)
 		{
 			return new ScanContext(Region, Name, projection, filter, null, readAhead);
 		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values, ReadAhead readAhead )
+		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values, ReadAhead readAhead)
 		{
 			return new ScanContext(Region, Name, projection, filter, values, readAhead);
 		}
