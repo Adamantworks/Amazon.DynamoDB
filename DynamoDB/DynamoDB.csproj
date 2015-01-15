@@ -61,6 +61,7 @@
     <Compile Include="Internal\IAwsAttributeValuesProvider.cs" />
     <Compile Include="Internal\TaskConstants.cs" />
     <Compile Include="Internal\TaskExtensions.cs" />
+    <Compile Include="ProvisionedThroughput.cs" />
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Syntax\CompositeHashKey.cs" />
     <Compile Include="Syntax\QueryContext.cs" />
@@ -73,7 +74,7 @@
     <Compile Include="Converters\Basic\NullableConverter.cs" />
     <Compile Include="Converters\Basic\NumberConverter.cs" />
     <Compile Include="DynamoDBRegion.cs" />
-    <Compile Include="ProvisionedThroughput.cs" />
+    <Compile Include="ProvisionedThroughputInfo.cs" />
     <Compile Include="Schema\IndexSchema.cs" />
     <Compile Include="Schema\AttributeSchema.cs" />
     <Compile Include="Schema\KeySchema.cs" />

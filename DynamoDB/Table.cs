@@ -33,7 +33,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		long ItemCount { get; }
 		long SizeInBytes { get; }
 		TableStatus Status { get; }
-		IProvisionedThroughput ProvisionedThroughput { get; }
+		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
@@ -152,7 +152,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public long ItemCount { get; private set; }
 		public long SizeInBytes { get; private set; }
 		public TableStatus Status { get; private set; }
-		public IProvisionedThroughput ProvisionedThroughput { get; private set; }
+		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		#region Get
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken)

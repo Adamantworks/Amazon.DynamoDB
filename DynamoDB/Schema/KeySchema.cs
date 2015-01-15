@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
@@ -31,6 +32,11 @@ namespace Adamantworks.Amazon.DynamoDB.Schema
 			HashKey = hashKey;
 		}
 
+		public KeySchema(string hashKeyName, DynamoDBValueType hashKeyType)
+			: this(new AttributeSchema(hashKeyName, hashKeyType))
+		{
+		}
+
 		public KeySchema(AttributeSchema hashKey, AttributeSchema rangeKey)
 			: this(hashKey)
 		{
@@ -38,6 +44,21 @@ namespace Adamantworks.Amazon.DynamoDB.Schema
 				throw new ArgumentException("Must by a KeyValue type", "rangeKey");
 
 			RangeKey = rangeKey;
+		}
+
+		public KeySchema(AttributeSchema hashKey, string rangeKeyName, DynamoDBValueType rangeKeyType)
+			: this(hashKey, new AttributeSchema(rangeKeyName, rangeKeyType))
+		{
+		}
+
+		public KeySchema(string hashKeyName, DynamoDBValueType hashKeyType, AttributeSchema rangeKey)
+			: this(new AttributeSchema(hashKeyName, hashKeyType), rangeKey)
+		{
+		}
+
+		public KeySchema(string hashKeyName, DynamoDBValueType hashKeyType, string rangeKeyName, DynamoDBValueType rangeKeyType)
+			: this(new AttributeSchema(hashKeyName, hashKeyType), new AttributeSchema(rangeKeyName, rangeKeyType))
+		{
 		}
 	}
 }

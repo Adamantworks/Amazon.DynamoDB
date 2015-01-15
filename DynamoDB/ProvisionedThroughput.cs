@@ -11,19 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-using System;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IProvisionedThroughput
+	public struct ProvisionedThroughput
 	{
-		DateTime LastDecreaseDateTime { get; }
-		DateTime LastIncreaseDateTime { get; }
-		long NumberOfDecreasesToday { get; }
-		long ReadCapacityUnits { get; }
-		long WriteCapacityUnits { get; }
-	}
-	internal class ProvisionedThroughput
-	{
+		private readonly long readCapacityUnits;
+		private readonly long writeCapacityUnits;
+
+		public ProvisionedThroughput(long readCapacityUnits, long writeCapacityUnits)
+		{
+			// TODO add validation here
+			this.readCapacityUnits = readCapacityUnits;
+			this.writeCapacityUnits = writeCapacityUnits;
+		}
+
+		public long ReadCapacityUnits { get { return readCapacityUnits; } }
+		public long WriteCapacityUnits { get { return writeCapacityUnits; } }
 	}
 }

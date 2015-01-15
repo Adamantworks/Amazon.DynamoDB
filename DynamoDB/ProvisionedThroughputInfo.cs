@@ -13,22 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 
-namespace Adamantworks.Amazon.DynamoDB.Schema
+namespace Adamantworks.Amazon.DynamoDB
 {
-	public class TableSchema
+	public interface IProvisionedThroughputInfo
 	{
-		public readonly KeySchema Key;
-		public readonly IReadOnlyDictionary<string, IndexSchema> Indexes;
+		DateTime LastDecreaseDateTime { get; }
+		DateTime LastIncreaseDateTime { get; }
+		long NumberOfDecreasesToday { get; }
+		long ReadCapacityUnits { get; }
+		long WriteCapacityUnits { get; }
+	}
 
-		public TableSchema(KeySchema key, IDictionary<string, IndexSchema> indexes = null)
-		{
-			if(key == null)
-				throw new ArgumentNullException("key");
-
-			Key = key;
-			Indexes = indexes != null ? new Dictionary<string, IndexSchema>(indexes) : new Dictionary<string, IndexSchema>();
-		}
+	internal class ProvisionedThroughputInfo
+	{
 	}
 }
