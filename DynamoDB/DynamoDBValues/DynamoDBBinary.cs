@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 using System;
-using System.Data.Linq;
+using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using System.IO;
 using Aws = Amazon.DynamoDBv2.Model;
 
@@ -20,14 +21,22 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {
 	public sealed class DynamoDBBinary : DynamoDBKeyValue, IEquatable<DynamoDBBinary>
 	{
-		private readonly Binary value;
+		private readonly ImmutableArray<byte> value;
 
-		public DynamoDBBinary(Binary value)
+		public DynamoDBBinary(ImmutableArray<byte> value)
 		{
 			if(value == null || value.Length == 0)
 				throw new ArgumentException("DynamoDB binary can't be null or empty", "value");
 
 			this.value = value;
+		}
+
+		public DynamoDBBinary(byte[] value)
+		{
+			if(value == null || value.Length == 0)
+				throw new ArgumentException("DynamoDB binary can't be null or empty", "value");
+
+			this.value = ImmutableArray.Create(value);
 		}
 
 		public override DynamoDBValueType Type
@@ -49,12 +58,14 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public byte[] ToArray()
 		{
-			return value.ToArray();
+			var array = new byte[value.Length];
+			value.CopyTo(array);
+			return array;
 		}
 
 		public MemoryStream ToMemoryStream()
 		{
-			return new MemoryStream(value.ToArray());
+			return new MemoryStream(ToArray());
 		}
 
 		public override bool Equals(object other)
@@ -82,12 +93,12 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return !Equals(a, b);
 		}
 
-		public static implicit operator Binary(DynamoDBBinary value)
+		public static implicit operator ImmutableArray<byte>(DynamoDBBinary value)
 		{
 			return value.value;
 		}
 
-		public static implicit operator DynamoDBBinary(Binary value)
+		public static implicit operator DynamoDBBinary(ImmutableArray<byte> value)
 		{
 			return value == null || value.Length == 0 ? null : new DynamoDBBinary(value);
 		}

@@ -35,15 +35,17 @@
       <HintPath>..\packages\AWSSDK.2.3.15.0\lib\net45\AWSSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\..\packages\System.Collections.Immutable.1.1.33-beta\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Interactive.Async">
       <HintPath>..\packages\Ix-Async.1.2.2\lib\net45\System.Interactive.Async.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\Basic\BinaryConverter.cs" />
+    <Compile Include="Converters\Basic\ImmutableArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\BooleanConverter.cs" />
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />

@@ -57,7 +57,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			converter.Add(BasicConverters.Number, int.MinValue + 3);
 			converter.Add(BasicConverters.MemoryStreamBinary, int.MinValue + 4);
 			converter.Add(BasicConverters.ByteArrayBinary, int.MinValue + 5);
-			converter.Add(BasicConverters.Binary, int.MinValue + 6);
+			converter.Add(BasicConverters.ImmutableArrayBinary, int.MinValue + 6);
 			return converter;
 		}
 

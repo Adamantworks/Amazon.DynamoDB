@@ -20,8 +20,9 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 		public static readonly IDynamoDBValueConverter Number = new NumberConverter();
 		public static readonly IDynamoDBValueConverter String = new StringConverter();
 		public static readonly IDynamoDBValueConverter Boolean = new BooleanConverter();
+		// TODO combine the three binary converters
 		public static readonly IDynamoDBValueConverter MemoryStreamBinary = new MemoryStreamBinaryConverter();
-		public static readonly IDynamoDBValueConverter Binary = new BinaryConverter();
+		public static readonly IDynamoDBValueConverter ImmutableArrayBinary = new ImmutableArrayBinaryConverter();
 		public static readonly IDynamoDBValueConverter ByteArrayBinary = new ByteArrayBinaryConverter();
 		public static readonly IDynamoDBValueConverter Nullable = new NullableConverter();
 	}

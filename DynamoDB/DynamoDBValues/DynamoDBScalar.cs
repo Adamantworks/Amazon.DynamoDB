@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 using System;
-using System.Data.Linq;
+using System.Collections.Immutable;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {
@@ -63,16 +63,16 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return (DynamoDBBoolean)value;
 		}
 
-		public static implicit operator Binary(DynamoDBScalar value)
+		public static implicit operator ImmutableArray<byte>(DynamoDBScalar value)
 		{
-			if(value == null) return null;
+			if(value == null) return default(ImmutableArray<byte>);
 			var binaryValue = value as DynamoDBBinary;
 			if(binaryValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Binary", value.GetType().Name));
+				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
 
 			return binaryValue;
 		}
-		public static implicit operator DynamoDBScalar(Binary value)
+		public static implicit operator DynamoDBScalar(ImmutableArray<byte> value)
 		{
 			return (DynamoDBBinary)value;
 		}
