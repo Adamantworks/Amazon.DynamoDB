@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using AwsEnums = Amazon.DynamoDBv2;
+
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {
 	public enum DynamoDBValueType
@@ -66,6 +69,21 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 					return true;
 				default:
 					return false;
+			}
+		}
+
+		internal static AwsEnums.ScalarAttributeType ToAws(this DynamoDBValueType type)
+		{
+			switch(type)
+			{
+				case DynamoDBValueType.Number:
+					return AwsEnums.ScalarAttributeType.N;
+				case DynamoDBValueType.String:
+					return AwsEnums.ScalarAttributeType.S;
+				case DynamoDBValueType.Binary:
+					return AwsEnums.ScalarAttributeType.B;
+				default:
+					throw new Exception(string.Format("{0} can't be used as a key type", type));
 			}
 		}
 	}

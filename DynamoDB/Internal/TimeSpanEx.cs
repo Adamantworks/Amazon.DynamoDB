@@ -12,22 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
+using System;
 
 namespace Adamantworks.Amazon.DynamoDB.Internal
 {
-	internal static class TaskExtensions
+	internal static class TimeSpanEx
 	{
-		public static Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancellationToken)
+		public static TimeSpan Min(TimeSpan a, TimeSpan b)
 		{
-			return task.IsCompleted // fast-path optimization
-				? task
-				: task.ContinueWith(
-					completedTask => completedTask.GetAwaiter().GetResult(),
-					cancellationToken,
-					TaskContinuationOptions.ExecuteSynchronously,
-					TaskScheduler.Default);
+			return a < b ? a : b;
 		}
 	}
 }

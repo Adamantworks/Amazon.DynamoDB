@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Aws = Amazon.DynamoDBv2.Model;
+
 namespace Adamantworks.Amazon.DynamoDB
 {
 	public struct ProvisionedThroughput
@@ -28,5 +30,10 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public long ReadCapacityUnits { get { return readCapacityUnits; } }
 		public long WriteCapacityUnits { get { return writeCapacityUnits; } }
+
+		internal Aws.ProvisionedThroughput ToAws()
+		{
+			return new Aws.ProvisionedThroughput(readCapacityUnits, writeCapacityUnits);
+		}
 	}
 }

@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -24,6 +25,8 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public interface IDynamoDBRegion
 	{
+		TimeSpan WaitStatusPollingInterval { get; set; }
+
 		IBatchGetAsync BeginBatchGetAsync();
 		IBatchWriteAsync BeginBatchWriteAsync();
 		IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken = default(CancellationToken));
@@ -34,6 +37,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput = null);
 
 		Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
+		ITable LoadTable(string tableName);
 
 		Task DeleteTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
 		void DeleteTable(string tableName);
@@ -46,7 +50,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		internal Region(IAmazonDynamoDB db)
 		{
 			DB = db;
+			WaitStatusPollingInterval = TimeSpan.FromSeconds(5);
 		}
+
+		public TimeSpan WaitStatusPollingInterval { get; set; }
 
 		public IBatchGetAsync BeginBatchGetAsync()
 		{
@@ -95,24 +102,49 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		private static Aws.CreateTableRequest BuildCreateTableRequest(string tableName, TableSchema schema)
 		{
-			var request = new Aws.CreateTableRequest()
+			return new Aws.CreateTableRequest()
 			{
 				TableName = tableName,
+				KeySchema = schema.Key.ToAws(),
+				LocalSecondaryIndexes = schema.Indexes.Where(i => !i.Value.IsGlobal).Select(i => new Aws.LocalSecondaryIndex()
+				{
+					IndexName = i.Key,
+					KeySchema = i.Value.Key.ToAws(),
+					Projection = i.Value.ToAwsProjection(),
+				}).ToList(),
+				GlobalSecondaryIndexes = schema.Indexes.Where(i => i.Value.IsGlobal).Select(i => new Aws.GlobalSecondaryIndex()
+				{
+					IndexName = i.Key,
+					KeySchema = schema.Key.ToAws(),
+					Projection = i.Value.ToAwsProjection(),
+					ProvisionedThroughput = new Aws.ProvisionedThroughput(1, 1),
+				}).ToList(),
+				AttributeDefinitions = schema.ToAwsAttributeDefinitions(),
+				ProvisionedThroughput = new Aws.ProvisionedThroughput(1, 1),
 			};
-			throw new NotImplementedException();
-			return request;
 		}
-		private static Aws.CreateTableRequest RequestProvisionedThroughput(Aws.CreateTableRequest request, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput)
+		private static void RequestProvisionedThroughput(Aws.CreateTableRequest request, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput)
 		{
-			throw new NotImplementedException();
+			request.ProvisionedThroughput = provisionedThroughput.ToAws();
+			if(indexProvisionedThroughput != null && indexProvisionedThroughput.Count != 0)
+				foreach(var index in request.GlobalSecondaryIndexes)
+					if(indexProvisionedThroughput.TryGetValue(index.IndexName, out provisionedThroughput))
+						index.ProvisionedThroughput = provisionedThroughput.ToAws();
 		}
 		#endregion
 
+		#region LoadTable
 		public async Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken)
 		{
 			var response = await DB.DescribeTableAsync(new Aws.DescribeTableRequest(tableName), cancellationToken).ConfigureAwait(false);
 			return new Table(this, response.Table);
 		}
+		public ITable LoadTable(string tableName)
+		{
+			var response = DB.DescribeTable(tableName);
+			return new Table(this, response.Table);
+		}
+		#endregion
 
 		#region DeleteTable
 		public Task DeleteTableAsync(string tableName, CancellationToken cancellationToken)

@@ -35,6 +35,14 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
+		Task ReloadAsync(CancellationToken cancellationToken = default(CancellationToken));
+		void Reload();
+
+		Task WaitUntilNotAsync(TableStatus status, CancellationToken cancellationToken = default(CancellationToken));
+		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout, CancellationToken cancellationToken = default(CancellationToken));
+		void WaitUntilNot(TableStatus status);
+		void WaitUntilNot(TableStatus status, TimeSpan timeout);
+
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
@@ -99,6 +107,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		// TODO: bool ReportConsumedCapacity
 		// TODO: CapacityConsumedEvent
+
 	}
 
 	internal class Table : ITable
@@ -114,12 +123,14 @@ namespace Adamantworks.Amazon.DynamoDB
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
 		{
 			Name = tableDescription.TableName;
+			Status = tableDescription.TableStatus.ToTableStatus();
+			// Handle state where all schema info is gone
+			if(Status == TableStatus.Deleting && tableDescription.AttributeDefinitions.Count == 0) return;
 			Schema = tableDescription.ToSchema();
 			CreationDateTime = tableDescription.CreationDateTime;
 			ItemCount = tableDescription.ItemCount;
 			SizeInBytes = tableDescription.TableSizeBytes;
-			Status = tableDescription.TableStatus.ToTableStatus();
-			// TODO: ProvisionedThroughput =
+			ProvisionedThroughput = tableDescription.ProvisionedThroughput.ToInfo();
 
 			// Indexes
 			var existingIndexes = Indexes;
@@ -153,6 +164,88 @@ namespace Adamantworks.Amazon.DynamoDB
 		public long SizeInBytes { get; private set; }
 		public TableStatus Status { get; private set; }
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
+
+		#region Reload
+		public async Task ReloadAsync(CancellationToken cancellationToken = new CancellationToken())
+		{
+			var response = await Region.DB.DescribeTableAsync(new Aws.DescribeTableRequest(Name), cancellationToken).ConfigureAwait(false);
+			UpdateTableDescription(response.Table);
+		}
+
+		public void Reload()
+		{
+			try
+			{
+				var response = Region.DB.DescribeTable(Name);
+				UpdateTableDescription(response.Table);
+			}
+			catch(Aws.ResourceNotFoundException)
+			{
+				Status = TableStatus.Deleted;
+			}
+		}
+		#endregion
+
+		#region WaitUntilNot
+		public async Task WaitUntilNotAsync(TableStatus status, CancellationToken cancellationToken)
+		{
+			CheckCanWaitUntilNot(status);
+			await ReloadAsync(cancellationToken).ConfigureAwait(false);
+			while(Status == status && !cancellationToken.IsCancellationRequested)
+			{
+				await Task.Delay(Region.WaitStatusPollingInterval, cancellationToken).ConfigureAwait(false);
+				await ReloadAsync(cancellationToken).ConfigureAwait(false);
+			}
+		}
+		public async Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout, CancellationToken cancellationToken)
+		{
+			CheckCanWaitUntilNot(status);
+			await ReloadAsync(cancellationToken).ConfigureAwait(false);
+			var start = DateTime.UtcNow;
+			TimeSpan timeRemaining;
+			while(Status == status && !cancellationToken.IsCancellationRequested && (timeRemaining = DateTime.UtcNow - start) < timeout)
+			{
+				await Task.Delay(TimeSpanEx.Min(Region.WaitStatusPollingInterval, timeRemaining), cancellationToken).ConfigureAwait(false);
+				await ReloadAsync(cancellationToken).ConfigureAwait(false);
+			}
+		}
+
+		public void WaitUntilNot(TableStatus status)
+		{
+			CheckCanWaitUntilNot(status);
+			Reload();
+			while(Status == status)
+			{
+				Thread.Sleep(Region.WaitStatusPollingInterval);
+				Reload();
+			}
+		}
+		public void WaitUntilNot(TableStatus status, TimeSpan timeout)
+		{
+			CheckCanWaitUntilNot(status);
+			Reload();
+			var start = DateTime.UtcNow;
+			TimeSpan timeRemaining;
+			while(Status == status && (timeRemaining = DateTime.UtcNow - start) < timeout)
+			{
+				Thread.Sleep(TimeSpanEx.Min(Region.WaitStatusPollingInterval, timeRemaining));
+				Reload();
+			}
+		}
+
+		private static void CheckCanWaitUntilNot(TableStatus status)
+		{
+			switch(status)
+			{
+				case TableStatus.Creating:
+				case TableStatus.Updating:
+				case TableStatus.Deleting:
+					return;
+				default:
+					throw new ArgumentException("Can only wait on transient status (Creating, Updating, Deleting)", "status");
+			}
+		}
+		#endregion
 
 		#region Get
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken)

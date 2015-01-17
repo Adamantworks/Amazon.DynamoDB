@@ -13,7 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Aws = Amazon.DynamoDBv2.Model;
+using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Schema
 {
@@ -59,6 +62,17 @@ namespace Adamantworks.Amazon.DynamoDB.Schema
 		public KeySchema(string hashKeyName, DynamoDBValueType hashKeyType, string rangeKeyName, DynamoDBValueType rangeKeyType)
 			: this(new AttributeSchema(hashKeyName, hashKeyType), new AttributeSchema(rangeKeyName, rangeKeyType))
 		{
+		}
+
+		internal List<Aws.KeySchemaElement> ToAws()
+		{
+			var keys = new List<Aws.KeySchemaElement>()
+			{
+				new Aws.KeySchemaElement(HashKey.Name, AwsEnums.KeyType.HASH)
+			};
+			if(RangeKey != null)
+				keys.Add(new Aws.KeySchemaElement(RangeKey.Name, AwsEnums.KeyType.RANGE));
+			return keys;
 		}
 	}
 }

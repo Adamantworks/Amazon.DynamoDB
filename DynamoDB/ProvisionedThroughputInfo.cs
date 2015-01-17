@@ -25,7 +25,46 @@ namespace Adamantworks.Amazon.DynamoDB
 		long WriteCapacityUnits { get; }
 	}
 
-	internal class ProvisionedThroughputInfo
+	internal class ProvisionedThroughputInfo : IProvisionedThroughputInfo
 	{
+		private readonly DateTime lastDecreaseDateTime;
+		private readonly DateTime lastIncreaseDateTime;
+		private readonly long numberOfDecreasesToday;
+		private readonly long readCapacityUnits;
+		private readonly long writeCapacityUnits;
+
+		public ProvisionedThroughputInfo(DateTime lastDecreaseDateTime, DateTime lastIncreaseDateTime, long numberOfDecreasesToday, long readCapacityUnits, long writeCapacityUnits)
+		{
+			this.lastDecreaseDateTime = lastDecreaseDateTime;
+			this.lastIncreaseDateTime = lastIncreaseDateTime;
+			this.numberOfDecreasesToday = numberOfDecreasesToday;
+			this.readCapacityUnits = readCapacityUnits;
+			this.writeCapacityUnits = writeCapacityUnits;
+		}
+
+		public DateTime LastDecreaseDateTime
+		{
+			get { return lastDecreaseDateTime; }
+		}
+
+		public DateTime LastIncreaseDateTime
+		{
+			get { return lastIncreaseDateTime; }
+		}
+
+		public long NumberOfDecreasesToday
+		{
+			get { return numberOfDecreasesToday; }
+		}
+
+		public long ReadCapacityUnits
+		{
+			get { return readCapacityUnits; }
+		}
+
+		public long WriteCapacityUnits
+		{
+			get { return writeCapacityUnits; }
+		}
 	}
 }

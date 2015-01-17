@@ -4,12 +4,21 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using NUnit.Framework;
+using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Tests
 {
 	[TestFixture, Explicit]
 	public class IntegrationTests
 	{
+		private IDynamoDBRegion region;
+
+		[TestFixtureSetUp]
+		public void SetUp()
+		{
+			region = DynamoDBRegion.Connect();
+		}
+
 		[Test]
 		public void Async()
 		{
@@ -17,27 +26,40 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			task.Wait();
 		}
 
-		private static async Task AsyncInternal()
+		private async Task AsyncInternal()
 		{
-			var region = DynamoDBRegion.Connect();
 			var tableName = "IntegrationTestAsync-" + Guid.NewGuid();
 			var schema = TableSchema();
-			await region.CreateTableAsync(tableName, schema); // TODO specify provisioned throughput
-			// TODO wait for creation to complete
-			await region.DeleteTableAsync(tableName);
-			// TODO wait for delete to complete
+			var table = await region.CreateTableAsync(tableName, schema); // TODO specify provisioned throughput
+			await table.WaitUntilNotAsync(TableStatus.Creating);
+			try
+			{
+
+			}
+			finally
+			{
+				region.DeleteTable(tableName);
+				table.WaitUntilNot(TableStatus.Deleting);
+			}
 		}
 
 		[Test]
 		public void Sync()
 		{
-			var region = DynamoDBRegion.Connect();
 			var tableName = "IntegrationTestSync-" + Guid.NewGuid();
 			var schema = TableSchema();
-			region.CreateTable(tableName, schema); // TODO specify provisioned throughput
-			// TODO wait for creation to complete
-			region.DeleteTable(tableName);
-			// TODO wait for delete to complete
+			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
+			table.WaitUntilNot(TableStatus.Creating);
+
+			try
+			{
+
+			}
+			finally
+			{
+				region.DeleteTable(tableName);
+				table.WaitUntilNot(TableStatus.Deleting);
+			}
 		}
 
 		private static TableSchema TableSchema()
@@ -50,8 +72,15 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			return new TableSchema(key, new Dictionary<string, IndexSchema>()
 			{
 				{ "local", new IndexSchema(false, localIndexKey) },
-				{ "global", new IndexSchema(false, globalIndexKey) },
+				{ "global", new IndexSchema(true, globalIndexKey) },
 			});
+		}
+
+		[Test]
+		public void LoadTableThatDoesNotExist()
+		{
+			var tableName = "DoesNotExist-" + Guid.NewGuid();
+			Assert.Throws<Aws.ResourceNotFoundException>(() => region.LoadTable(tableName));
 		}
 	}
 }

@@ -63,8 +63,10 @@
     <Compile Include="Internal\IAwsAttributeValuesProvider.cs" />
     <Compile Include="Internal\TaskConstants.cs" />
     <Compile Include="Internal\TaskExtensions.cs" />
+    <Compile Include="Internal\TimeSpanEx.cs" />
     <Compile Include="ProvisionedThroughput.cs" />
     <Compile Include="ReadAhead.cs" />
+    <Compile Include="Schema\IndexProjectionType.cs" />
     <Compile Include="Syntax\CompositeHashKey.cs" />
     <Compile Include="Syntax\QueryContext.cs" />
     <Compile Include="Syntax\ScanContext.cs" />

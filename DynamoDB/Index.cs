@@ -11,7 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
 using Aws = Amazon.DynamoDBv2.Model;
@@ -23,6 +25,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITable Table { get; }
 		string Name { get; }
 		IndexSchema Schema { get; }
+		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
 		IQueryContext Query(DynamoDBKeyValue hashKey, ReadAhead readAhead = ReadAhead.Some);
 		IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent, ReadAhead readAhead = ReadAhead.Some);
@@ -52,6 +55,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			//TODO in debug check that index names match
 			Schema = schema;
+			ProvisionedThroughput = description.ProvisionedThroughput.ToInfo();
 		}
 		internal void UpdateDescription(Aws.LocalSecondaryIndexDescription description, IndexSchema schema)
 		{
@@ -62,6 +66,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public ITable Table { get { return table; } }
 		public string Name { get; private set; }
 		public IndexSchema Schema { get; private set; }
+		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		public IQueryContext Query(DynamoDBKeyValue hashKey, ReadAhead readAhead)
 		{

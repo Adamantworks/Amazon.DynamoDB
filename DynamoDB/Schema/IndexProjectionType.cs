@@ -12,22 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Adamantworks.Amazon.DynamoDB.Internal
+namespace Adamantworks.Amazon.DynamoDB.Schema
 {
-	internal static class TaskExtensions
+	public enum IndexProjectionType
 	{
-		public static Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancellationToken)
-		{
-			return task.IsCompleted // fast-path optimization
-				? task
-				: task.ContinueWith(
-					completedTask => completedTask.GetAwaiter().GetResult(),
-					cancellationToken,
-					TaskContinuationOptions.ExecuteSynchronously,
-					TaskScheduler.Default);
-		}
+		All = 1,
+		KeysOnly,
+		Include,
 	}
 }

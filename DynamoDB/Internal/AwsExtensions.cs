@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,6 +108,12 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 				return TableStatus.Deleting;
 
 			throw new NotSupportedException(string.Format("TableStatus '{0}' not supported", tableStatus.Value));
+		}
+
+		public static ProvisionedThroughputInfo ToInfo(this Aws.ProvisionedThroughputDescription p)
+		{
+			// TODO make sure DateTimes are UTC
+			return new ProvisionedThroughputInfo(p.LastDecreaseDateTime, p.LastIncreaseDateTime, p.NumberOfDecreasesToday, p.ReadCapacityUnits, p.WriteCapacityUnits);
 		}
 	}
 }
