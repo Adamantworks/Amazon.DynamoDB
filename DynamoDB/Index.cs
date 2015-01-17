@@ -25,6 +25,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITable Table { get; }
 		string Name { get; }
 		IndexSchema Schema { get; }
+		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
 		IQueryContext Query(DynamoDBKeyValue hashKey, ReadAhead readAhead = ReadAhead.Some);
@@ -56,16 +57,19 @@ namespace Adamantworks.Amazon.DynamoDB
 			//TODO in debug check that index names match
 			Schema = schema;
 			ProvisionedThroughput = description.ProvisionedThroughput.ToInfo();
+			Status = description.IndexStatus.ToTableStatus();
 		}
 		internal void UpdateDescription(Aws.LocalSecondaryIndexDescription description, IndexSchema schema)
 		{
 			//TODO in debug check that index names match
 			Schema = schema;
+			Status = table.Status;
 		}
 
 		public ITable Table { get { return table; } }
 		public string Name { get; private set; }
 		public IndexSchema Schema { get; private set; }
+		public TableStatus Status { get; private set; }
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		public IQueryContext Query(DynamoDBKeyValue hashKey, ReadAhead readAhead)

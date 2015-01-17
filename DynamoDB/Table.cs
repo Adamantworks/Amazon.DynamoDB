@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -42,6 +43,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout, CancellationToken cancellationToken = default(CancellationToken));
 		void WaitUntilNot(TableStatus status);
 		void WaitUntilNot(TableStatus status, TimeSpan timeout);
+
+		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateTableAsync(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken = default(CancellationToken));
+		void UpdateTable(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null);
+		void UpdateTable(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
@@ -107,7 +113,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		// TODO: bool ReportConsumedCapacity
 		// TODO: CapacityConsumedEvent
-
 	}
 
 	internal class Table : ITable
@@ -191,7 +196,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			CheckCanWaitUntilNot(status);
 			await ReloadAsync(cancellationToken).ConfigureAwait(false);
-			while(Status == status && !cancellationToken.IsCancellationRequested)
+			while((Status == status || Indexes.Values.Any(i => i.Status == status)) && !cancellationToken.IsCancellationRequested)
 			{
 				await Task.Delay(Region.WaitStatusPollingInterval, cancellationToken).ConfigureAwait(false);
 				await ReloadAsync(cancellationToken).ConfigureAwait(false);
@@ -203,7 +208,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			await ReloadAsync(cancellationToken).ConfigureAwait(false);
 			var start = DateTime.UtcNow;
 			TimeSpan timeRemaining;
-			while(Status == status && !cancellationToken.IsCancellationRequested && (timeRemaining = DateTime.UtcNow - start) < timeout)
+			while((Status == status || Indexes.Values.Any(i => i.Status == status)) && !cancellationToken.IsCancellationRequested && (timeRemaining = DateTime.UtcNow - start) < timeout)
 			{
 				await Task.Delay(TimeSpanEx.Min(Region.WaitStatusPollingInterval, timeRemaining), cancellationToken).ConfigureAwait(false);
 				await ReloadAsync(cancellationToken).ConfigureAwait(false);
@@ -214,7 +219,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			CheckCanWaitUntilNot(status);
 			Reload();
-			while(Status == status)
+			while(Status == status || Indexes.Values.Any(i => i.Status == status))
 			{
 				Thread.Sleep(Region.WaitStatusPollingInterval);
 				Reload();
@@ -226,7 +231,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			Reload();
 			var start = DateTime.UtcNow;
 			TimeSpan timeRemaining;
-			while(Status == status && (timeRemaining = DateTime.UtcNow - start) < timeout)
+			while((Status == status || Indexes.Values.Any(i => i.Status == status)) && (timeRemaining = DateTime.UtcNow - start) < timeout)
 			{
 				Thread.Sleep(TimeSpanEx.Min(Region.WaitStatusPollingInterval, timeRemaining));
 				Reload();
@@ -244,6 +249,51 @@ namespace Adamantworks.Amazon.DynamoDB
 				default:
 					throw new ArgumentException("Can only wait on transient status (Creating, Updating, Deleting)", "status");
 			}
+		}
+		#endregion
+
+		#region UpdateTable
+		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
+		{
+			var request = BuildUpdateTableRequest(provisionedThroughput, indexProvisionedThroughputs);
+			return Region.DB.UpdateTableAsync(request, cancellationToken);
+		}
+		public Task UpdateTableAsync(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
+		{
+			var request = BuildUpdateTableRequest(null, indexProvisionedThroughputs);
+			return Region.DB.UpdateTableAsync(request, cancellationToken);
+		}
+
+		public void UpdateTable(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			var request = BuildUpdateTableRequest(provisionedThroughput, indexProvisionedThroughputs);
+			Region.DB.UpdateTable(request);
+		}
+		public void UpdateTable(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			var request = BuildUpdateTableRequest(null, indexProvisionedThroughputs);
+			Region.DB.UpdateTable(request);
+		}
+
+		private Aws.UpdateTableRequest BuildUpdateTableRequest(ProvisionedThroughput? provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			var request = new Aws.UpdateTableRequest()
+			{
+				TableName = Name,
+			};
+			if(provisionedThroughput != null)
+				request.ProvisionedThroughput = provisionedThroughput.Value.ToAws();
+			if(indexProvisionedThroughputs != null && indexProvisionedThroughputs.Count > 0)
+				request.GlobalSecondaryIndexUpdates = indexProvisionedThroughputs.Select(i => new Aws.GlobalSecondaryIndexUpdate()
+				{
+					Update = new Aws.UpdateGlobalSecondaryIndexAction()
+					{
+						IndexName = i.Key,
+						ProvisionedThroughput = i.Value.ToAws(),
+					}
+				}).ToList();
+
+			return request;
 		}
 		#endregion
 

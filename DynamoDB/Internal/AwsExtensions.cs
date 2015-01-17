@@ -110,6 +110,20 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			throw new NotSupportedException(string.Format("TableStatus '{0}' not supported", tableStatus.Value));
 		}
 
+		public static TableStatus ToTableStatus(this AwsEnums.IndexStatus indexStatus)
+		{
+			if(indexStatus == AwsEnums.IndexStatus.ACTIVE)
+				return TableStatus.Active;
+			if(indexStatus == AwsEnums.IndexStatus.UPDATING)
+				return TableStatus.Updating;
+			if(indexStatus == AwsEnums.IndexStatus.CREATING)
+				return TableStatus.Creating;
+			if(indexStatus == AwsEnums.IndexStatus.DELETING)
+				return TableStatus.Deleting;
+
+			throw new NotSupportedException(string.Format("IndexStatus '{0}' not supported", indexStatus.Value));
+		}
+
 		public static ProvisionedThroughputInfo ToInfo(this Aws.ProvisionedThroughputDescription p)
 		{
 			// TODO make sure DateTimes are UTC

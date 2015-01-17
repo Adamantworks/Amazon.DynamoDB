@@ -32,9 +32,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, CancellationToken cancellationToken = default(CancellationToken));
-		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null, CancellationToken cancellationToken = default(CancellationToken));
 		ITable CreateTable(string tableName, TableSchema schema);
-		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput = null);
+		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null);
 
 		Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
 		ITable LoadTable(string tableName);
@@ -77,10 +77,10 @@ namespace Adamantworks.Amazon.DynamoDB
 			var response = await DB.CreateTableAsync(request, cancellationToken).ConfigureAwait(false);
 			return new Table(this, response.TableDescription);
 		}
-		public async Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput, CancellationToken cancellationToken)
+		public async Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
 		{
 			var request = BuildCreateTableRequest(tableName, schema);
-			RequestProvisionedThroughput(request, provisionedThroughput, indexProvisionedThroughput);
+			RequestProvisionedThroughput(request, provisionedThroughput, indexProvisionedThroughputs);
 			var response = await DB.CreateTableAsync(request, cancellationToken).ConfigureAwait(false);
 			return new Table(this, response.TableDescription);
 		}
@@ -92,10 +92,10 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new Table(this, response.TableDescription);
 		}
 
-		public ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput)
+		public ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
 			var request = BuildCreateTableRequest(tableName, schema);
-			RequestProvisionedThroughput(request, provisionedThroughput, indexProvisionedThroughput);
+			RequestProvisionedThroughput(request, provisionedThroughput, indexProvisionedThroughputs);
 			var response = DB.CreateTable(request);
 			return new Table(this, response.TableDescription);
 		}
@@ -123,12 +123,12 @@ namespace Adamantworks.Amazon.DynamoDB
 				ProvisionedThroughput = new Aws.ProvisionedThroughput(1, 1),
 			};
 		}
-		private static void RequestProvisionedThroughput(Aws.CreateTableRequest request, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughput)
+		private static void RequestProvisionedThroughput(Aws.CreateTableRequest request, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
 			request.ProvisionedThroughput = provisionedThroughput.ToAws();
-			if(indexProvisionedThroughput != null && indexProvisionedThroughput.Count != 0)
+			if(indexProvisionedThroughputs != null && indexProvisionedThroughputs.Count != 0)
 				foreach(var index in request.GlobalSecondaryIndexes)
-					if(indexProvisionedThroughput.TryGetValue(index.IndexName, out provisionedThroughput))
+					if(indexProvisionedThroughputs.TryGetValue(index.IndexName, out provisionedThroughput))
 						index.ProvisionedThroughput = provisionedThroughput.ToAws();
 		}
 		#endregion

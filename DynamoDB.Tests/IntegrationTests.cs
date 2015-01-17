@@ -11,6 +11,8 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 	[TestFixture, Explicit]
 	public class IntegrationTests
 	{
+		private static readonly ProvisionedThroughput MinProvisionedThroughput = new ProvisionedThroughput(1, 1);
+		private static readonly ProvisionedThroughput LargeProvisionedThroughput = new ProvisionedThroughput(10, 5);
 		private IDynamoDBRegion region;
 
 		[TestFixtureSetUp]
@@ -28,13 +30,17 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 		private async Task AsyncInternal()
 		{
-			var tableName = "IntegrationTestAsync-" + Guid.NewGuid();
+			var tableName = "UnitTest-IntegrationTestAsync-" + Guid.NewGuid();
 			var schema = TableSchema();
 			var table = await region.CreateTableAsync(tableName, schema); // TODO specify provisioned throughput
 			await table.WaitUntilNotAsync(TableStatus.Creating);
 			try
 			{
-
+				await table.UpdateTableAsync(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
+				{
+					{"global", LargeProvisionedThroughput}
+				});
+				await table.WaitUntilNotAsync(TableStatus.Updating);
 			}
 			finally
 			{
@@ -46,14 +52,18 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		[Test]
 		public void Sync()
 		{
-			var tableName = "IntegrationTestSync-" + Guid.NewGuid();
+			var tableName = "UnitTest-IntegrationTestSync-" + Guid.NewGuid();
 			var schema = TableSchema();
 			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
 			table.WaitUntilNot(TableStatus.Creating);
 
 			try
 			{
-
+				table.UpdateTable(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
+				{
+					{"global", LargeProvisionedThroughput}
+				});
+				table.WaitUntilNot(TableStatus.Updating);
 			}
 			finally
 			{
@@ -79,8 +89,45 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		[Test]
 		public void LoadTableThatDoesNotExist()
 		{
-			var tableName = "DoesNotExist-" + Guid.NewGuid();
+			var tableName = "UnitTest-DoesNotExist-" + Guid.NewGuid();
 			Assert.Throws<Aws.ResourceNotFoundException>(() => region.LoadTable(tableName));
+		}
+
+		[Test]
+		public void UpdateIndexOnly()
+		{
+			var tableName = "UnitTest-UpdateIndexOnly-" + Guid.NewGuid();
+			var schema = TableSchema();
+			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
+			table.WaitUntilNot(TableStatus.Creating);
+
+			try
+			{
+				// Increate Both
+				table.UpdateTable(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
+				{
+					{"global", LargeProvisionedThroughput}
+				});
+				table.WaitUntilNot(TableStatus.Updating);
+				// Decrease Index
+				table.UpdateTable(new Dictionary<string, ProvisionedThroughput>()
+				{
+					{"global", MinProvisionedThroughput}
+				});
+				table.WaitUntilNot(TableStatus.Updating);
+				Assert.AreEqual(0, table.ProvisionedThroughput.NumberOfDecreasesToday);
+				Assert.AreEqual(1, table.Indexes["global"].ProvisionedThroughput.NumberOfDecreasesToday);
+				// Decrease Table
+				table.UpdateTable(MinProvisionedThroughput);
+				table.WaitUntilNot(TableStatus.Updating);
+				Assert.AreEqual(1, table.ProvisionedThroughput.NumberOfDecreasesToday);
+				Assert.AreEqual(1, table.Indexes["global"].ProvisionedThroughput.NumberOfDecreasesToday);
+			}
+			finally
+			{
+				region.DeleteTable(tableName);
+				table.WaitUntilNot(TableStatus.Deleting);
+			}
 		}
 	}
 }
