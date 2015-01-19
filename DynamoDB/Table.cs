@@ -62,6 +62,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent = false);
 		DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent = false);
 
+		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent = false);
+		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent = false);
+
 		// TODO:Task<Item> GetAsync(IBatchGetAsync batch);
 		// TODO:Task PutAsync(Item item);
 		// TODO:Task PutAsync(IBatchWriteAsync batch, Item item);
@@ -117,6 +120,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 	internal class Table : ITable
 	{
+		private const int BatchGetBatchSizeLimit = 100;
 		internal readonly Region Region;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
@@ -365,6 +369,62 @@ namespace Adamantworks.Amazon.DynamoDB
 				request.ProjectionExpression = projection.Expression;
 				request.ExpressionAttributeNames = AwsAttributeNames.Get(projection);
 			}
+			return request;
+		}
+		#endregion
+
+		#region BatchGet
+		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent = false)
+		{
+			return BatchGet(keys, null, consistent);
+		}
+		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent = false)
+		{
+			var awsKeys = keys.Select(k => k.ToAws(Schema.Key));
+
+			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);
+			var request = BuildBatchGetItemRequest(batchKeys, projection, consistent);
+
+			using(var enumerator = awsKeys.GetEnumerator())
+			{
+				for(; ; )
+				{
+					while(batchKeys.Count < BatchGetBatchSizeLimit && enumerator.MoveNext())
+						batchKeys.Add(enumerator.Current);
+
+					if(batchKeys.Count == 0) // No more items to get
+						yield break;
+
+					var response = Region.DB.BatchGetItem(request);
+					foreach(var item in response.Responses[Name])
+						yield return item.ToGetValue();
+
+					batchKeys.Clear();
+					if(response.UnprocessedKeys.Count > 0)
+						batchKeys.AddRange(response.UnprocessedKeys[Name].Keys);
+				}
+			}
+		}
+
+		private Aws.BatchGetItemRequest BuildBatchGetItemRequest(List<Dictionary<string, Aws.AttributeValue>> batchKeys, ProjectionExpression projection, bool consistent)
+		{
+			var keysAndAttributes = new Aws.KeysAndAttributes()
+			{
+				Keys = batchKeys,
+				ConsistentRead = consistent,
+			};
+			if(projection != null)
+			{
+				keysAndAttributes.ProjectionExpression = projection.Expression;
+				keysAndAttributes.ExpressionAttributeNames = AwsAttributeNames.Get(projection);
+			}
+			var request = new Aws.BatchGetItemRequest()
+			{
+				RequestItems = new Dictionary<string, Aws.KeysAndAttributes>()
+				{
+					{Name, keysAndAttributes}
+				},
+			};
 			return request;
 		}
 		#endregion
