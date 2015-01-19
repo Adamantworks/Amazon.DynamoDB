@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
@@ -26,6 +27,12 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 
 		public override bool TryConvertTo(DynamoDBValue fromValue, Type type, out string toValue, IDynamoDBValueConverter context)
 		{
+			if(fromValue == null)
+			{
+				toValue = null;
+				return true;
+			}
+
 			if(fromValue is DynamoDBString)
 			{
 				toValue = fromValue.ToString();

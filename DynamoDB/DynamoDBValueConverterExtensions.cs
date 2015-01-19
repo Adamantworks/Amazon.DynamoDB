@@ -48,10 +48,52 @@ namespace Adamantworks.Amazon.DynamoDB
 
 			var values = ItemKey.Split(stringValue);
 			if(values.Length != 2)
-				throw new ArgumentException("Must be a composite of 2 values","value");
+				throw new ArgumentException("Must be a composite of 2 values", "value");
 
-			return Tuple.Create(To<T1>((DynamoDBString)values[0], converter),
+			return Tuple.Create(
+				To<T1>((DynamoDBString)values[0], converter),
 				To<T2>((DynamoDBString)values[1], converter));
+		}
+
+		public static Tuple<T1, T2, T3> To<T1, T2, T3>(this DynamoDBValue value)
+		{
+			return value.To<T1, T2, T3>(DynamoDBValueConverter.Default);
+		}
+		public static Tuple<T1, T2, T3> To<T1, T2, T3>(this DynamoDBValue value, IDynamoDBValueConverter converter)
+		{
+			var stringValue = value as DynamoDBString;
+			if(stringValue == null)
+				throw new ArgumentException();
+
+			var values = ItemKey.Split(stringValue);
+			if(values.Length != 3)
+				throw new ArgumentException("Must be a composite of 2 values", "value");
+
+			return Tuple.Create(
+				To<T1>((DynamoDBString)values[0], converter),
+				To<T2>((DynamoDBString)values[1], converter),
+				To<T3>((DynamoDBString)values[2], converter));
+		}
+
+		public static Tuple<T1, T2, T3, T4> To<T1, T2, T3, T4>(this DynamoDBValue value)
+		{
+			return value.To<T1, T2, T3, T4>(DynamoDBValueConverter.Default);
+		}
+		public static Tuple<T1, T2, T3, T4> To<T1, T2, T3, T4>(this DynamoDBValue value, IDynamoDBValueConverter converter)
+		{
+			var stringValue = value as DynamoDBString;
+			if(stringValue == null)
+				throw new ArgumentException();
+
+			var values = ItemKey.Split(stringValue);
+			if(values.Length != 4)
+				throw new ArgumentException("Must be a composite of 2 values", "value");
+
+			return Tuple.Create(
+				To<T1>((DynamoDBString)values[0], converter),
+				To<T2>((DynamoDBString)values[1], converter),
+				To<T3>((DynamoDBString)values[2], converter),
+				To<T4>((DynamoDBString)values[3], converter));
 		}
 
 		public static DynamoDBValue ToDynamoDBValue<T>(this T value)

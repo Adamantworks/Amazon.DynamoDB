@@ -58,7 +58,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 
 		#region Composite
-
 		public static char CompositeValueSeparator
 		{
 			get { return compositeValueSeparator; }
