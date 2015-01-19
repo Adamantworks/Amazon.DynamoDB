@@ -322,7 +322,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			var request = BuildGetRequest(key, projection, consistent);
 			var result = await Region.DB.GetItemAsync(request, cancellationToken).ConfigureAwait(false);
-			return result.Item.ToValue();
+			return result.Item.ToGetValue();
 		}
 
 		public DynamoDBMap Get(DynamoDBKeyValue hashKey, bool consistent)
@@ -349,7 +349,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			var request = BuildGetRequest(key, projection, consistent);
 			var result = Region.DB.GetItem(request);
-			return result.Item.ToValue();
+			return result.Item.ToGetValue();
 		}
 
 		private Aws.GetItemRequest BuildGetRequest(ItemKey key, ProjectionExpression projection, bool consistent)

@@ -29,6 +29,12 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			return new DynamoDBMap(values);
 		}
 
+		public static DynamoDBMap ToGetValue(this Dictionary<string, Aws.AttributeValue> values)
+		{
+			if(values == null || values.Count == 0) return null;
+			return new DynamoDBMap(values);
+		}
+
 		public static DynamoDBValue ToValue(this Aws.AttributeValue value)
 		{
 			if(value.NULL)
