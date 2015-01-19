@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -32,8 +33,9 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		{
 			var tableName = "UnitTest-IntegrationTestAsync-" + Guid.NewGuid();
 			var schema = TableSchema();
-			var table = await region.CreateTableAsync(tableName, schema); // TODO specify provisioned throughput
+			var table = await region.CreateTableAsync(tableName, schema);
 			await table.WaitUntilNotAsync(TableStatus.Creating);
+
 			try
 			{
 				await table.UpdateTableAsync(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
@@ -41,6 +43,11 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 					{"global", LargeProvisionedThroughput}
 				});
 				await table.WaitUntilNotAsync(TableStatus.Updating);
+
+				var hashKey = Guid.NewGuid().ToDynamoDBKeyValue();
+
+				var items = await table.Indexes["global"].Query(hashKey).AllRangeKeysAsync().ToList();
+				// TODO test query limits
 			}
 			finally
 			{
@@ -54,7 +61,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		{
 			var tableName = "UnitTest-IntegrationTestSync-" + Guid.NewGuid();
 			var schema = TableSchema();
-			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
+			var table = region.CreateTable(tableName, schema);
 			table.WaitUntilNot(TableStatus.Creating);
 
 			try
@@ -64,6 +71,11 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 					{"global", LargeProvisionedThroughput}
 				});
 				table.WaitUntilNot(TableStatus.Updating);
+
+				var hashKey = Guid.NewGuid().ToDynamoDBKeyValue();
+
+				var items = table.Indexes["global"].Query(hashKey).AllRangeKeys().ToList();
+				// TODO test query limits
 			}
 			finally
 			{

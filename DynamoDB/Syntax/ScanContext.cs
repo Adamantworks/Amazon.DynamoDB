@@ -67,6 +67,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			return this;
 		}
 
+		#region All
 		public IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some)
 		{
 			var request = BuildScanRequest();
@@ -94,6 +95,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 					yield return item.ToValue();
 			} while(!IsComplete(lastResponse));
 		}
+		#endregion
 
 		private Aws.ScanRequest BuildScanRequest()
 		{

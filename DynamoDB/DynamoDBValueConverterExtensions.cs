@@ -63,12 +63,29 @@ namespace Adamantworks.Amazon.DynamoDB
 
 			throw new InvalidCastException();
 		}
-
 		public static DynamoDBValue ToDynamoDBValue<T>(this T value, IDynamoDBValueConverter converter)
 		{
 			DynamoDBValue toValue;
 			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
 				return toValue;
+
+			throw new InvalidCastException();
+		}
+
+		public static DynamoDBKeyValue ToDynamoDBKeyValue<T>(this T value)
+		{
+			DynamoDBValue toValue;
+			var converter = DynamoDBValueConverter.Default;
+			if(DynamoDBValueConverter.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return (DynamoDBKeyValue)toValue;
+
+			throw new InvalidCastException();
+		}
+		public static DynamoDBKeyValue ToDynamoDBKeyValue<T>(this T value, IDynamoDBValueConverter converter)
+		{
+			DynamoDBValue toValue;
+			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return (DynamoDBKeyValue)toValue;
 
 			throw new InvalidCastException();
 		}

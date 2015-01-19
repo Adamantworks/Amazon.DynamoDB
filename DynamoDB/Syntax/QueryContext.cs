@@ -25,7 +25,8 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public interface IQueryContext
 	{
 		IQueryContext LimitTo(int? limit);
-		IAsyncEnumerable<DynamoDBMap> AllRangeKeysAsync();
+		IAsyncEnumerable<DynamoDBMap> AllRangeKeysAsync(ReadAhead readAhead = ReadAhead.Some);
+		IEnumerable<DynamoDBMap> AllRangeKeys();
 	}
 
 	internal class QueryContext : IQueryContext
@@ -39,7 +40,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		private readonly PredicateExpression filter;
 		private readonly Values values;
 		private readonly bool consistent;
-		private readonly ReadAhead readAhead;
 		private bool limitSet;
 		private int? limit;
 
@@ -52,8 +52,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			ProjectionExpression projection,
 			PredicateExpression filter,
 			Values values,
-			bool consistent,
-			ReadAhead readAhead)
+			bool consistent)
 		{
 			this.region = region;
 			this.tableName = tableName;
@@ -64,7 +63,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			this.filter = filter;
 			this.values = values;
 			this.consistent = consistent;
-			this.readAhead = readAhead;
 		}
 
 		public IQueryContext LimitTo(int? limit)
@@ -77,7 +75,38 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			return this;
 		}
 
-		public IAsyncEnumerable<DynamoDBMap> AllRangeKeysAsync()
+		#region AllRangeKeys
+		public IAsyncEnumerable<DynamoDBMap> AllRangeKeysAsync(ReadAhead readAhead)
+		{
+			var request = BuildQueryRequest();
+			return AsyncEnumerableEx.GenerateChunked<Aws.QueryResponse, DynamoDBMap>(null,
+				(lastResponse, cancellationToken) =>
+				{
+					if(lastResponse != null)
+						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+					return region.DB.QueryAsync(request, cancellationToken);
+				},
+				lastResponse => lastResponse.Items.Select(item => item.ToValue()),
+				IsComplete,
+				readAhead);
+		}
+
+		public IEnumerable<DynamoDBMap> AllRangeKeys()
+		{
+			var request = BuildQueryRequest();
+			Aws.QueryResponse lastResponse = null;
+			do
+			{
+				if(lastResponse != null)
+					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				lastResponse = region.DB.Query(request);
+				foreach(var item in lastResponse.Items)
+					yield return item.ToValue();
+			} while(!IsComplete(lastResponse));
+		}
+		#endregion
+
+		private Aws.QueryRequest BuildQueryRequest()
 		{
 			var request = new Aws.QueryRequest()
 			{
@@ -94,16 +123,11 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			if(filter != null)
 				request.FilterExpression = filter.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
-			return AsyncEnumerableEx.GenerateChunked<Aws.QueryResponse, DynamoDBMap>(null,
-				(lastResponse, cancellationToken) =>
-				{
-					if(lastResponse != null)
-						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-					return region.DB.QueryAsync(request, cancellationToken);
-				},
-				lastResponse => lastResponse.Items.Select(item => item.ToValue()),
-				lastResponse => lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0,
-				readAhead);
+			return request;
+		}
+		private static bool IsComplete(Aws.QueryResponse lastResponse)
+		{
+			return lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0;
 		}
 	}
 }
