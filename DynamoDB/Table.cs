@@ -21,6 +21,7 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Amazon.KeyManagementService.Model;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -49,6 +50,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		void UpdateTable(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null);
 		void UpdateTable(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
+		ItemKey GetKey(DynamoDBMap item);
+
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
 		Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent = false, CancellationToken cancellationToken = default(CancellationToken));
@@ -64,6 +67,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent = false);
 		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent = false);
+
+		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent = false);
+		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent = false);
 
 		// TODO:Task<Item> GetAsync(IBatchGetAsync batch);
 		// TODO:Task PutAsync(Item item);
@@ -301,6 +307,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
+		public ItemKey GetKey(DynamoDBMap item)
+		{
+			return Schema.Key.GetKey(item);
+		}
+
 		#region Get
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken)
 		{
@@ -426,6 +437,74 @@ namespace Adamantworks.Amazon.DynamoDB
 				},
 			};
 			return request;
+		}
+		#endregion
+
+		#region BatchGetJoin
+		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent)
+		{
+			return BatchGetJoin(outerItems, keySelector, resultSelector, null, consistent);
+		}
+		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent)
+		{
+			var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
+			var batchItems = new Dictionary<ItemKey, T>(BatchGetBatchSizeLimit);
+			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);
+			var request = BuildBatchGetItemRequest(batchKeys, projection, consistent);
+
+			using(var enumerator = outerItems.GetEnumerator())
+			{
+				for(; ; )
+				{
+					while(batchItems.Count < BatchGetBatchSizeLimit && enumerator.MoveNext())
+					{
+						var outerItem = enumerator.Current;
+						var key = keySelector(outerItem);
+						DynamoDBMap innerItem;
+						if(innerItems.TryGetValue(key, out innerItem))
+							yield return resultSelector(outerItem, innerItem);
+						else
+							batchItems.Add(key, outerItem);
+					}
+
+					if(batchItems.Count == 0) // No more items to get
+						yield break;
+
+					batchKeys.AddRange(batchItems.Keys.Select(k => k.ToAws(Schema.Key)));
+
+					var response = Region.DB.BatchGetItem(request);
+					foreach(var item in response.Responses[Name])
+					{
+						var innerItem = item.ToGetValue();
+						if(innerItem != null)
+							innerItems.Add(GetKey(innerItem), innerItem);
+					}
+
+					var unprocessedKeys = response.UnprocessedKeys.Count > 0 ? response.UnprocessedKeys[Name].Keys.Select(k => k.ToItemKey(Schema.Key)) : Enumerable.Empty<ItemKey>();
+					var unprocessedItems = unprocessedKeys.ToDictionary(k => k, k =>
+					{
+						var item = batchItems[k];
+						batchItems.Remove(k);
+						return item;
+					});
+
+					foreach(var batchItem in batchItems)
+					{
+						var key = batchItem.Key;
+						var outerItem = batchItem.Value;
+						DynamoDBMap innerItem;
+						if(!innerItems.TryGetValue(key, out innerItem))
+							innerItems.Add(key, null); // Add that the key was not found, for future lookups
+						yield return resultSelector(outerItem, innerItem); // innerItem == null if TryGetValue returned false
+					}
+
+					batchItems.Clear();
+					batchKeys.Clear();
+
+					foreach(var item in unprocessedItems)
+						batchItems.Add(item.Key, item.Value);
+				}
+			}
 		}
 		#endregion
 

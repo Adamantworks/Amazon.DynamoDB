@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public struct ItemKey
+	public struct ItemKey : IEquatable<ItemKey>
 	{
 		public readonly DynamoDBKeyValue HashKey;
 		public readonly DynamoDBKeyValue RangeKey;
@@ -99,6 +100,25 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static string[] Split(DynamoDBString value)
 		{
 			return value.ToString().Split(separatorArray);
+		}
+
+		public override bool Equals(object obj)
+		{
+			var itemKey = obj as ItemKey?;
+			return itemKey != null && Equals(itemKey.Value);
+		}
+
+		public bool Equals(ItemKey other)
+		{
+			return HashKey.Equals(other.HashKey) && Equals(RangeKey, other.RangeKey);
+		}
+
+		public override int GetHashCode()
+		{
+			var hash = HashKey.GetHashCode();
+			if(RangeKey != null)
+				hash ^= RangeKey.GetHashCode();
+			return hash;
 		}
 	}
 }

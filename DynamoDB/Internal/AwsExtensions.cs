@@ -135,5 +135,12 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			// TODO make sure DateTimes are UTC
 			return new ProvisionedThroughputInfo(p.LastDecreaseDateTime, p.LastIncreaseDateTime, p.NumberOfDecreasesToday, p.ReadCapacityUnits, p.WriteCapacityUnits);
 		}
+
+		public static ItemKey ToItemKey(this Dictionary<string, Aws.AttributeValue> values, KeySchema key)
+		{
+			var hashKeyValue = values[key.HashKey.Name];
+			var rangeKeyValue = key.RangeKey != null ? values[key.RangeKey.Name] : null;
+			return new ItemKey(hashKeyValue.ToDynamoDBKeyValue(), rangeKeyValue.ToDynamoDBKeyValue());
+		}
 	}
 }

@@ -74,5 +74,12 @@ namespace Adamantworks.Amazon.DynamoDB.Schema
 				keys.Add(new Aws.KeySchemaElement(RangeKey.Name, AwsEnums.KeyType.RANGE));
 			return keys;
 		}
+
+		public ItemKey GetKey(DynamoDBMap item)
+		{
+			var hashKeyValue = (DynamoDBKeyValue)item[HashKey.Name];
+			var rangeKeyValue = (DynamoDBKeyValue)(RangeKey != null ? item[RangeKey.Name] : null);
+			return new ItemKey(hashKeyValue, rangeKeyValue);
+		}
 	}
 }
