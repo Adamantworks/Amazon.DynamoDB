@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
@@ -24,6 +25,8 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 {
 	internal static class AwsExtensions
 	{
+		private static readonly object[] NoArgs = new object[0];
+
 		public static DynamoDBMap ToValue(this Dictionary<string, Aws.AttributeValue> values)
 		{
 			return new DynamoDBMap(values);
@@ -45,17 +48,35 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 				return new DynamoDBNumber(value.N);
 			if(value.B != null)
 				return new DynamoDBBinary(value.B.ToArray());
+			if(value.SS != null && value.SS.Count != 0)
+				return new DynamoDBSet<DynamoDBString>(value.SS.Select(v => new DynamoDBString(v)));
+			if(value.NS != null && value.NS.Count != 0)
+				return new DynamoDBSet<DynamoDBNumber>(value.NS.Select(v => new DynamoDBNumber(v)));
+			if(value.BS != null && value.BS.Count != 0)
+				return new DynamoDBSet<DynamoDBBinary>(value.BS.Select(v => new DynamoDBBinary(v.ToArray())));
+
+			// For performance reasons, we check for these cases before going to reflection
+			if(value.L != null && value.L.Count != 0)
+				return new DynamoDBList(value.L.Select(ToValue));
+			if(value.M != null && value.M.Count != 0)
+				return new DynamoDBMap(value.M);
+			if(value.BOOL)
+				return (DynamoDBBoolean)value.BOOL;
+
+			// Now we have to start using reflection because the rest are indistinguishable through the public API
+			if(IsBool(value))
+				return (DynamoDBBoolean)value.BOOL;
 			if(value.L != null)
 				return new DynamoDBList(value.L.Select(ToValue));
 			if(value.M != null)
 				return new DynamoDBMap(value.M);
-			if(value.SS != null)
-				return new DynamoDBSet<DynamoDBString>(value.SS.Select(v => new DynamoDBString(v)));
-			if(value.NS != null)
-				return new DynamoDBSet<DynamoDBNumber>(value.NS.Select(v => new DynamoDBNumber(v)));
-			if(value.BS != null)
-				return new DynamoDBSet<DynamoDBBinary>(value.BS.Select(v => new DynamoDBBinary(v.ToArray())));
-			return (DynamoDBBoolean)value.BOOL; // Since we can't check whether it has a bool value we must assume it is a bool if it isn't anything else
+
+			throw new NotSupportedException("AttributeValue type is not supported");
+		}
+
+		private static bool IsBool(Aws.AttributeValue value)
+		{
+			return (bool)typeof(Aws.AttributeValue).InvokeMember("IsSetBOOL", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod, null, value, NoArgs);
 		}
 
 		public static TableSchema ToSchema(this Aws.TableDescription tableDescription)

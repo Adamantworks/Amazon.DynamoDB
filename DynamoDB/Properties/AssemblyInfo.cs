@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -35,3 +36,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.1.0.0")]
 
 [assembly: CLSCompliant(true)]
+#if DEBUG
+[assembly: InternalsVisibleTo("Adamantworks.Amazon.DynamoDB.Tests")]
+#endif
