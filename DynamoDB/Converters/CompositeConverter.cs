@@ -22,12 +22,13 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 	{
 		private readonly IDictionary<int, ISet<IDynamoDBValueConverter>> converters = new SortedList<int, ISet<IDynamoDBValueConverter>>();
 
-		public void Add(IDynamoDBValueConverter converter, int priority = 0)
+		public CompositeConverter Add(IDynamoDBValueConverter converter, int priority = 0)
 		{
 			if(!converters.ContainsKey(priority))
 				converters[priority] = new HashSet<IDynamoDBValueConverter>();
 
 			converters[priority].Add(converter);
+			return this;
 		}
 
 		public bool Remove(IDynamoDBValueConverter converter)

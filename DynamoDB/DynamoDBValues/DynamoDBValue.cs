@@ -29,5 +29,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		}
 
 		internal abstract Aws.AttributeValue ToAws();
+
+		// TODO implement the conversions that are on DynamoDBKeyValue
 	}
 }
