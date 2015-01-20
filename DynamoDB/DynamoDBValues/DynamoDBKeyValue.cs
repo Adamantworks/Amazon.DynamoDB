@@ -13,6 +13,7 @@
 // limitations under the License.
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
 
@@ -41,6 +42,33 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public abstract override int GetHashCode();
 
 		#region conversions
+		public static explicit operator ImmutableArray<byte>(DynamoDBKeyValue value)
+		{
+			if(value == null) return default(ImmutableArray<byte>);
+			var binaryValue = value as DynamoDBBinary;
+			if(binaryValue == null)
+				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
+
+			return binaryValue;
+		}
+		public static implicit operator DynamoDBKeyValue(ImmutableArray<byte> value)
+		{
+			return (DynamoDBBinary)value;
+		}
+		public static explicit operator byte[](DynamoDBKeyValue value)
+		{
+			if(value == null) return null;
+			var binaryValue = value as DynamoDBBinary;
+			if(binaryValue == null)
+				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
+
+			return binaryValue;
+		}
+		public static implicit operator DynamoDBKeyValue(byte[] value)
+		{
+			return (DynamoDBBinary)value;
+		}
+
 		public static explicit operator string(DynamoDBKeyValue value)
 		{
 			if(value == null) return null;

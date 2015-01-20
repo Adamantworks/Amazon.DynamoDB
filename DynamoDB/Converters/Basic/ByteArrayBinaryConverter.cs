@@ -11,30 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class ByteArrayBinaryConverter : DynamoDBValueConverter<byte[]>
+	internal class ByteArrayBinaryConverter : DynamoDBValueConverter<byte[], DynamoDBBinary>
 	{
-		public override bool TryConvertFrom(Type type, byte[] fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(Type type, byte[] fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
 		{
-			toValue = new DynamoDBBinary(fromValue);
+			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvertTo(DynamoDBValue fromValue, Type type, out byte[] toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertTo(DynamoDBBinary fromValue, Type type, out byte[] toValue, IDynamoDBValueConverter context)
 		{
-			var value = fromValue as DynamoDBBinary;
-			if(value != null)
-			{
-				toValue = value.ToArray();
-				return true;
-			}
-
-			toValue = null;
-			return false;
+			toValue = fromValue != null ? fromValue.ToArray() : null;
+			return true;
 		}
 	}
 }

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Aws = Amazon.DynamoDBv2.Model;
 
@@ -70,7 +71,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public static implicit operator string(DynamoDBString value)
 		{
-			return value.value;
+			return value == null ? null : value.value;
 		}
 
 		public static implicit operator DynamoDBString(string value)

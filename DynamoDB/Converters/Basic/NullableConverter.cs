@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
@@ -18,28 +19,35 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
 	public class NullableConverter : IDynamoDBValueConverter
 	{
-		public bool CanConvert(Type type, IDynamoDBValueConverter context)
+		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
 			var underlyingType = Nullable.GetUnderlyingType(type);
 			if(underlyingType == null) return false;
-			return context.CanConvert(underlyingType, context);
+			return context.CanConvertFrom<T>(underlyingType, context);
 		}
 
-		public bool TryConvertFrom(Type type, object fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		{
+			var underlyingType = Nullable.GetUnderlyingType(type);
+			if(underlyingType == null) return false;
+			return context.CanConvertTo<T>(underlyingType, context);
+		}
+
+		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
 			toValue = null;
 			var underlyingType = Nullable.GetUnderlyingType(type);
 			if(underlyingType == null) return false;
-			if(fromValue == null) return context.CanConvert(underlyingType, context);
+			if(fromValue == null) return context.CanConvertFrom<T>(underlyingType, context);
 			return context.TryConvertFrom(underlyingType, fromValue, out toValue, context);
 		}
 
-		public bool TryConvertTo(DynamoDBValue fromValue, Type type, out object toValue, IDynamoDBValueConverter context)
+		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
 			toValue = null;
 			var underlyingType = Nullable.GetUnderlyingType(type);
 			if(underlyingType == null) return false;
-			if(fromValue == null) return context.CanConvert(underlyingType, context);
+			if(fromValue == null) return context.CanConvertTo<T>(underlyingType, context);
 			return context.TryConvertTo(fromValue, underlyingType, out toValue, context);
 		}
 	}

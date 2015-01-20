@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -19,12 +20,13 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public interface IDynamoDBValueConverter
 	{
-		bool CanConvert(Type type, IDynamoDBValueConverter context);
-		bool TryConvertFrom(Type type, object fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context);
-		bool TryConvertTo(DynamoDBValue fromValue, Type type, out object toValue, IDynamoDBValueConverter context);
+		bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
+		bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
+		bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
+		bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
 	}
 
-	public class DynamoDBValueConverter
+	public static class DynamoDBValueConverter
 	{
 		private static CompositeConverter @default;
 
@@ -58,6 +60,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			converter.Add(BasicConverters.MemoryStreamBinary, int.MinValue + 4);
 			converter.Add(BasicConverters.ByteArrayBinary, int.MinValue + 5);
 			converter.Add(BasicConverters.ImmutableArrayBinary, int.MinValue + 6);
+			converter.Add(BasicConverters.Set, int.MinValue + 7);
 			return converter;
 		}
 

@@ -11,31 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Immutable;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class ImmutableArrayBinaryConverter : DynamoDBValueConverter<ImmutableArray<byte>>
+	internal class ImmutableArrayBinaryConverter : DynamoDBValueConverter<ImmutableArray<byte>, DynamoDBBinary>
 	{
-		public override bool TryConvertFrom(Type type, ImmutableArray<byte> fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(Type type, ImmutableArray<byte> fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
 		{
-			toValue = new DynamoDBBinary(fromValue);
+			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvertTo(DynamoDBValue fromValue, Type type, out ImmutableArray<byte> toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertTo(DynamoDBBinary fromValue, Type type, out ImmutableArray<byte> toValue, IDynamoDBValueConverter context)
 		{
-			var value = fromValue as DynamoDBBinary;
-			if(value != null)
-			{
-				toValue = value;
-				return true;
-			}
-
-			toValue = default(ImmutableArray<byte>);
-			return false;
+			toValue = fromValue != null ? (ImmutableArray<byte>)fromValue : default(ImmutableArray<byte>);
+			return true;
 		}
 	}
 }

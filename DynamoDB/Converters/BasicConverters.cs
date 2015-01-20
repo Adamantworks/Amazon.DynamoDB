@@ -26,5 +26,6 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 		public static readonly IDynamoDBValueConverter ImmutableArrayBinary = new ImmutableArrayBinaryConverter();
 		public static readonly IDynamoDBValueConverter ByteArrayBinary = new ByteArrayBinaryConverter();
 		public static readonly IDynamoDBValueConverter Nullable = new NullableConverter();
+		public static readonly IDynamoDBValueConverter Set = new SetConverter();
 	}
 }

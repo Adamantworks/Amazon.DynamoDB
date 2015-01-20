@@ -11,22 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Standard
 {
-	internal class GuidStringConverter : DynamoDBValueConverter<Guid>
+	internal class GuidStringConverter : DynamoDBValueConverter<Guid, DynamoDBString>
 	{
-		public override bool TryConvertFrom(Type type, Guid fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(Type type, Guid fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
 		{
-			toValue = new DynamoDBString(fromValue.ToString("D"));
+			toValue = fromValue.ToString("D");
 			return true;
 		}
 
-		public override bool TryConvertTo(DynamoDBValue fromValue, Type type, out Guid toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertTo(DynamoDBString fromValue, Type type, out Guid toValue, IDynamoDBValueConverter context)
 		{
-			if(fromValue is DynamoDBString)
+			if(fromValue != null)
 				return Guid.TryParse(fromValue.ToString(), out toValue);
 
 			toValue = Guid.Empty;

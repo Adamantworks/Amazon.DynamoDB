@@ -17,30 +17,18 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	public class StringConverter : DynamoDBValueConverter<string>
+	public class StringConverter : DynamoDBValueConverter<string, DynamoDBString>
 	{
-		public override bool TryConvertFrom(Type type, string fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(Type type, string fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
 		{
-			toValue = new DynamoDBString(fromValue);
+			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvertTo(DynamoDBValue fromValue, Type type, out string toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertTo(DynamoDBString fromValue, Type type, out string toValue, IDynamoDBValueConverter context)
 		{
-			if(fromValue == null)
-			{
-				toValue = null;
-				return true;
-			}
-
-			if(fromValue is DynamoDBString)
-			{
-				toValue = fromValue.ToString();
-				return true;
-			}
-
-			toValue = null;
-			return false;
+			toValue = fromValue;
+			return true;
 		}
 	}
 }

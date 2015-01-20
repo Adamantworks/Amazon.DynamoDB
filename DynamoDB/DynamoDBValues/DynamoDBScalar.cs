@@ -50,7 +50,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public abstract override int GetHashCode();
 
 		#region conversions
-		public static implicit operator bool(DynamoDBScalar value)
+		public static explicit operator bool(DynamoDBScalar value)
 		{
 			var boolValue = value as DynamoDBBoolean;
 			if(boolValue == null)
@@ -63,7 +63,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return (DynamoDBBoolean)value;
 		}
 
-		public static implicit operator ImmutableArray<byte>(DynamoDBScalar value)
+		public static explicit operator ImmutableArray<byte>(DynamoDBScalar value)
 		{
 			if(value == null) return default(ImmutableArray<byte>);
 			var binaryValue = value as DynamoDBBinary;
@@ -75,6 +75,15 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public static implicit operator DynamoDBScalar(ImmutableArray<byte> value)
 		{
 			return (DynamoDBBinary)value;
+		}
+		public static explicit operator byte[](DynamoDBScalar value)
+		{
+			if(value == null) return null;
+			var binaryValue = value as DynamoDBBinary;
+			if(binaryValue == null)
+				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
+
+			return binaryValue;
 		}
 		public static implicit operator DynamoDBScalar(byte[] value)
 		{

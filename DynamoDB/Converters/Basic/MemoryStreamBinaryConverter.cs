@@ -11,31 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.IO;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class MemoryStreamBinaryConverter : DynamoDBValueConverter<MemoryStream>
+	internal class MemoryStreamBinaryConverter : DynamoDBValueConverter<MemoryStream, DynamoDBBinary>
 	{
-		public override bool TryConvertFrom(Type type, MemoryStream fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(Type type, MemoryStream fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
 		{
 			toValue = new DynamoDBBinary(fromValue.ToArray());
 			return true;
 		}
 
-		public override bool TryConvertTo(DynamoDBValue fromValue, Type type, out MemoryStream toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertTo(DynamoDBBinary fromValue, Type type, out MemoryStream toValue, IDynamoDBValueConverter context)
 		{
-			var value = fromValue as DynamoDBBinary;
-			if(value != null)
-			{
-				toValue = value.ToMemoryStream();
-				return true;
-			}
-
-			toValue = null;
-			return false;
+			toValue = fromValue != null ? fromValue.ToMemoryStream() : null;
+			return true;
 		}
 	}
 }

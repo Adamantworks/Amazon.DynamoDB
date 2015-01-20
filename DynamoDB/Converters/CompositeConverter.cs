@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,20 +46,24 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 			return false;
 		}
 
-
-		public bool CanConvert(Type type, IDynamoDBValueConverter context)
+		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
-			return converters.SelectMany(priorityLevel => priorityLevel.Value).Any(converter => converter.CanConvert(type, context));
+			return converters.SelectMany(priorityLevel => priorityLevel.Value).Any(converter => converter.CanConvertFrom<T>(type, context));
 		}
 
-		public bool TryConvertFrom(Type type, object fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		{
+			return converters.SelectMany(priorityLevel => priorityLevel.Value).Any(converter => converter.CanConvertTo<T>(type, context));
+		}
+
+		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
 			toValue = null;
 			foreach(var priorityLevel in converters)
 			{
 				var matchingConverters = 0;
 				foreach(var converter in priorityLevel.Value)
-					if(converter.TryConvertFrom(type, fromValue, out toValue, context))
+					if(converter.TryConvertFrom<T>(type, fromValue, out toValue, context))
 						matchingConverters++;
 
 				if(matchingConverters == 1)
@@ -69,14 +74,14 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 			return false;
 		}
 
-		public bool TryConvertTo(DynamoDBValue fromValue, Type type, out object toValue, IDynamoDBValueConverter context)
+		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
 			toValue = null;
 			foreach(var priorityLevel in converters)
 			{
 				var matchingConverters = 0;
 				foreach(var converter in priorityLevel.Value)
-					if(converter.TryConvertTo(fromValue, type, out toValue, context))
+					if(converter.TryConvertTo<T>(fromValue, type, out toValue, context))
 						matchingConverters++;
 
 				if(matchingConverters == 1)

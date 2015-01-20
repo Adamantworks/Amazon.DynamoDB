@@ -11,33 +11,48 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters
 {
-	public abstract class DynamoDBValueConverter<T> : IDynamoDBValueConverter
+	public abstract class DynamoDBValueConverter<TValue, TDynamoDBValue> : IDynamoDBValueConverter
+		where TDynamoDBValue : DynamoDBValue
 	{
-		public bool CanConvert(Type type, IDynamoDBValueConverter context)
+		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
-			return typeof(T).IsAssignableFrom(type);
+			// type assigns to TValue converts to TDynamoDBValue assigns to T
+			return typeof(TValue).IsAssignableFrom(type) && typeof(T).IsAssignableFrom(typeof(TDynamoDBValue));
 		}
 
-		bool IDynamoDBValueConverter.TryConvertFrom(Type type, object fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
-			if(CanConvert(type, context))
-				return TryConvertFrom(type, (T)fromValue, out toValue, context);
+			// T encompasses type TDynamoDBValue converts to TValue assigns to type
+			return typeof(T).IsAssignableFrom(typeof(TDynamoDBValue)) && type.IsAssignableFrom(typeof(TValue));
+		}
+
+		bool IDynamoDBValueConverter.TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context)
+		{
+			if(CanConvertFrom<T>(type, context))
+			{
+				TDynamoDBValue typedToValue;
+				var result = TryConvertFrom(type, (TValue)fromValue, out typedToValue, context);
+				toValue = (T)(object)typedToValue; // We know from CanConvertFrom that this assignment is safe
+				return result;
+			}
 
 			toValue = null;
 			return false;
 		}
 
-		bool IDynamoDBValueConverter.TryConvertTo(DynamoDBValue fromValue, Type type, out object toValue, IDynamoDBValueConverter context)
+		bool IDynamoDBValueConverter.TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context)
 		{
-			if(CanConvert(type, context))
+			var typedFromValue = fromValue as TDynamoDBValue;
+			if(CanConvertTo<T>(type, context) && (typedFromValue != null || fromValue == null))
 			{
-				T typedToValue;
-				var result = TryConvertTo(fromValue, type, out typedToValue, context);
+				TValue typedToValue;
+				var result = TryConvertTo(typedFromValue, type, out typedToValue, context);
 				toValue = typedToValue;
 				return result;
 			}
@@ -46,7 +61,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 			return false;
 		}
 
-		public abstract bool TryConvertFrom(Type type, T fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context);
-		public abstract bool TryConvertTo(DynamoDBValue fromValue, Type type, out T toValue, IDynamoDBValueConverter context);
+		public abstract bool TryConvertFrom(Type type, TValue fromValue, out TDynamoDBValue toValue, IDynamoDBValueConverter context);
+		public abstract bool TryConvertTo(TDynamoDBValue fromValue, Type type, out TValue toValue, IDynamoDBValueConverter context);
 	}
 }

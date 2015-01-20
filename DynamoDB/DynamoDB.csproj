@@ -50,6 +50,7 @@
     <Compile Include="Converters\Basic\BooleanConverter.cs" />
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
+    <Compile Include="Converters\Basic\SetConverter.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
     <Compile Include="Internal\AwsExtensions.cs" />
     <Compile Include="BatchGet.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Schema\IndexProjectionType.cs" />
     <Compile Include="Syntax\CompositeHashKey.cs" />
+    <Compile Include="Syntax\Convertable.cs" />
     <Compile Include="Syntax\QueryContext.cs" />
     <Compile Include="Syntax\ScanContext.cs" />
     <Compile Include="Values.cs" />

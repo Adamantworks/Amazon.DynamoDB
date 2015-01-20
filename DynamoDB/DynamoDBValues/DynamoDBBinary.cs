@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Immutable;
-using System.Diagnostics.Contracts;
 using System.IO;
 using Aws = Amazon.DynamoDBv2.Model;
 
@@ -95,12 +95,17 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public static implicit operator ImmutableArray<byte>(DynamoDBBinary value)
 		{
-			return value.value;
+			return value == null ? default(ImmutableArray<byte>) : value.value;
 		}
 
 		public static implicit operator DynamoDBBinary(ImmutableArray<byte> value)
 		{
 			return value == null || value.Length == 0 ? null : new DynamoDBBinary(value);
+		}
+
+		public static implicit operator byte[](DynamoDBBinary value)
+		{
+			return value == null ? null : value.ToArray();
 		}
 
 		public static implicit operator DynamoDBBinary(byte[] value)

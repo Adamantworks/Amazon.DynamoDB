@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
@@ -18,7 +19,17 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
 	internal class NumberConverter : IDynamoDBValueConverter
 	{
-		public bool CanConvert(Type type, IDynamoDBValueConverter context)
+		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		{
+			return typeof(T).IsAssignableFrom(typeof(DynamoDBNumber)) && IsPrimitiveNumeric(type);
+		}
+
+		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		{
+			return typeof(T).IsAssignableFrom(typeof(DynamoDBNumber)) && IsPrimitiveNumeric(type);
+		}
+
+		private static bool IsPrimitiveNumeric(Type type)
 		{
 			return type == typeof(byte)
 				   || type == typeof(sbyte)
@@ -32,28 +43,28 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 				   || type == typeof(decimal);
 		}
 
-		public bool TryConvertFrom(Type type, object fromValue, out DynamoDBValue toValue, IDynamoDBValueConverter context)
+		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
 			if(type == typeof(byte))
-				toValue = (DynamoDBNumber)(byte)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(byte)fromValue;
 			else if(type == typeof(sbyte))
-				toValue = (DynamoDBNumber)(sbyte)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(sbyte)fromValue;
 			else if(type == typeof(short))
-				toValue = (DynamoDBNumber)(short)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(short)fromValue;
 			else if(type == typeof(ushort))
-				toValue = (DynamoDBNumber)(ushort)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(ushort)fromValue;
 			else if(type == typeof(int))
-				toValue = (DynamoDBNumber)(int)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(int)fromValue;
 			else if(type == typeof(uint))
-				toValue = (DynamoDBNumber)(uint)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(uint)fromValue;
 			else if(type == typeof(long))
-				toValue = (DynamoDBNumber)(long)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(long)fromValue;
 			else if(type == typeof(float))
-				toValue = (DynamoDBNumber)(float)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(float)fromValue;
 			else if(type == typeof(double))
-				toValue = (DynamoDBNumber)(double)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(double)fromValue;
 			else if(type == typeof(decimal))
-				toValue = (DynamoDBNumber)(decimal)fromValue;
+				toValue = (T)(object)(DynamoDBNumber)(decimal)fromValue;
 			else
 			{
 				toValue = null;
@@ -62,7 +73,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 			return true;
 		}
 
-		public bool TryConvertTo(DynamoDBValue fromValue, Type type, out object toValue, IDynamoDBValueConverter context)
+		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
 		{
 			var value = fromValue as DynamoDBNumber;
 			if(value == null)

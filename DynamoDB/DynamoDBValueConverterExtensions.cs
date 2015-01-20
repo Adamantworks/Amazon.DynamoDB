@@ -13,6 +13,7 @@
 // limitations under the License.
 using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -114,22 +115,49 @@ namespace Adamantworks.Amazon.DynamoDB
 			throw new InvalidCastException();
 		}
 
-		public static DynamoDBKeyValue ToDynamoDBKeyValue<T>(this T value)
+		public static DynamoDBScalar ToDynamoDBScalar<T>(this T value)
 		{
-			DynamoDBValue toValue;
+			DynamoDBScalar toValue;
 			var converter = DynamoDBValueConverter.Default;
 			if(DynamoDBValueConverter.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
-				return (DynamoDBKeyValue)toValue;
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public static DynamoDBScalar ToDynamoDBScalar<T>(this T value, IDynamoDBValueConverter converter)
+		{
+			DynamoDBScalar toValue;
+			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+
+		public static DynamoDBKeyValue ToDynamoDBKeyValue<T>(this T value)
+		{
+			DynamoDBKeyValue toValue;
+			var converter = DynamoDBValueConverter.Default;
+			if(DynamoDBValueConverter.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return toValue;
 
 			throw new InvalidCastException();
 		}
 		public static DynamoDBKeyValue ToDynamoDBKeyValue<T>(this T value, IDynamoDBValueConverter converter)
 		{
-			DynamoDBValue toValue;
+			DynamoDBKeyValue toValue;
 			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
-				return (DynamoDBKeyValue)toValue;
+				return toValue;
 
 			throw new InvalidCastException();
+		}
+
+		public static Convertable<T> ToDynamoDB<T>(this T value)
+		{
+			return new Convertable<T>(value, DynamoDBValueConverter.Default);
+		}
+		public static Convertable<T> ToDynamoDB<T>(this T value, IDynamoDBValueConverter converter)
+		{
+			return new Convertable<T>(value, converter);
 		}
 	}
 }
