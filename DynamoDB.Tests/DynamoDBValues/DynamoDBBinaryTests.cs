@@ -25,20 +25,20 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 		public void ConvertFromToNullOrEmpty()
 		{
 			DynamoDBBinary nullBinary = null;
-			Assert.AreEqual(null, (byte[])nullBinary, "null binary -> byte[]");
+			Assert.IsNull((byte[])nullBinary, "null binary -> byte[]");
 			Assert.IsTrue(((ImmutableArray<byte>)nullBinary).IsDefault, "null binary -> immutable array");
 
 			byte[] nullByteArray = null;
-			Assert.AreEqual(null, (DynamoDBBinary)nullByteArray, "null byte[] -> binary");
+			Assert.IsNull((DynamoDBBinary)nullByteArray, "null byte[] -> binary");
 
 			byte[] emptyByteArray = null;
-			Assert.AreEqual(null, (DynamoDBBinary)emptyByteArray, "empty byte[] -> binary");
+			Assert.IsNull((DynamoDBBinary)emptyByteArray, "empty byte[] -> binary");
 
 			var nullImmutableArray = default(ImmutableArray<byte>);
-			Assert.AreEqual(null, (DynamoDBBinary)nullImmutableArray, "null immutable array -> binary");
+			Assert.IsNull((DynamoDBBinary)nullImmutableArray, "null immutable array -> binary");
 
 			var emptyImmutableArray = ImmutableArray<byte>.Empty;
-			Assert.AreEqual(null, (DynamoDBBinary)emptyImmutableArray,"empty immutable array -> binary");
+			Assert.IsNull((DynamoDBBinary)emptyImmutableArray, "empty immutable array -> binary");
 		}
 	}
 }

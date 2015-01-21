@@ -49,6 +49,13 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		}
 
 		[Test]
+		public void NullToSetOfInt()
+		{
+			DynamoDBValue value = null;
+			Assert.IsNull(value.To<ISet<int>>());
+		}
+
+		[Test]
 		public void SetOfStringToSetOfGuid()
 		{
 			ISet<Guid> expected = new HashSet<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
