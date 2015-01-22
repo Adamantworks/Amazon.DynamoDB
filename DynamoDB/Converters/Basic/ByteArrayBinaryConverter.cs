@@ -27,7 +27,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 
 		public override bool TryConvertTo(DynamoDBBinary fromValue, Type type, out byte[] toValue, IDynamoDBValueConverter context)
 		{
-			toValue = fromValue != null ? fromValue.ToArray() : null;
+			toValue = fromValue;
 			return true;
 		}
 	}

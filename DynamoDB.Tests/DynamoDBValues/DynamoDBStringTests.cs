@@ -12,24 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.IO;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using NUnit.Framework;
 
-namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
+namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 {
-	internal class MemoryStreamBinaryConverter : DynamoDBValueConverter<MemoryStream, DynamoDBBinary>
+	class DynamoDBStringTests
 	{
-		public override bool TryConvertFrom(Type type, MemoryStream fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
+		[Test]
+		public void ConvertFromToNullOrEmpty()
 		{
-			toValue = fromValue.ToArray();
-			return true;
-		}
+			DynamoDBString nullDynamoString = null;
+			Assert.IsNull((string)nullDynamoString, "null dynamo string -> string");
 
-		public override bool TryConvertTo(DynamoDBBinary fromValue, Type type, out MemoryStream toValue, IDynamoDBValueConverter context)
-		{
-			toValue = fromValue != null ? fromValue.ToMemoryStream() : null;
-			return true;
+			string nullString = null;
+			Assert.IsNull((DynamoDBString)nullString, "null string -> dynamo string");
+
+			var emptyString = ""; // Not constant because we need the cast to be evaluated at run time
+			Assert.IsNull((DynamoDBString)emptyString, "empty string -> dynamo string");
 		}
 	}
 }

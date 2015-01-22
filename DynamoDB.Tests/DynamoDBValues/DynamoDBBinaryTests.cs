@@ -31,7 +31,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 			byte[] nullByteArray = null;
 			Assert.IsNull((DynamoDBBinary)nullByteArray, "null byte[] -> binary");
 
-			byte[] emptyByteArray = null;
+			var emptyByteArray = new byte[0];
 			Assert.IsNull((DynamoDBBinary)emptyByteArray, "empty byte[] -> binary");
 
 			var nullImmutableArray = default(ImmutableArray<byte>);

@@ -57,6 +57,7 @@
     <Compile Include="DotNetFrameworkTests.cs" />
     <Compile Include="DynamoDBValueConverterTests.cs" />
     <Compile Include="DynamoDBValues\DynamoDBBinaryTests.cs" />
+    <Compile Include="DynamoDBValues\DynamoDBStringTests.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Internal\AwsExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
