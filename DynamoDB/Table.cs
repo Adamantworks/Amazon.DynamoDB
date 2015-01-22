@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Schema;
+using Adamantworks.Amazon.DynamoDB.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Internal;
-using Adamantworks.Amazon.DynamoDB.Schema;
-using Adamantworks.Amazon.DynamoDB.Syntax;
-using Amazon.KeyManagementService.Model;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -37,6 +36,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
+		// In the following interface API, the only arguments with default values should be:
+		//     cancellationToken for async methods
+		//     consistent for non-async methods
+		// That will ensure a consistent set of overloads and prevent users from needing to specify parameter names
+
 		Task ReloadAsync(CancellationToken cancellationToken = default(CancellationToken));
 		void Reload();
 
@@ -45,10 +49,12 @@ namespace Adamantworks.Amazon.DynamoDB
 		void WaitUntilNot(TableStatus status);
 		void WaitUntilNot(TableStatus status, TimeSpan timeout);
 
-		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken = default(CancellationToken));
 		Task UpdateTableAsync(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken = default(CancellationToken));
-		void UpdateTable(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null);
+		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken = default(CancellationToken));
+		void UpdateTable(ProvisionedThroughput provisionedThroughput);
 		void UpdateTable(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
+		void UpdateTable(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
 		ItemKey GetKey(DynamoDBMap item);
 
@@ -266,6 +272,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region UpdateTable
+		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken)
+		{
+			var request = BuildUpdateTableRequest(provisionedThroughput, null);
+			return Region.DB.UpdateTableAsync(request, cancellationToken);
+		}
 		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
 		{
 			var request = BuildUpdateTableRequest(provisionedThroughput, indexProvisionedThroughputs);
@@ -277,14 +288,19 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Region.DB.UpdateTableAsync(request, cancellationToken);
 		}
 
-		public void UpdateTable(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		public void UpdateTable(ProvisionedThroughput provisionedThroughput)
 		{
-			var request = BuildUpdateTableRequest(provisionedThroughput, indexProvisionedThroughputs);
+			var request = BuildUpdateTableRequest(provisionedThroughput, null);
 			Region.DB.UpdateTable(request);
 		}
 		public void UpdateTable(Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
 			var request = BuildUpdateTableRequest(null, indexProvisionedThroughputs);
+			Region.DB.UpdateTable(request);
+		}
+		public void UpdateTable(ProvisionedThroughput provisionedThroughput, Dictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			var request = BuildUpdateTableRequest(provisionedThroughput, indexProvisionedThroughputs);
 			Region.DB.UpdateTable(request);
 		}
 

@@ -28,6 +28,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
+		// In the following interface API, the only arguments with default values should be:
+		//     cancellationToken for async methods
+		//     consistent for non-async methods
+		// That will ensure a consistent set of overloads and prevent users from needing to specify parameter names
+
 		IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent = false);
 		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent = false);
 		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent = false);
