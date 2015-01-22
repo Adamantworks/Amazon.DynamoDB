@@ -28,18 +28,12 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
-		IQueryContext Query(DynamoDBKeyValue hashKey);
-		IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent);
-		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
-		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent);
-		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
-		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent);
+		IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent = false);
+		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent = false);
+		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent = false);
+		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false);
+		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent = false);
+		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent = false);
 	}
 
 	internal class Index : IIndex
@@ -73,49 +67,25 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		#region Query
-		public IQueryContext Query(DynamoDBKeyValue hashKey)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, null, null, false);
-		}
 		public IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, null, null, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, null, false);
 		}
 		public IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, null, consistent);
 		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, values, false);
-		}
 		public IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, values, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, null, null, false);
 		}
 		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, null, null, consistent);
 		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, filter, null, false);
-		}
 		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, filter, null, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, filter, values, false);
 		}
 		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
 		{
