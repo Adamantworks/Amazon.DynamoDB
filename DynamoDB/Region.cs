@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Amazon.DynamoDBv2;
 using Aws = Amazon.DynamoDBv2.Model;
@@ -33,8 +34,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		IBatchWriteAsync BeginBatchWriteAsync();
 		IBatchWrite BeginBatchWrite();
 
-		IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken = default(CancellationToken));
+		IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead = ReadAhead.Some);
 		IEnumerable<string> ListTables();
+
+		// TODO ListTableNamesBeginningWith // Could use exclusive start key to do this
 
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, CancellationToken cancellationToken = default(CancellationToken));
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken = default(CancellationToken));
@@ -87,14 +90,42 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region ListTables
-		public IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken)
+		public IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead)
 		{
-			throw new NotImplementedException();
+			return AsyncEnumerable.Defer(() =>
+			{
+				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
+				var request = new Aws.ListTablesRequest();
+				return AsyncEnumerableEx.GenerateChunked<Aws.ListTablesResponse, string>(null,
+					(lastResponse, cancellationToken) =>
+					{
+						if(lastResponse != null)
+							request.ExclusiveStartTableName = lastResponse.LastEvaluatedTableName;
+						return DB.ListTablesAsync(request, cancellationToken);
+					},
+					lastResponse => lastResponse.TableNames,
+					IsComplete,
+					readAhead);
+			});
 		}
 
 		public IEnumerable<string> ListTables()
 		{
-			throw new NotImplementedException();
+			var request = new Aws.ListTablesRequest();
+			Aws.ListTablesResponse lastResponse = null;
+			do
+			{
+				if(lastResponse != null)
+					request.ExclusiveStartTableName = lastResponse.LastEvaluatedTableName;
+				lastResponse = DB.ListTables(request);
+				foreach(var tableName in lastResponse.TableNames)
+					yield return tableName;
+			} while(IsComplete(lastResponse));
+		}
+
+		private static bool IsComplete(Aws.ListTablesResponse lastResponse)
+		{
+			return lastResponse.LastEvaluatedTableName == null;
 		}
 		#endregion
 

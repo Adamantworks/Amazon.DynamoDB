@@ -485,7 +485,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 			return AsyncEnumerable.Using(awsKeys.GetEnumerator, enumerator =>
 			{
-				// These must be in the using so they are deferred until GetEnumerator() is called on us
+				// These must be in the using so they are deferred until GetEnumerator() is called on us (need one per enumerator)
 				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);
 				var request = BuildBatchGetItemRequest(batchKeys, projection, consistent);
 
@@ -603,7 +603,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return AsyncEnumerable.Using(outerItems.GetEnumerator, enumerator =>
 			{
-				// These must be in the using so they are deferred until GetEnumerator() is called on us
+				// These must be in the using so they are deferred until GetEnumerator() is called on us (need one per enumerator)
 				var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
 				var batchItems = new Dictionary<ItemKey, T>(BatchGetBatchSizeLimit);
 				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);

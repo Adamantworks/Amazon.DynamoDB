@@ -70,17 +70,21 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		#region All
 		public IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some)
 		{
-			var request = BuildScanRequest();
-			return AsyncEnumerableEx.GenerateChunked<Aws.ScanResponse, DynamoDBMap>(null,
-				(lastResponse, cancellationToken) =>
-				{
-					if(lastResponse != null)
-						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-					return region.DB.ScanAsync(request, cancellationToken);
-				},
-				lastResponse => lastResponse.Items.Select(item => item.ToValue()),
-				IsComplete,
-				readAhead);
+			return AsyncEnumerable.Defer(() =>
+			{
+				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
+				var request = BuildScanRequest();
+				return AsyncEnumerableEx.GenerateChunked<Aws.ScanResponse, DynamoDBMap>(null,
+					(lastResponse, cancellationToken) =>
+					{
+						if(lastResponse != null)
+							request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+						return region.DB.ScanAsync(request, cancellationToken);
+					},
+					lastResponse => lastResponse.Items.Select(item => item.ToValue()),
+					IsComplete,
+					readAhead);
+			});
 		}
 		public IEnumerable<DynamoDBMap> All()
 		{
