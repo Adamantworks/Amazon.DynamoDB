@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Aws = Amazon.DynamoDBv2.Model;
+using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -37,9 +38,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
 		// In the following interface API, the only one argument per method group should have a default value. The priority of those arguments is:
-		//     cancellationToken for async methods (not returning IAsyncEnumerable)
-		//     readAhead for methods returning IAsyncEnumerable
-		//     consistent (either non-async or not returning IAsyncEnumerable)
+		//     CancellationToken cancellationToken - methods returning Task<>
+		//     ReadAhead readAhead - methods returning IAsyncEnumerable
+		//     bool consistent - reads
+		//     bool returnOldItem - puts
+		//     Values values
 		// That will ensure a consistent set of overloads and prevent users from needing to specify parameter names
 
 		Task ReloadAsync(CancellationToken cancellationToken = default(CancellationToken));
@@ -102,9 +105,13 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		// TODO:Task PutAsync(Item item);
 		// TODO:Task PutAsync(IBatchWriteAsync batch, Item item);
+		DynamoDBMap Put(DynamoDBMap item, bool returnOldItem = false);
+		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem = false);
+		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem = false);
 
 		// TODO:Task InsertAsync() // does a put with a condition that the row doesn't exist
 
+		// TODO hande return values
 		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
 		Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
 		Task UpdateAsync(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -730,6 +737,38 @@ namespace Adamantworks.Amazon.DynamoDB
 
 			foreach(var item in unprocessedItems)
 				batchItems.Add(item.Key, item.Value);
+		}
+		#endregion
+
+		#region Put
+		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
+		{
+			return Put(item, null, null, returnOldItem);
+		}
+		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem)
+		{
+			return Put(item, condition, null, returnOldItem);
+		}
+		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
+		{
+			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
+			var response = Region.DB.PutItem(request);
+			if(!returnOldItem) return null;
+			return response.Attributes.ToGetValue();
+		}
+
+		private Aws.PutItemRequest BuildPutItemRequest(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
+		{
+			var request = new Aws.PutItemRequest()
+			{
+				TableName = Name,
+				Item = item.ToAwsDictionary(),
+				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
+			};
+			if(condition != null)
+				request.ConditionExpression = condition.Expression;
+			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
+			return request;
 		}
 		#endregion
 
