@@ -14,11 +14,17 @@
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IBatchGetAsync
+	public interface IBatchGet
 	{
 	}
 
-	internal class BatchGetAsync : IBatchGetAsync
+	internal class BatchGet : IBatchGet
 	{
+		private readonly Region region;
+
+		public BatchGet(Region region)
+		{
+			this.region = region;
+		}
 	}
 }

@@ -46,6 +46,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchGet.cs" />
+    <Compile Include="BatchWrite.cs" />
     <Compile Include="Converters\Basic\ImmutableArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\BooleanConverter.cs" />
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
@@ -53,8 +55,8 @@
     <Compile Include="Converters\Basic\SetConverter.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
     <Compile Include="Internal\AwsExtensions.cs" />
-    <Compile Include="BatchGet.cs" />
-    <Compile Include="BatchWrite.cs" />
+    <Compile Include="BatchGetAsync.cs" />
+    <Compile Include="BatchWriteAsync.cs" />
     <Compile Include="Converters\BasicConverters.cs" />
     <Compile Include="Converters\Basic\StringConverter.cs" />
     <Compile Include="Converters\Standard\GuidStringConverter.cs" />

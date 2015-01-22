@@ -100,9 +100,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent = false);
 		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent = false);
 
-		// TODO:Task<Item> GetAsync(IBatchGetAsync batch);
 		// TODO:Task PutAsync(Item item);
 		// TODO:Task PutAsync(IBatchWriteAsync batch, Item item);
+
 		// TODO:Task InsertAsync() // does a put with a condition that the row doesn't exist
 
 		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));

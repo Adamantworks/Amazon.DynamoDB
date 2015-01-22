@@ -28,13 +28,20 @@ namespace Adamantworks.Amazon.DynamoDB
 		TimeSpan WaitStatusPollingInterval { get; set; }
 
 		IBatchGetAsync BeginBatchGetAsync();
+		IBatchGet BeginBatchGet();
+
 		IBatchWriteAsync BeginBatchWriteAsync();
+		IBatchWrite BeginBatchWrite();
+
 		IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken = default(CancellationToken));
+		IEnumerable<string> ListTables();
 
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, CancellationToken cancellationToken = default(CancellationToken));
-		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken = default(CancellationToken));
 		ITable CreateTable(string tableName, TableSchema schema);
-		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs = null);
+		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput);
+		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
 		Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
 		ITable LoadTable(string tableName);
@@ -55,25 +62,53 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public TimeSpan WaitStatusPollingInterval { get; set; }
 
+		#region BeginBatchGet
 		public IBatchGetAsync BeginBatchGetAsync()
 		{
-			throw new System.NotImplementedException();
+			return new BatchGetAsync(this);
 		}
 
+		public IBatchGet BeginBatchGet()
+		{
+			return new BatchGet(this);
+		}
+		#endregion
+
+		#region BeginBatchWrite
 		public IBatchWriteAsync BeginBatchWriteAsync()
 		{
-			throw new System.NotImplementedException();
+			return new BatchWriteAsync(this);
 		}
 
+		public IBatchWrite BeginBatchWrite()
+		{
+			return new BatchWrite(this);
+		}
+		#endregion
+
+		#region ListTables
 		public IAsyncEnumerable<string> ListTablesAsync(CancellationToken cancellationToken)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
+
+		public IEnumerable<string> ListTables()
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 
 		#region CreateTable
 		public async Task<ITable> CreateTableAsync(string tableName, TableSchema schema, CancellationToken cancellationToken)
 		{
 			var request = BuildCreateTableRequest(tableName, schema);
+			var response = await DB.CreateTableAsync(request, cancellationToken).ConfigureAwait(false);
+			return new Table(this, response.TableDescription);
+		}
+		public async Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken)
+		{
+			var request = BuildCreateTableRequest(tableName, schema);
+			RequestProvisionedThroughput(request, provisionedThroughput, null);
 			var response = await DB.CreateTableAsync(request, cancellationToken).ConfigureAwait(false);
 			return new Table(this, response.TableDescription);
 		}
@@ -91,7 +126,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			var response = DB.CreateTable(request);
 			return new Table(this, response.TableDescription);
 		}
-
+		public ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput)
+		{
+			var request = BuildCreateTableRequest(tableName, schema);
+			RequestProvisionedThroughput(request, provisionedThroughput, null);
+			var response = DB.CreateTable(request);
+			return new Table(this, response.TableDescription);
+		}
 		public ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
 			var request = BuildCreateTableRequest(tableName, schema);

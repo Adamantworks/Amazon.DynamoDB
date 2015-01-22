@@ -14,23 +14,17 @@
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IBatchWrite
+	public interface IBatchGetAsync
 	{
-		void Submit();
 	}
 
-	internal class BatchWrite : IBatchWrite
+	internal class BatchGetAsync : IBatchGetAsync
 	{
 		private readonly Region region;
 
-		public BatchWrite(Region region)
+		public BatchGetAsync(Region region)
 		{
 			this.region = region;
-		}
-
-		public void Submit()
-		{
-			throw new System.NotImplementedException();
 		}
 	}
 }
