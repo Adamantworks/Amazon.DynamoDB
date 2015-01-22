@@ -111,7 +111,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		// TODO:Task InsertAsync() // does a put with a condition that the row doesn't exist
 
-		// TODO hande return values
+		// TODO handle return values
 		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
 		Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
 		Task UpdateAsync(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
