@@ -40,5 +40,27 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 			var emptyImmutableArray = ImmutableArray<byte>.Empty;
 			Assert.IsNull((DynamoDBBinary)emptyImmutableArray, "empty immutable array -> binary");
 		}
+
+		[Test]
+		public void Equals()
+		{
+			// Test that two independent binary values will be equal based on content
+			var value1 = new DynamoDBBinary(new byte[] { 1, 2, 3, 4 });
+			var value2 = new DynamoDBBinary(new byte[] { 1, 2, 3, 4 });
+			Assert.AreNotSame(value1, value2);
+			// Check that the immutable arrays are not equal
+			Assert.IsFalse(((ImmutableArray<byte>)value1).Equals(value2)); // relies on the fact that cast reveals the internal array
+			Assert.IsTrue(Equals(value1, value2)); // Use object.Equals() to avoid NUnit content comparison
+			Assert.AreEqual(value1.GetHashCode(), value2.GetHashCode());
+		}
+
+		[Test]
+		public new void GetHashCode()
+		{
+			// Differ in last byte
+			var value1 = new DynamoDBBinary(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 });
+			var value2 = new DynamoDBBinary(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1 });
+			Assert.AreNotEqual(value1.GetHashCode(), value2.GetHashCode());
+		}
 	}
 }

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
@@ -159,9 +160,18 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 
 		public static ItemKey ToItemKey(this Dictionary<string, Aws.AttributeValue> values, KeySchema key)
 		{
-			var hashKeyValue = values[key.HashKey.Name];
-			var rangeKeyValue = key.RangeKey != null ? values[key.RangeKey.Name] : null;
-			return new ItemKey(hashKeyValue.ToDynamoDBKeyValue(), rangeKeyValue.ToDynamoDBKeyValue());
+			var hashKeyValue = values[key.HashKey.Name].ToValue();
+			if(hashKeyValue.Type != key.HashKey.Type)
+				throw new InvalidCastException("Hash key types does not match schema");
+			DynamoDBValue rangeKeyValue;
+			if(key.RangeKey != null)
+			{
+				rangeKeyValue = values[key.RangeKey.Name].ToValue();
+				if(rangeKeyValue.Type != key.RangeKey.Type)
+					throw new InvalidCastException("Range key types does not match schema");
+			}
+			else rangeKeyValue = null;
+			return new ItemKey((DynamoDBKeyValue)hashKeyValue, (DynamoDBKeyValue)rangeKeyValue);
 		}
 	}
 }

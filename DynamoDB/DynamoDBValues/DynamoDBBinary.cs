@@ -22,6 +22,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 	public sealed class DynamoDBBinary : DynamoDBKeyValue, IEquatable<DynamoDBBinary>
 	{
 		private readonly ImmutableArray<byte> value;
+		private int? hashCode;
 
 		public DynamoDBBinary(ImmutableArray<byte> value)
 		{
@@ -75,12 +76,37 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public bool Equals(DynamoDBBinary other)
 		{
-			return other != null && Equals(value, other.value);
+			if(other == null
+				|| value.Length != other.value.Length
+				|| GetHashCode() != other.GetHashCode())
+				return false;
+
+			var otherValue = other.value; // for performance
+			for(var i = 0; i < value.Length; i++) // for performance, don't use linq
+				if(value[i] != otherValue[i])
+					return false;
+
+			return true;
+		}
+
+		private int ComputeHash()
+		{
+			var s = 314;
+			const int t = 159;
+			var hash = 0;
+			for(var i = 0; i < value.Length; i++) // for performance, don't use linq
+			{
+				hash = hash * s + value[i];
+				s *= t;
+			}
+			return hash;
 		}
 
 		public override int GetHashCode()
 		{
-			return value.GetHashCode();
+			if(hashCode == null)
+				hashCode = ComputeHash();
+			return hashCode.Value;
 		}
 
 		public static bool operator ==(DynamoDBBinary a, DynamoDBBinary b)
