@@ -20,6 +20,8 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public partial interface ITable
 	{
+		Task ReloadAsync();
+
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection);
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent);
@@ -57,8 +59,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		DynamoDBMap Get(ItemKey key, bool consistent);
 	}
 
-	internal partial class Table : ITable
+	internal partial class Table
 	{
+		#region ReloadAsync
+		public Task ReloadAsync()
+		{
+			return ReloadAsync(default(CancellationToken));
+		}
+		#endregion
+
 		#region GetAsync
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey)
 		{

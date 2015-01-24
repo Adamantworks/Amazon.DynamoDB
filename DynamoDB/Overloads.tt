@@ -33,6 +33,7 @@
 	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "new ItemKey(hashKey)");
 	var hashKey = ParamTransform("DynamoDBKeyValue", "hashKey", null);
 	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey","new ItemKey(hashKey, rangeKey)");
+	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
 		GenOverloads(true, hashKeyOnly, projection, consistent, cancellationToken)
 		.Concat(GenOverloads(true, hashKey, rangeKey, projection, consistent, cancellationToken))
@@ -50,13 +51,17 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public partial interface ITable
 	{
+<#		GenInterface(reloadAsync); #>
+
 <#		GenInterface(getAsync); #>
 
 <#		GenInterface(get); #>
 	}
 
-	internal partial class Table : ITable
+	internal partial class Table
 	{
+<#		GenMethods(reloadAsync); #>
+
 <#		GenMethods(getAsync); #>
 
 <#		GenMethods(get); #>

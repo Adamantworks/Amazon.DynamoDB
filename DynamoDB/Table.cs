@@ -26,6 +26,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
+	// See Overloads.tt and Overloads.cs for all the method overloads of this interface
 	public partial interface ITable
 	{
 		string Name { get; }
@@ -37,15 +38,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
-		// In the following interface API, the only one argument per method group should have a default value. The priority of those arguments is:
-		//     CancellationToken cancellationToken - methods returning Task<>
-		//     ReadAhead readAhead - methods returning IAsyncEnumerable
-		//     bool consistent - reads
-		//     bool returnOldItem - puts
-		//     Values values
-		// That will ensure a consistent set of overloads and prevent users from needing to specify parameter names
-
-		Task ReloadAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task ReloadAsync(CancellationToken cancellationToken);
 		void Reload();
 
 		Task WaitUntilNotAsync(TableStatus status, CancellationToken cancellationToken = default(CancellationToken));
@@ -147,6 +140,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		// TODO: CapacityConsumedEvent
 	}
 
+	// See Overloads.tt and Overloads.cs for all the method overloads of this class
 	internal partial class Table : ITable
 	{
 		private const int BatchGetBatchSizeLimit = 100;
@@ -204,7 +198,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		#region Reload
-		public async Task ReloadAsync(CancellationToken cancellationToken = new CancellationToken())
+		public async Task ReloadAsync(CancellationToken cancellationToken)
 		{
 			var response = await Region.DB.DescribeTableAsync(new Aws.DescribeTableRequest(Name), cancellationToken).ConfigureAwait(false);
 			UpdateTableDescription(response.Table);
