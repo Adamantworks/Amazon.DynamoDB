@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -25,6 +26,16 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		Task WaitUntilNotAsync(TableStatus status);
 		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout);
+
+		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput);
+		Task UpdateTableAsync(IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
+		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
+		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken);
+		Task UpdateTableAsync(IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken);
+		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken);
+		void UpdateTable(ProvisionedThroughput provisionedThroughput);
+		void UpdateTable(IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
+		void UpdateTable(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection);
@@ -49,7 +60,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken);
 		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, CancellationToken cancellationToken);
 		Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent, CancellationToken cancellationToken);
-
 		DynamoDBMap Get(DynamoDBKeyValue hashKey);
 		DynamoDBMap Get(DynamoDBKeyValue hashKey, ProjectionExpression projection);
 		DynamoDBMap Get(DynamoDBKeyValue hashKey, bool consistent);
@@ -80,6 +90,48 @@ namespace Adamantworks.Amazon.DynamoDB
 		public Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout)
 		{
 			return WaitUntilNotAsync(status, timeout, default(CancellationToken));
+		}
+		#endregion
+
+		#region UpdateTableAsync
+		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput)
+		{
+			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, null, default(CancellationToken));
+		}
+		public Task UpdateTableAsync(IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			return UpdateTableAsync(null, indexProvisionedThroughputs, default(CancellationToken));
+		}
+		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, indexProvisionedThroughputs, default(CancellationToken));
+		}
+		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken)
+		{
+			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, null, cancellationToken);
+		}
+		public Task UpdateTableAsync(IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
+		{
+			return UpdateTableAsync(null, indexProvisionedThroughputs, cancellationToken);
+		}
+		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
+		{
+			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, indexProvisionedThroughputs, cancellationToken);
+		}
+		#endregion
+
+		#region UpdateTable
+		public void UpdateTable(ProvisionedThroughput provisionedThroughput)
+		{
+			UpdateTable((ProvisionedThroughput?)provisionedThroughput, null);
+		}
+		public void UpdateTable(IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			UpdateTable(null, indexProvisionedThroughputs);
+		}
+		public void UpdateTable(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		{
+			UpdateTable((ProvisionedThroughput?)provisionedThroughput, indexProvisionedThroughputs);
 		}
 		#endregion
 

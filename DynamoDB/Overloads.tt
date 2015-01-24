@@ -33,12 +33,23 @@
 	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "new ItemKey(hashKey)");
 	var hashKey = ParamTransform("DynamoDBKeyValue", "hashKey", null);
 	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey","new ItemKey(hashKey, rangeKey)");
-	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var status = Param("TableStatus","status");
 	var timeout = Param("TimeSpan", "timeout");
+	var provisionedThroughput = ParamTransform("ProvisionedThroughput", "provisionedThroughput","(ProvisionedThroughput?)provisionedThroughput", "null");
+	var indexProvisionedThroughputs = Param("IDictionary<string, ProvisionedThroughput>", "indexProvisionedThroughputs", "null");
+
+	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
 		GenOverloads(status, cancellationToken)
 		.Concat(GenOverloads(status, timeout, cancellationToken)));
+	var updateTableAsync = new Method("Task", "UpdateTableAsync",
+		GenOverloads(true, provisionedThroughput, indexProvisionedThroughputs, cancellationToken)
+		// must pass either provisionedThroughput or indexProvisionedThroughputs
+		.Where(overload => overload.Contains(provisionedThroughput) || overload.Contains(indexProvisionedThroughputs)));
+	var updateTable = new Method("void", "UpdateTable",
+		GenOverloads(true, provisionedThroughput, indexProvisionedThroughputs)
+		// must pass either provisionedThroughput or indexProvisionedThroughputs
+		.Where(overload => overload.Contains(provisionedThroughput) || overload.Contains(indexProvisionedThroughputs)));
 	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
 		GenOverloads(true, hashKeyOnly, projection, consistent, cancellationToken)
 		.Concat(GenOverloads(true, hashKey, rangeKey, projection, consistent, cancellationToken))
@@ -49,6 +60,7 @@
 		.Concat(GenOverloads(itemKey, projection, consistent)));
 #>
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -61,8 +73,10 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(waitUntilNotAsync); #>
 
-<#		GenInterface(getAsync); #>
+<#		GenInterface(updateTableAsync); #>
+<#		GenInterface(updateTable); #>
 
+<#		GenInterface(getAsync); #>
 <#		GenInterface(get); #>
 	}
 
@@ -71,6 +85,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(reloadAsync); #>
 
 <#		GenMethods(waitUntilNotAsync); #>
+
+<#		GenMethods(updateTableAsync); #>
+
+<#		GenMethods(updateTable); #>
 
 <#		GenMethods(getAsync); #>
 
@@ -89,6 +107,11 @@ namespace Adamantworks.Amazon.DynamoDB
 	public Parameter ParamTransform(string type, string name, string value)
 	{
 		return new Parameter(type, name, null, value);
+	}
+
+	public Parameter ParamTransform(string type, string name, string value, string defaultValue)
+	{
+		return new Parameter(type, name, defaultValue, value);
 	}
 
 	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(params Parameter[] parameters)
@@ -148,7 +171,9 @@ namespace Adamantworks.Amazon.DynamoDB
 #>		public <#+ GenDeclaration(method, overload); #>
 
 		{
-			return <#= method.Name #>(<#+
+			<#+if(method.ReturnType != "void")
+				#>return <#+
+			#><#= method.Name #>(<#+
 			var firstParam = true;
 			foreach(var param in overload)
 				if(param.Value != null)
