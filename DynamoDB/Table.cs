@@ -26,7 +26,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface ITable
+	public partial interface ITable
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -62,24 +62,8 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, CancellationToken cancellationToken = default(CancellationToken));
-		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken = default(CancellationToken));
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, bool consistent = false);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent = false);
-		DynamoDBMap Get(ItemKey key, bool consistent = false);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent = false);
-		DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent = false);
+		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken);
+		DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent);
 
 		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead = ReadAhead.Some);
 		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead = ReadAhead.Some);
@@ -163,7 +147,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		// TODO: CapacityConsumedEvent
 	}
 
-	internal class Table : ITable
+	internal partial class Table : ITable
 	{
 		private const int BatchGetBatchSizeLimit = 100;
 		internal readonly Region Region;
@@ -362,50 +346,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 
 		#region Get
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey), null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey), null, consistent, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), null, consistent, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken)
-		{
-			return GetAsync(key, null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent, CancellationToken cancellationToken)
-		{
-			return GetAsync(key, null, consistent, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey), projection, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey), projection, consistent, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), projection, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
-		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), projection, consistent, cancellationToken);
-		}
-		public Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, CancellationToken cancellationToken)
-		{
-			return GetAsync(key, projection, false, cancellationToken);
-		}
 		public async Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
 		{
 			var request = BuildGetRequest(key, projection, consistent);
@@ -413,26 +353,6 @@ namespace Adamantworks.Amazon.DynamoDB
 			return result.Item.ToGetValue();
 		}
 
-		public DynamoDBMap Get(DynamoDBKeyValue hashKey, bool consistent)
-		{
-			return Get(new ItemKey(hashKey), null, consistent);
-		}
-		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent)
-		{
-			return Get(new ItemKey(hashKey, rangeKey), null, consistent);
-		}
-		public DynamoDBMap Get(ItemKey key, bool consistent)
-		{
-			return Get(key, null, consistent);
-		}
-		public DynamoDBMap Get(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
-		{
-			return Get(new ItemKey(hashKey), projection, consistent);
-		}
-		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent)
-		{
-			return Get(new ItemKey(hashKey, rangeKey), projection, consistent);
-		}
 		public DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent)
 		{
 			var request = BuildGetRequest(key, projection, consistent);

@@ -1,0 +1,203 @@
+﻿// Copyright 2015 Adamantworks.  All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Xml.dll" #>
+<#@ Assembly Name="System.Xml.Linq.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+	var itemKey = Param("ItemKey","key");
+	var projection = Param("ProjectionExpression","projection","null");
+	var consistent = Param("bool","consistent","false");
+	var cancellationToken = Param("CancellationToken", "cancellationToken","default(CancellationToken)");
+	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "new ItemKey(hashKey)");
+	var hashKey = ParamTransform("DynamoDBKeyValue", "hashKey", null);
+	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey","new ItemKey(hashKey, rangeKey)");
+	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
+		GenOverloads(true, hashKeyOnly, projection, consistent, cancellationToken)
+		.Concat(GenOverloads(true, hashKey, rangeKey, projection, consistent, cancellationToken))
+		.Concat(GenOverloads(itemKey, projection, consistent, cancellationToken)));
+	var get = new Method("DynamoDBMap", "Get",
+		GenOverloads(true, hashKeyOnly, projection, consistent)
+		.Concat(GenOverloads(true, hashKey, rangeKey, projection, consistent))
+		.Concat(GenOverloads(itemKey, projection, consistent)));
+#>
+using System.Threading;
+using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+
+namespace Adamantworks.Amazon.DynamoDB
+{
+	public partial interface ITable
+	{
+<#		GenInterface(getAsync); #>
+
+<#		GenInterface(get); #>
+	}
+
+	internal partial class Table : ITable
+	{
+<#		GenMethods(getAsync); #>
+
+<#		GenMethods(get); #>
+	}
+}
+<#+
+	public Parameter Param(string type, string name)
+	{
+		return new Parameter(type, name, null, name);
+	}
+	public Parameter Param(string type, string name, string defaultValue)
+	{
+		return new Parameter(type, name, defaultValue, name);
+	}
+	public Parameter ParamTransform(string type, string name, string value)
+	{
+		return new Parameter(type, name, null, value);
+	}
+
+	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(params Parameter[] parameters)
+	{
+		return GenOverloads(false, parameters);
+	}
+
+	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(bool includeAll, params Parameter[] parameters)
+	{
+		var paramsList = parameters.ToList();
+		var overloads = new List<List<Parameter>>();
+		overloads.Add(new List<Parameter>());
+		foreach(var param in parameters)
+		{
+			if(param.DefaultValue == null)
+			{
+				foreach(var overload in overloads)
+					overload.Add(param);
+			}
+			else
+			{
+				var ovarloadsWithParam = overloads.Select(o =>
+					{
+						var overload = new List<Parameter>(o);
+						overload.Add(param);
+						return overload;
+					}).ToList(); // So we gen them before changing overloads
+
+				// overloads without the param need the default value
+				foreach(var overload in overloads)
+					overload.Add(param.Default);
+
+				overloads.AddRange(ovarloadsWithParam);
+			}
+		}
+		if(!includeAll)
+			overloads.RemoveAt(overloads.Count-1); // The last one has no defaults
+		return overloads;
+	}
+
+	public void GenInterface(Method method)
+	{
+		foreach(var overload in method.ParameterOverloads)
+		{
+			#>		<#+
+			GenDeclaration(method, overload);
+			#>;
+<#+
+		}
+	}
+
+	public void GenMethods(Method method)
+	{
+#>		#region <#= method.Name #>
+<#+		foreach(var overload in method.ParameterOverloads)
+		{
+#>		public <#+ GenDeclaration(method, overload); #>
+
+		{
+			return <#= method.Name #>(<#+
+			var firstParam = true;
+			foreach(var param in overload)
+				if(param.Value != null)
+				{
+					if(firstParam)
+						firstParam = false;
+					else
+						#>, <#+
+					#><#= param.Value #><#+
+				}
+			#>);
+		}
+<#+
+		}
+#>		#endregion
+<#+
+	}
+
+	public void GenDeclaration(Method method, IReadOnlyList<Parameter> overload)
+	{
+		#><#= method.ReturnType #> <#= method.Name #>(<#+
+		var firstParam = true;
+		foreach(var param in overload)
+			if(param.Name != null)
+			{
+				if(firstParam)
+					firstParam = false;
+				else
+					#>, <#+
+				#><#= param.Type #> <#= param.Name #><#+
+			}
+		#>)<#+
+	}
+
+	public class Method
+	{
+		public readonly string ReturnType;
+		public readonly string Name;
+		public readonly IReadOnlyList<IReadOnlyList<Parameter>> ParameterOverloads;
+
+		public Method(string returnType, string name, IEnumerable<IReadOnlyList<Parameter>> parameterOverloads)
+		{
+			ReturnType = returnType;
+			Name = name;
+			ParameterOverloads = parameterOverloads.ToList();
+		}
+	}
+
+	public class Parameter
+	{
+		public readonly string Type;
+		public readonly string Name;
+		public readonly string DefaultValue;
+		public readonly string Value;
+		public readonly Parameter Default;
+
+		public Parameter(string type, string name, string defaultValue, string value)
+		{
+			Type = type;
+			Name = name;
+			DefaultValue = defaultValue;
+			Value = value;
+			if(name != null)
+				Default = new Parameter(null, null, null, defaultValue ?? value);
+		}
+	}
+#>
