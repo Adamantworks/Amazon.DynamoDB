@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -21,6 +22,9 @@ namespace Adamantworks.Amazon.DynamoDB
 	public partial interface ITable
 	{
 		Task ReloadAsync();
+
+		Task WaitUntilNotAsync(TableStatus status);
+		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout);
 
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection);
@@ -65,6 +69,17 @@ namespace Adamantworks.Amazon.DynamoDB
 		public Task ReloadAsync()
 		{
 			return ReloadAsync(default(CancellationToken));
+		}
+		#endregion
+
+		#region WaitUntilNotAsync
+		public Task WaitUntilNotAsync(TableStatus status)
+		{
+			return WaitUntilNotAsync(status, default(CancellationToken));
+		}
+		public Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout)
+		{
+			return WaitUntilNotAsync(status, timeout, default(CancellationToken));
 		}
 		#endregion
 

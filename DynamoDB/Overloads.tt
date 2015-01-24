@@ -34,6 +34,11 @@
 	var hashKey = ParamTransform("DynamoDBKeyValue", "hashKey", null);
 	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey","new ItemKey(hashKey, rangeKey)");
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
+	var status = Param("TableStatus","status");
+	var timeout = Param("TimeSpan", "timeout");
+	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
+		GenOverloads(status, cancellationToken)
+		.Concat(GenOverloads(status, timeout, cancellationToken)));
 	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
 		GenOverloads(true, hashKeyOnly, projection, consistent, cancellationToken)
 		.Concat(GenOverloads(true, hashKey, rangeKey, projection, consistent, cancellationToken))
@@ -43,6 +48,7 @@
 		.Concat(GenOverloads(true, hashKey, rangeKey, projection, consistent))
 		.Concat(GenOverloads(itemKey, projection, consistent)));
 #>
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -53,6 +59,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	{
 <#		GenInterface(reloadAsync); #>
 
+<#		GenInterface(waitUntilNotAsync); #>
+
 <#		GenInterface(getAsync); #>
 
 <#		GenInterface(get); #>
@@ -61,6 +69,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Table
 	{
 <#		GenMethods(reloadAsync); #>
+
+<#		GenMethods(waitUntilNotAsync); #>
 
 <#		GenMethods(getAsync); #>
 

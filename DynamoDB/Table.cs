@@ -41,8 +41,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task ReloadAsync(CancellationToken cancellationToken);
 		void Reload();
 
-		Task WaitUntilNotAsync(TableStatus status, CancellationToken cancellationToken = default(CancellationToken));
-		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout, CancellationToken cancellationToken = default(CancellationToken));
+		Task WaitUntilNotAsync(TableStatus status, CancellationToken cancellationToken);
+		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout, CancellationToken cancellationToken);
 		void WaitUntilNot(TableStatus status);
 		void WaitUntilNot(TableStatus status, TimeSpan timeout);
 
