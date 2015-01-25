@@ -41,7 +41,12 @@
 	var keysSyncToAsync = ParamTransform("IEnumerable<ItemKey>", "keys", "keys.ToAsyncEnumerable()");
 	var keys = Param("IEnumerable<ItemKey>", "keys");
 	var readAhead = Param("ReadAhead", "readAhead", "ReadAhead.Some");
-	
+	var outerItemsAsync = Param("IAsyncEnumerable<T>", "outerItems");
+	var outerItemsSyncToAsync = ParamTransform("IEnumerable<T>", "outerItems", "outerItems.ToAsyncEnumerable()");
+	var outerItemsSync = Param("IEnumerable<T>", "outerItems");
+	var keySelector = Param("Func<T, ItemKey>","keySelector");
+	var resultSelector = Param("Func<T, DynamoDBMap, TResult>", "resultSelector");
+
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
 		GenOverloads(status, cancellationToken)
@@ -67,6 +72,11 @@
 		.Concat(GenOverloads(keysAsync, projection, consistent, readAhead)));
 	var batchGet = new Method("IEnumerable<DynamoDBMap>", "BatchGet",
 		GenOverloads(keys, projection, consistent));
+	var batchGetJoinAsync = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>",
+		GenOverloads(true, outerItemsSyncToAsync, keySelector, resultSelector, projection, consistent, readAhead)
+		.Concat(GenOverloads(outerItemsAsync, keySelector, resultSelector, projection, consistent, readAhead)));
+	var batchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
+		GenOverloads(outerItemsSync, keySelector, resultSelector, projection, consistent));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
@@ -91,6 +101,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(batchGetAsync); #>
 <#		GenInterface(batchGet); #>
+
+<#		GenInterface(batchGetJoinAsync); #>
+<#		GenInterface(batchGetJoin); #>
 	}
 
 	internal partial class Table
@@ -110,6 +123,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(batchGetAsync); #>
 
 <#		GenMethods(batchGet); #>
+
+<#		GenMethods(batchGetJoinAsync); #>
+
+<#		GenMethods(batchGetJoin); #>
 	}
 }
 <#+
