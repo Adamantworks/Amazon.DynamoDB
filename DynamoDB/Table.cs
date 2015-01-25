@@ -73,18 +73,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
 		DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
 
-		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		bool TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null);
-		bool TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null);
-		bool TryUpdate(ItemKey key, UpdateExpression update, Values values = null);
-		bool TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null);
-		bool TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null);
-		bool TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null);
+		Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken);
+		bool TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values);
 
 		// TODO:Task DeleteAsync();
 		// TODO:Task DeleteAsync(IBatchWriteAsync batch);
@@ -640,31 +630,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region TryUpdate
-		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
-		{
-			return TryUpdateAsync(new ItemKey(hashKey), update, null, values, cancellationToken);
-		}
-		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
-		{
-			return TryUpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, cancellationToken);
-		}
-		public Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken)
-		{
-			return TryUpdateAsync(key, update, null, values, cancellationToken);
-		}
-		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			return TryUpdateAsync(new ItemKey(hashKey), update, condition, values, cancellationToken);
-		}
-		public Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			return TryUpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, cancellationToken);
-		}
 		public async Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
 		{
 			try
 			{
-				await UpdateAsync(key, update, condition, values, cancellationToken);
+				await UpdateAsync(key, update, condition, values, UpdateReturnValue.None, cancellationToken);
 				return true;
 			}
 			catch(Aws.ConditionalCheckFailedException)
@@ -673,31 +643,11 @@ namespace Adamantworks.Amazon.DynamoDB
 			}
 		}
 
-		public bool TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, Values values)
-		{
-			return TryUpdate(new ItemKey(hashKey), update, null, values);
-		}
-		public bool TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values)
-		{
-			return TryUpdate(new ItemKey(hashKey, rangeKey), update, null, values);
-		}
-		public bool TryUpdate(ItemKey key, UpdateExpression update, Values values)
-		{
-			return TryUpdate(key, update, null, values);
-		}
-		public bool TryUpdate(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values)
-		{
-			return TryUpdate(new ItemKey(hashKey), update, condition, values);
-		}
-		public bool TryUpdate(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values)
-		{
-			return TryUpdate(new ItemKey(hashKey, rangeKey), update, condition, values);
-		}
 		public bool TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values)
 		{
 			try
 			{
-				Update(key, update, condition, values);
+				Update(key, update, condition, values, UpdateReturnValue.None);
 				return true;
 			}
 			catch(Aws.ConditionalCheckFailedException)

@@ -99,6 +99,14 @@
 		GenOverloads(true, hashKeyOnly, updateExp, condition, values, updateReturnValue)
 		.Concat(GenOverloads(true, hashKey, rangeKey, updateExp, condition, values, updateReturnValue))
 		.Concat(GenOverloads(itemKey, updateExp, condition, values, updateReturnValue)));
+	var tryUpdateAsync = new Method("Task<bool>", "TryUpdateAsync",
+		GenOverloads(true, hashKeyOnly, updateExp, condition, values, cancellationToken)
+		.Concat(GenOverloads(true, hashKey, rangeKey, updateExp, condition, values, cancellationToken))
+		.Concat(GenOverloads(itemKey, updateExp, condition, values, cancellationToken)));
+	var tryUpdate = new Method("bool", "TryUpdate",
+		GenOverloads(true, hashKeyOnly, updateExp, condition, values)
+		.Concat(GenOverloads(true, hashKey, rangeKey, updateExp, condition, values))
+		.Concat(GenOverloads(itemKey, updateExp, condition, values)));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
@@ -132,6 +140,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(updateAsync); #>
 <#		GenInterface(update); #>
+
+<#		GenInterface(tryUpdateAsync); #>
+<#		GenInterface(tryUpdate); #>
 	}
 
 	internal partial class Table
@@ -163,6 +174,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(updateAsync); #>
 
 <#		GenMethods(update); #>
+
+<#		GenMethods(tryUpdateAsync); #>
+
+<#		GenMethods(tryUpdate); #>
 	}
 }
 <#+
