@@ -46,6 +46,11 @@
 	var outerItemsSync = Param("IEnumerable<T>", "outerItems");
 	var keySelector = Param("Func<T, ItemKey>","keySelector");
 	var resultSelector = Param("Func<T, DynamoDBMap, TResult>", "resultSelector");
+	var item = Param("DynamoDBMap", "item");
+	var condition = Param("PredicateExpression", "condition", "null");
+	var values = Param("Values", "values", "null");
+	var returnOldItem = Param("bool", "returnOldItem", "false");
+	var update  = Param("UpdateExpression", "update");
 
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
@@ -77,6 +82,12 @@
 		.Concat(GenOverloads(outerItemsAsync, keySelector, resultSelector, projection, consistent, readAhead)));
 	var batchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
 		GenOverloads(outerItemsSync, keySelector, resultSelector, projection, consistent));
+	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
+		GenOverloads(item, condition, values, returnOldItem, cancellationToken)
+		.Where(overload => !(overload.Contains(values) && !overload.Contains(condition))));
+	var put = new Method("DynamoDBMap", "Put",
+		GenOverloads(item, condition, values, returnOldItem)
+		.Where(overload => !(overload.Contains(values) && !overload.Contains(condition))));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
@@ -104,6 +115,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(batchGetJoinAsync); #>
 <#		GenInterface(batchGetJoin); #>
+
+<#		GenInterface(putAsync); #>
+<#		GenInterface(put); #>
 	}
 
 	internal partial class Table
@@ -127,6 +141,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(batchGetJoinAsync); #>
 
 <#		GenMethods(batchGetJoin); #>
+
+<#		GenMethods(putAsync); #>
+
+<#		GenMethods(put); #>
 	}
 }
 <#+

@@ -110,6 +110,23 @@ namespace Adamantworks.Amazon.DynamoDB
 		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
 		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection);
 		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent);
+
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, bool returnOldItem);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, CancellationToken cancellationToken);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken);
+		DynamoDBMap Put(DynamoDBMap item);
+		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition);
+		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values);
+		DynamoDBMap Put(DynamoDBMap item, bool returnOldItem);
+		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem);
 	}
 
 	internal partial class Table
@@ -469,6 +486,76 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent)
 		{
 			return BatchGetJoin<T, TResult>(outerItems, keySelector, resultSelector, null, consistent);
+		}
+		#endregion
+
+		#region PutAsync
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
+		{
+			return PutAsync(item, null, null, false, default(CancellationToken));
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition)
+		{
+			return PutAsync(item, condition, null, false, default(CancellationToken));
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values)
+		{
+			return PutAsync(item, condition, values, false, default(CancellationToken));
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
+		{
+			return PutAsync(item, null, null, returnOldItem, default(CancellationToken));
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, bool returnOldItem)
+		{
+			return PutAsync(item, condition, null, returnOldItem, default(CancellationToken));
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
+		{
+			return PutAsync(item, condition, values, returnOldItem, default(CancellationToken));
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
+		{
+			return PutAsync(item, null, null, false, cancellationToken);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, CancellationToken cancellationToken)
+		{
+			return PutAsync(item, condition, null, false, cancellationToken);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		{
+			return PutAsync(item, condition, values, false, cancellationToken);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken)
+		{
+			return PutAsync(item, null, null, returnOldItem, cancellationToken);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken)
+		{
+			return PutAsync(item, condition, null, returnOldItem, cancellationToken);
+		}
+		#endregion
+
+		#region Put
+		public DynamoDBMap Put(DynamoDBMap item)
+		{
+			return Put(item, null, null, false);
+		}
+		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition)
+		{
+			return Put(item, condition, null, false);
+		}
+		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values)
+		{
+			return Put(item, condition, values, false);
+		}
+		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
+		{
+			return Put(item, null, null, returnOldItem);
+		}
+		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem)
+		{
+			return Put(item, condition, null, returnOldItem);
 		}
 		#endregion
 	}

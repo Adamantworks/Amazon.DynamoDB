@@ -61,11 +61,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent, ReadAhead readAhead);
 		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent);
 
-		// TODO:Task PutAsync(Item item);
 		// TODO:Task PutAsync(IBatchWriteAsync batch, Item item);
-		DynamoDBMap Put(DynamoDBMap item, bool returnOldItem = false);
-		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem = false);
-		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem = false);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
+		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem);
 
 		// TODO:Task InsertAsync() // does a put with a condition that the row doesn't exist
 
@@ -552,14 +550,14 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region Put
-		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
+		public async Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
 		{
-			return Put(item, null, null, returnOldItem);
+			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
+			var response = await Region.DB.PutItemAsync(request, cancellationToken);
+			if(!returnOldItem) return null;
+			return response.Attributes.ToGetValue();
 		}
-		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem)
-		{
-			return Put(item, condition, null, returnOldItem);
-		}
+
 		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
 		{
 			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
