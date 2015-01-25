@@ -50,7 +50,8 @@
 	var condition = Param("PredicateExpression", "condition", "null");
 	var values = Param("Values", "values", "null");
 	var returnOldItem = Param("bool", "returnOldItem", "false");
-	var update  = Param("UpdateExpression", "update");
+	var updateExp  = Param("UpdateExpression", "update");
+	var updateReturnValue = Param("UpdateReturnValue", "returnValue", "UpdateReturnValue.None");
 
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
@@ -84,10 +85,20 @@
 		GenOverloads(outerItemsSync, keySelector, resultSelector, projection, consistent));
 	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
 		GenOverloads(item, condition, values, returnOldItem, cancellationToken)
+		// Can't have values without condition
 		.Where(overload => !(overload.Contains(values) && !overload.Contains(condition))));
 	var put = new Method("DynamoDBMap", "Put",
 		GenOverloads(item, condition, values, returnOldItem)
+		// Can't have values without condition
 		.Where(overload => !(overload.Contains(values) && !overload.Contains(condition))));
+	var updateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
+		GenOverloads(true, hashKeyOnly, updateExp, condition, values, updateReturnValue, cancellationToken)
+		.Concat(GenOverloads(true, hashKey, rangeKey, updateExp, condition, values, updateReturnValue, cancellationToken))
+		.Concat(GenOverloads(itemKey, updateExp, condition, values, updateReturnValue, cancellationToken)));
+	var update = new Method("DynamoDBMap", "Update",
+		GenOverloads(true, hashKeyOnly, updateExp, condition, values, updateReturnValue)
+		.Concat(GenOverloads(true, hashKey, rangeKey, updateExp, condition, values, updateReturnValue))
+		.Concat(GenOverloads(itemKey, updateExp, condition, values, updateReturnValue)));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
@@ -118,6 +129,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(putAsync); #>
 <#		GenInterface(put); #>
+
+<#		GenInterface(updateAsync); #>
+<#		GenInterface(update); #>
 	}
 
 	internal partial class Table
@@ -145,6 +159,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(putAsync); #>
 
 <#		GenMethods(put); #>
+
+<#		GenMethods(updateAsync); #>
+
+<#		GenMethods(update); #>
 	}
 }
 <#+

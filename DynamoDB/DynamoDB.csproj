@@ -71,6 +71,7 @@
     <Compile Include="Internal\TaskConstants.cs" />
     <Compile Include="Internal\TaskExtensions.cs" />
     <Compile Include="Internal\TimeSpanEx.cs" />
+    <Compile Include="Internal\UpdateReturnValuesExtension.cs" />
     <Compile Include="Overloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -83,6 +84,7 @@
     <Compile Include="Syntax\Convertable.cs" />
     <Compile Include="Syntax\QueryContext.cs" />
     <Compile Include="Syntax\ScanContext.cs" />
+    <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="PredicateExpression.cs" />
     <Compile Include="Converters\CompositeConverter.cs" />

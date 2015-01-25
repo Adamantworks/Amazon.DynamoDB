@@ -127,6 +127,77 @@ namespace Adamantworks.Amazon.DynamoDB
 		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values);
 		DynamoDBMap Put(DynamoDBMap item, bool returnOldItem);
 		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem);
+
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, UpdateReturnValue returnValue);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, UpdateReturnValue returnValue);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update, Values values);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update, UpdateReturnValue returnValue);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update, Values values, UpdateReturnValue returnValue);
 	}
 
 	internal partial class Table
@@ -556,6 +627,292 @@ namespace Adamantworks.Amazon.DynamoDB
 		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, bool returnOldItem)
 		{
 			return Put(item, condition, null, returnOldItem);
+		}
+		#endregion
+
+		#region UpdateAsync
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, null, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, null, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, values, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, values, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, null, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, null, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, null, values, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey), update, condition, values, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, null, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, null, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, null, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, null, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update)
+		{
+			return UpdateAsync(key, update, null, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition)
+		{
+			return UpdateAsync(key, update, condition, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values)
+		{
+			return UpdateAsync(key, update, null, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values)
+		{
+			return UpdateAsync(key, update, condition, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(key, update, null, null, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(key, update, condition, null, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(key, update, null, values, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(key, update, condition, values, returnValue, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(key, update, null, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(key, update, condition, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(key, update, null, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(key, update, condition, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(key, update, null, null, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(key, update, condition, null, returnValue, cancellationToken);
+		}
+		public Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(key, update, null, values, returnValue, cancellationToken);
+		}
+		#endregion
+
+		#region Update
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update)
+		{
+			return Update(new ItemKey(hashKey), update, null, null, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition)
+		{
+			return Update(new ItemKey(hashKey), update, condition, null, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values)
+		{
+			return Update(new ItemKey(hashKey), update, null, values, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values)
+		{
+			return Update(new ItemKey(hashKey), update, condition, values, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey), update, null, null, returnValue);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey), update, condition, null, returnValue);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey), update, null, values, returnValue);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey), update, condition, values, returnValue);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, null, null, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, condition, null, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, null, values, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, condition, values, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, null, null, returnValue);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, condition, null, returnValue);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, null, values, returnValue);
+		}
+		public DynamoDBMap Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
+		{
+			return Update(new ItemKey(hashKey, rangeKey), update, condition, values, returnValue);
+		}
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update)
+		{
+			return Update(key, update, null, null, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition)
+		{
+			return Update(key, update, condition, null, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update, Values values)
+		{
+			return Update(key, update, null, values, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values)
+		{
+			return Update(key, update, condition, values, UpdateReturnValue.None);
+		}
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return Update(key, update, null, null, returnValue);
+		}
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, UpdateReturnValue returnValue)
+		{
+			return Update(key, update, condition, null, returnValue);
+		}
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return Update(key, update, null, values, returnValue);
 		}
 		#endregion
 	}

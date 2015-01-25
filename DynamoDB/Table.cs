@@ -70,19 +70,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken);
 		void Insert(DynamoDBMap item);
 
-		// TODO handle return values
-		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task UpdateAsync(ItemKey key, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		Task UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
-		void Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null);
-		void Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null);
-		void Update(ItemKey key, UpdateExpression update, Values values = null);
-		void Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values = null);
-		void Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values = null);
-		void Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values = null);
+		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
 
 		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
 		Task<bool> TryUpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -616,59 +605,23 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region Update
-		public Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
+		public async Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
 		{
-			return UpdateAsync(new ItemKey(hashKey), update, null, values, cancellationToken);
-		}
-		public Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values, CancellationToken cancellationToken)
-		{
-			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, null, values, cancellationToken);
-		}
-		public Task UpdateAsync(ItemKey key, UpdateExpression update, Values values, CancellationToken cancellationToken)
-		{
-			return UpdateAsync(key, update, null, values, cancellationToken);
-		}
-		public Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			return UpdateAsync(new ItemKey(hashKey), update, condition, values, cancellationToken);
-		}
-		public Task UpdateAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			return UpdateAsync(new ItemKey(hashKey, rangeKey), update, condition, values, cancellationToken); ;
-		}
-		public async Task UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			var request = BuildUpdateRequest(key, update, condition, values);
-			await Region.DB.UpdateItemAsync(request, cancellationToken).ConfigureAwait(false);
+			var request = BuildUpdateRequest(key, update, condition, values, returnValue);
+			var response = await Region.DB.UpdateItemAsync(request, cancellationToken).ConfigureAwait(false);
+			if(returnValue == UpdateReturnValue.None) return null;
+			return response.Attributes.ToGetValue();
 		}
 
-		public void Update(DynamoDBKeyValue hashKey, UpdateExpression update, Values values)
+		public DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
 		{
-			Update(new ItemKey(hashKey), update, null, values);
-		}
-		public void Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, Values values)
-		{
-			Update(new ItemKey(hashKey, rangeKey), update, null, values);
-		}
-		public void Update(ItemKey key, UpdateExpression update, Values values)
-		{
-			Update(key, update, null, values);
-		}
-		public void Update(DynamoDBKeyValue hashKey, UpdateExpression update, PredicateExpression condition, Values values)
-		{
-			Update(new ItemKey(hashKey), update, condition, values);
-		}
-		public void Update(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, UpdateExpression update, PredicateExpression condition, Values values)
-		{
-			Update(new ItemKey(hashKey, rangeKey), update, condition, values);
-		}
-		public void Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values)
-		{
-			var request = BuildUpdateRequest(key, update, condition, values);
-			Region.DB.UpdateItem(request);
+			var request = BuildUpdateRequest(key, update, condition, values, returnValue);
+			var response = Region.DB.UpdateItem(request);
+			if(returnValue == UpdateReturnValue.None) return null;
+			return response.Attributes.ToGetValue();
 		}
 
-		private Aws.UpdateItemRequest BuildUpdateRequest(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values)
+		private Aws.UpdateItemRequest BuildUpdateRequest(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
 		{
 			var request = new Aws.UpdateItemRequest()
 			{
@@ -676,6 +629,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				Key = key.ToAws(Schema.Key),
 				UpdateExpression = update.Expression,
 				ExpressionAttributeNames = AwsAttributeNames.GetCombined(update, condition),
+				ReturnValues = returnValue.ToAws(),
 			};
 			if(condition != null)
 				request.ConditionExpression = condition.Expression;
