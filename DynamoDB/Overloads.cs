@@ -22,6 +22,21 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
+	public partial interface IDynamoDBRegion
+	{
+		IAsyncEnumerable<string> ListTablesAsync();
+	}
+
+	internal partial class Region
+	{
+		#region ListTablesAsync
+		public IAsyncEnumerable<string> ListTablesAsync()
+		{
+			return ListTablesAsync(ReadAhead.Some);
+		}
+		#endregion
+	}
+
 	public partial interface ITable
 	{
 		Task ReloadAsync();

@@ -62,6 +62,10 @@
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutCondition = overload => !(overload.Contains(values) && !overload.Contains(condition));
 
+	// Region
+	var listTablesAsync = new Method("IAsyncEnumerable<string>", "ListTablesAsync", GenOverloads(readAhead));
+
+	// Table
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
 		GenOverloads(status, cancellationToken)
@@ -145,6 +149,16 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
+	public partial interface IDynamoDBRegion
+	{
+<#		GenInterface(listTablesAsync); #>
+	}
+
+	internal partial class Region
+	{
+<#		GenMethods(listTablesAsync); #>
+	}
+
 	public partial interface ITable
 	{
 <#		GenInterface(reloadAsync); #>

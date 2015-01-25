@@ -24,7 +24,8 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IDynamoDBRegion
+	// See Overloads.tt and Overloads.cs for more method overloads of this interface
+	public partial interface IDynamoDBRegion
 	{
 		TimeSpan WaitStatusPollingInterval { get; set; }
 
@@ -34,7 +35,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		IBatchWriteAsync BeginBatchWriteAsync();
 		IBatchWrite BeginBatchWrite();
 
-		IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead);
 		IEnumerable<string> ListTables();
 
 		// TODO ListTableNamesBeginningWith // Could use exclusive start key to do this
@@ -53,7 +54,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		void DeleteTable(string tableName);
 	}
 
-	internal class Region : IDynamoDBRegion
+	// See Overloads.tt and Overloads.cs for more method overloads of this class
+	internal partial class Region : IDynamoDBRegion
 	{
 		internal readonly IAmazonDynamoDB DB;
 

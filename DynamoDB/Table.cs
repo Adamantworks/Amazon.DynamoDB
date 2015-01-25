@@ -46,7 +46,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		void WaitUntilNot(TableStatus status);
 		void WaitUntilNot(TableStatus status, TimeSpan timeout);
 
-		// A overloads of these methods are in Overloads.tt and call the private implementations
+		// The overloads of these methods are in Overloads.tt and call the private implementations
 		// Task UpdateTableAsync(...);
 		// void UpdateTable(...);
 
@@ -81,7 +81,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		void Delete(IBatchWrite batch, ItemKey key);
 		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem);
 
-		// A overloads of these methods are in Overloads.tt
+		// The overloads of these methods are in Overloads.tt
 		// IQueryContext Query(...);
 		// IScanContext Scan(...);
 
