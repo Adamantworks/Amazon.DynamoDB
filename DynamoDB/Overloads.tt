@@ -29,7 +29,7 @@
 	var itemKey = Param("ItemKey","key");
 	var projection = Param("ProjectionExpression","projection","null");
 	var consistent = Param("bool","consistent","false");
-	var cancellationToken = Param("CancellationToken", "cancellationToken","default(CancellationToken)");
+	var cancellationToken = Param("CancellationToken", "cancellationToken","CancellationToken.None");
 	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "new ItemKey(hashKey)");
 	var hashKey = ParamTransform("DynamoDBKeyValue", "hashKey", null);
 	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey","new ItemKey(hashKey, rangeKey)");

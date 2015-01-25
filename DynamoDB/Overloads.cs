@@ -134,33 +134,33 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region ReloadAsync
 		public Task ReloadAsync()
 		{
-			return ReloadAsync(default(CancellationToken));
+			return ReloadAsync(CancellationToken.None);
 		}
 		#endregion
 
 		#region WaitUntilNotAsync
 		public Task WaitUntilNotAsync(TableStatus status)
 		{
-			return WaitUntilNotAsync(status, default(CancellationToken));
+			return WaitUntilNotAsync(status, CancellationToken.None);
 		}
 		public Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout)
 		{
-			return WaitUntilNotAsync(status, timeout, default(CancellationToken));
+			return WaitUntilNotAsync(status, timeout, CancellationToken.None);
 		}
 		#endregion
 
 		#region UpdateTableAsync
 		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput)
 		{
-			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, null, default(CancellationToken));
+			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, null, CancellationToken.None);
 		}
 		public Task UpdateTableAsync(IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
-			return UpdateTableAsync(null, indexProvisionedThroughputs, default(CancellationToken));
+			return UpdateTableAsync(null, indexProvisionedThroughputs, CancellationToken.None);
 		}
 		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
-			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, indexProvisionedThroughputs, default(CancellationToken));
+			return UpdateTableAsync((ProvisionedThroughput?)provisionedThroughput, indexProvisionedThroughputs, CancellationToken.None);
 		}
 		public Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken)
 		{
@@ -194,19 +194,19 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region GetAsync
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey)
 		{
-			return GetAsync(new ItemKey(hashKey), null, false, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey), null, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection)
 		{
-			return GetAsync(new ItemKey(hashKey), projection, false, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey), projection, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, bool consistent)
 		{
-			return GetAsync(new ItemKey(hashKey), null, consistent, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey), null, consistent, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
 		{
-			return GetAsync(new ItemKey(hashKey), projection, consistent, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey), projection, consistent, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
 		{
@@ -226,19 +226,19 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), null, false, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey, rangeKey), null, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection)
 		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), projection, false, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey, rangeKey), projection, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool consistent)
 		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), null, consistent, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey, rangeKey), null, consistent, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, ProjectionExpression projection, bool consistent)
 		{
-			return GetAsync(new ItemKey(hashKey, rangeKey), projection, consistent, default(CancellationToken));
+			return GetAsync(new ItemKey(hashKey, rangeKey), projection, consistent, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
@@ -258,19 +258,19 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key)
 		{
-			return GetAsync(key, null, false, default(CancellationToken));
+			return GetAsync(key, null, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection)
 		{
-			return GetAsync(key, projection, false, default(CancellationToken));
+			return GetAsync(key, projection, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key, bool consistent)
 		{
-			return GetAsync(key, null, consistent, default(CancellationToken));
+			return GetAsync(key, null, consistent, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent)
 		{
-			return GetAsync(key, projection, consistent, default(CancellationToken));
+			return GetAsync(key, projection, consistent, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken)
 		{
@@ -492,27 +492,27 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region PutAsync
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
 		{
-			return PutAsync(item, null, null, false, default(CancellationToken));
+			return PutAsync(item, null, null, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition)
 		{
-			return PutAsync(item, condition, null, false, default(CancellationToken));
+			return PutAsync(item, condition, null, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values)
 		{
-			return PutAsync(item, condition, values, false, default(CancellationToken));
+			return PutAsync(item, condition, values, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
 		{
-			return PutAsync(item, null, null, returnOldItem, default(CancellationToken));
+			return PutAsync(item, null, null, returnOldItem, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, bool returnOldItem)
 		{
-			return PutAsync(item, condition, null, returnOldItem, default(CancellationToken));
+			return PutAsync(item, condition, null, returnOldItem, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
 		{
-			return PutAsync(item, condition, values, returnOldItem, default(CancellationToken));
+			return PutAsync(item, condition, values, returnOldItem, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
 		{

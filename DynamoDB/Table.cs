@@ -66,7 +66,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		void Put(IBatchWrite batch, DynamoDBMap item);
 		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem);
 
-		// TODO:Task InsertAsync() // does a put with a condition that the row doesn't exist
+		Task InsertAsync(DynamoDBMap item);
+		Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken);
+		void Insert(DynamoDBMap item);
 
 		// TODO handle return values
 		Task UpdateAsync(DynamoDBKeyValue hashKey, UpdateExpression update, Values values = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -554,7 +556,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			((IBatchWriteOperations)batch).Put(this, item);
 		}
-
 		public async Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
 		{
 			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
@@ -567,7 +568,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			((IBatchWriteOperations)batch).Put(this, item);
 		}
-
 		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
 		{
 			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
@@ -588,6 +588,30 @@ namespace Adamantworks.Amazon.DynamoDB
 				request.ConditionExpression = condition.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
 			return request;
+		}
+		#endregion
+
+		#region Insert
+		public Task InsertAsync(DynamoDBMap item)
+		{
+			return PutAsync(item, GetInsertExpression(), null, false, CancellationToken.None);
+		}
+		public Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken)
+		{
+			return PutAsync(item, GetInsertExpression(), null, false, cancellationToken);
+		}
+
+		public void Insert(DynamoDBMap item)
+		{
+			Put(item, GetInsertExpression(), null, false);
+		}
+
+		private PredicateExpression insertExpression;
+		private PredicateExpression GetInsertExpression()
+		{
+			if(insertExpression == null)
+				insertExpression = new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name);
+			return insertExpression;
 		}
 		#endregion
 
