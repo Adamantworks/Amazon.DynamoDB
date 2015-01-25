@@ -231,19 +231,19 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region UpdateTable
-		private Task UpdateTableAsync(ProvisionedThroughput? provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
+		private Task UpdateTableAsync(ProvisionedThroughput? provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
 		{
 			var request = BuildUpdateTableRequest(provisionedThroughput, indexProvisionedThroughputs);
 			return Region.DB.UpdateTableAsync(request, cancellationToken);
 		}
 
-		private void UpdateTable(ProvisionedThroughput? provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		private void UpdateTable(ProvisionedThroughput? provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
 			var request = BuildUpdateTableRequest(provisionedThroughput, indexProvisionedThroughputs);
 			Region.DB.UpdateTable(request);
 		}
 
-		private Aws.UpdateTableRequest BuildUpdateTableRequest(ProvisionedThroughput? provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
+		private Aws.UpdateTableRequest BuildUpdateTableRequest(ProvisionedThroughput? provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
 			var request = new Aws.UpdateTableRequest()
 			{

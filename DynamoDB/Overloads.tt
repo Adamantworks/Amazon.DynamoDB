@@ -36,7 +36,7 @@
 	var status = Param("TableStatus","status");
 	var timeout = Param("TimeSpan", "timeout");
 	var provisionedThroughput = ParamTransform("ProvisionedThroughput", "provisionedThroughput","(ProvisionedThroughput?)provisionedThroughput", "null");
-	var indexProvisionedThroughputs = Param("IDictionary<string, ProvisionedThroughput>", "indexProvisionedThroughputs", "null");
+	var indexProvisionedThroughputs = Param("IReadOnlyDictionary<string, ProvisionedThroughput>", "indexProvisionedThroughputs", "null");
 	var keysAsync = Param("IAsyncEnumerable<ItemKey>", "keys");
 	var keysSyncToAsync = ParamTransform("IEnumerable<ItemKey>", "keys", "keys.ToAsyncEnumerable()");
 	var keys = Param("IEnumerable<ItemKey>", "keys");
@@ -52,18 +52,24 @@
 	var returnOldItem = Param("bool", "returnOldItem", "false");
 	var updateExp  = Param("UpdateExpression", "update");
 	var updateReturnValue = Param("UpdateReturnValue", "returnValue", "UpdateReturnValue.None");
-	var region = Argument("Region");
-	var tableName = Argument("Name");
-	var indexNameNone = Argument("null");
-	var keySchema = Argument("Schema.Key");
+	var regionArg = Argument("Region");
+	var tableNameArg = Argument("Name");
+	var indexNameNoneArg = Argument("null");
+	var keySchemaArg = Argument("Schema.Key");
 	var hashKey = Param("DynamoDBKeyValue", "hashKey");
 	var filter = Param("PredicateExpression", "filter", "null");
+	var tableName = Param("string", "tableName");
+	var schema = Param("TableSchema", "schema");
 
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutCondition = overload => !(overload.Contains(values) && !overload.Contains(condition));
 
 	// Region
 	var listTablesAsync = new Method("IAsyncEnumerable<string>", "ListTablesAsync", GenOverloads(readAhead));
+	var createTableAsync = new Method("Task<ITable>", "CreateTableAsync",
+		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs, cancellationToken));
+	var createTable = new Method("ITable", "CreateTable",
+		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs));
 
 	// Table
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
@@ -133,13 +139,14 @@
 		// Can't have values without condition
 		.Where(noValuesWithoutCondition));
 	var query = new Method("IQueryContext", "Query", "new QueryContext",
-		GenOverloads(true, region, tableName, indexNameNone, keySchema, hashKey, projection, filter, values, consistent)
+		GenOverloads(true, regionArg, tableNameArg, indexNameNoneArg, keySchemaArg, hashKey, projection, filter, values, consistent)
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanContext", "Scan", "new ScanContext",
-		GenOverloads(true, region, tableName, projection, filter, values)
+		GenOverloads(true, regionArg, tableNameArg, projection, filter, values)
 		.Where(noValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
 using System;
 using System.Collections.Generic;
@@ -152,11 +159,18 @@ namespace Adamantworks.Amazon.DynamoDB
 	public partial interface IDynamoDBRegion
 	{
 <#		GenInterface(listTablesAsync); #>
+
+<#		GenInterface(createTableAsync); #>
+<#		GenInterface(createTable); #>
 	}
 
 	internal partial class Region
 	{
 <#		GenMethods(listTablesAsync); #>
+
+<#		GenMethods(createTableAsync); #>
+
+<#		GenMethods(createTable); #>
 	}
 
 	public partial interface ITable
