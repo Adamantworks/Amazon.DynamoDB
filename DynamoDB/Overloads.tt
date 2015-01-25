@@ -131,6 +131,9 @@
 	var query = new Method("IQueryContext", "Query", "new QueryContext",
 		GenOverloads(true, region, tableName, indexNameNone, keySchema, hashKey, projection, filter, values, consistent)
 		.Where(noValuesWithoutFilter));
+	var scan = new Method("IScanContext", "Scan", "new ScanContext",
+		GenOverloads(true, region, tableName, projection, filter, values)
+		.Where(noValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax;
@@ -173,6 +176,8 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(delete); #>
 
 <#		GenInterface(query); #>
+
+<#		GenInterface(scan); #>
 	}
 
 	internal partial class Table
@@ -214,6 +219,8 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(delete); #>
 
 <#		GenMethods(query); #>
+
+<#		GenMethods(scan); #>
 	}
 }
 <#+

@@ -83,13 +83,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		// A overloads of these methods are in Overloads.tt
 		// IQueryContext Query(...);
-
-		IScanContext Scan();
-		IScanContext Scan(PredicateExpression filter);
-		IScanContext Scan(PredicateExpression filter, Values values);
-		IScanContext Scan(ProjectionExpression projection);
-		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter);
-		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values);
+		// IScanContext Scan(...);
 
 		// TODO: QueryCount
 		// TODO: ScanCount()
@@ -691,33 +685,6 @@ namespace Adamantworks.Amazon.DynamoDB
 				request.ConditionExpression = condition.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
 			return request;
-		}
-		#endregion
-
-		#region Scan
-		public IScanContext Scan()
-		{
-			return new ScanContext(Region, Name, null, null, null);
-		}
-		public IScanContext Scan(PredicateExpression filter)
-		{
-			return new ScanContext(Region, Name, null, filter, null);
-		}
-		public IScanContext Scan(PredicateExpression filter, Values values)
-		{
-			return new ScanContext(Region, Name, null, filter, values);
-		}
-		public IScanContext Scan(ProjectionExpression projection)
-		{
-			return new ScanContext(Region, Name, projection, null, null);
-		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter)
-		{
-			return new ScanContext(Region, Name, projection, filter, null);
-		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values)
-		{
-			return new ScanContext(Region, Name, projection, filter, values);
 		}
 		#endregion
 	}

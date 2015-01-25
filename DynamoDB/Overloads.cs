@@ -300,6 +300,13 @@ namespace Adamantworks.Amazon.DynamoDB
 		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent);
 		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent);
 		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent);
+
+		IScanContext Scan();
+		IScanContext Scan(ProjectionExpression projection);
+		IScanContext Scan(PredicateExpression filter);
+		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter);
+		IScanContext Scan(PredicateExpression filter, Values values);
+		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values);
 	}
 
 	internal partial class Table
@@ -1422,6 +1429,33 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, filter, values, consistent);
+		}
+		#endregion
+
+		#region Scan
+		public IScanContext Scan()
+		{
+			return new ScanContext(Region, Name, null, null, null);
+		}
+		public IScanContext Scan(ProjectionExpression projection)
+		{
+			return new ScanContext(Region, Name, projection, null, null);
+		}
+		public IScanContext Scan(PredicateExpression filter)
+		{
+			return new ScanContext(Region, Name, null, filter, null);
+		}
+		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter)
+		{
+			return new ScanContext(Region, Name, projection, filter, null);
+		}
+		public IScanContext Scan(PredicateExpression filter, Values values)
+		{
+			return new ScanContext(Region, Name, null, filter, values);
+		}
+		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values)
+		{
+			return new ScanContext(Region, Name, projection, filter, values);
 		}
 		#endregion
 	}
