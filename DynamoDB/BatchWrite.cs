@@ -47,6 +47,11 @@ namespace Adamantworks.Amazon.DynamoDB
 			Flush(false);
 		}
 
+		public void Delete(ITable table, ItemKey key)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void Complete()
 		{
 			throw new NotImplementedException();

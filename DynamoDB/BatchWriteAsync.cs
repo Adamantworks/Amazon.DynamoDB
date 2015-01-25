@@ -37,6 +37,11 @@ namespace Adamantworks.Amazon.DynamoDB
 			throw new System.NotImplementedException();
 		}
 
+		public void Delete(ITable table, ItemKey key)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public Task Complete()
 		{
 			throw new System.NotImplementedException();

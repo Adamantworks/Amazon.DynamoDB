@@ -53,6 +53,8 @@
 	var updateExp  = Param("UpdateExpression", "update");
 	var updateReturnValue = Param("UpdateReturnValue", "returnValue", "UpdateReturnValue.None");
 
+	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutCondition = overload => !(overload.Contains(values) && !overload.Contains(condition));
+
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
 		GenOverloads(status, cancellationToken)
@@ -86,11 +88,11 @@
 	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
 		GenOverloads(item, condition, values, returnOldItem, cancellationToken)
 		// Can't have values without condition
-		.Where(overload => !(overload.Contains(values) && !overload.Contains(condition))));
+		.Where(noValuesWithoutCondition));
 	var put = new Method("DynamoDBMap", "Put",
 		GenOverloads(item, condition, values, returnOldItem)
 		// Can't have values without condition
-		.Where(overload => !(overload.Contains(values) && !overload.Contains(condition))));
+		.Where(noValuesWithoutCondition));
 	var updateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
 		GenOverloads(true, hashKeyOnly, updateExp, condition, values, updateReturnValue, cancellationToken)
 		.Concat(GenOverloads(true, hashKey, rangeKey, updateExp, condition, values, updateReturnValue, cancellationToken))
@@ -107,6 +109,18 @@
 		GenOverloads(true, hashKeyOnly, updateExp, condition, values)
 		.Concat(GenOverloads(true, hashKey, rangeKey, updateExp, condition, values))
 		.Concat(GenOverloads(itemKey, updateExp, condition, values)));
+	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
+		GenOverloads(true, hashKeyOnly, condition, values, returnOldItem, cancellationToken)
+		.Concat(GenOverloads(true, hashKey, rangeKey, condition, values, returnOldItem, cancellationToken))
+		.Concat(GenOverloads(itemKey, condition, values, returnOldItem, cancellationToken))
+		// Can't have values without condition
+		.Where(noValuesWithoutCondition));
+	var delete = new Method("DynamoDBMap", "Delete",
+		GenOverloads(true, hashKeyOnly, condition, values, returnOldItem)
+		.Concat(GenOverloads(true, hashKey, rangeKey, condition, values, returnOldItem))
+		.Concat(GenOverloads(itemKey, condition, values, returnOldItem))
+		// Can't have values without condition
+		.Where(noValuesWithoutCondition));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
@@ -143,6 +157,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(tryUpdateAsync); #>
 <#		GenInterface(tryUpdate); #>
+
+<#		GenInterface(deleteAsync); #>
+<#		GenInterface(delete); #>
 	}
 
 	internal partial class Table
@@ -178,6 +195,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(tryUpdateAsync); #>
 
 <#		GenMethods(tryUpdate); #>
+
+<#		GenMethods(deleteAsync); #>
+
+<#		GenMethods(delete); #>
 	}
 }
 <#+

@@ -76,8 +76,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken);
 		bool TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values);
 
-		// TODO:Task DeleteAsync();
-		// TODO:Task DeleteAsync(IBatchWriteAsync batch);
+		void DeleteAsync(IBatchWriteAsync batch, ItemKey key);
+		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
+		void Delete(IBatchWrite batch, ItemKey key);
+		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem);
 
 		IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent = false);
 		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent = false);
@@ -538,7 +540,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public async Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
 		{
 			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
-			var response = await Region.DB.PutItemAsync(request, cancellationToken);
+			var response = await Region.DB.PutItemAsync(request, cancellationToken).ConfigureAwait(false);
 			if(!returnOldItem) return null;
 			return response.Attributes.ToGetValue();
 		}
@@ -634,7 +636,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			try
 			{
-				await UpdateAsync(key, update, condition, values, UpdateReturnValue.None, cancellationToken);
+				await UpdateAsync(key, update, condition, values, UpdateReturnValue.None, cancellationToken).ConfigureAwait(false);
 				return true;
 			}
 			catch(Aws.ConditionalCheckFailedException)
@@ -654,6 +656,46 @@ namespace Adamantworks.Amazon.DynamoDB
 			{
 				return false;
 			}
+		}
+		#endregion
+
+		#region Delete
+		public void DeleteAsync(IBatchWriteAsync batch, ItemKey key)
+		{
+			((IBatchWriteOperations)batch).Delete(this, key);
+		}
+		public async Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
+		{
+			var request = BuildDeleteRequest(key, condition, values, returnOldItem);
+			var response = await Region.DB.DeleteItemAsync(request, cancellationToken).ConfigureAwait(false);
+			if(!returnOldItem) return null;
+			return response.Attributes.ToGetValue();
+		}
+
+		public void Delete(IBatchWrite batch, ItemKey key)
+		{
+			((IBatchWriteOperations)batch).Delete(this, key);
+		}
+		public DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem)
+		{
+			var request = BuildDeleteRequest(key, condition, values, returnOldItem);
+			var response = Region.DB.DeleteItem(request);
+			if(!returnOldItem) return null;
+			return response.Attributes.ToGetValue();
+		}
+
+		private Aws.DeleteItemRequest BuildDeleteRequest(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem)
+		{
+			var request = new Aws.DeleteItemRequest()
+			{
+				TableName = Name,
+				Key = key.ToAws(Schema.Key),
+				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
+			};
+			if(condition != null)
+				request.ConditionExpression = condition.Expression;
+			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
+			return request;
 		}
 		#endregion
 

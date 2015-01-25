@@ -19,5 +19,6 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 	internal interface IBatchWriteOperations
 	{
 		void Put(ITable table, DynamoDBMap item);
+		void Delete(ITable table, ItemKey key);
 	}
 }
