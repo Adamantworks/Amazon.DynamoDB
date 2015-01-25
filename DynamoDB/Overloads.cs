@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -71,6 +72,25 @@ namespace Adamantworks.Amazon.DynamoDB
 		DynamoDBMap Get(ItemKey key);
 		DynamoDBMap Get(ItemKey key, ProjectionExpression projection);
 		DynamoDBMap Get(ItemKey key, bool consistent);
+
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys);
+		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection);
+		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent);
 	}
 
 	internal partial class Table
@@ -274,6 +294,84 @@ namespace Adamantworks.Amazon.DynamoDB
 		public DynamoDBMap Get(ItemKey key, bool consistent)
 		{
 			return Get(key, null, consistent);
+		}
+		#endregion
+
+		#region BatchGetAsync
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), null, false, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, false, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), null, consistent, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, consistent, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), null, false, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, false, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), null, consistent, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, consistent, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys)
+		{
+			return BatchGetAsync(keys, null, false, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection)
+		{
+			return BatchGetAsync(keys, projection, false, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent)
+		{
+			return BatchGetAsync(keys, null, consistent, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent)
+		{
+			return BatchGetAsync(keys, projection, consistent, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys, null, false, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys, projection, false, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys, null, consistent, readAhead);
+		}
+		#endregion
+
+		#region BatchGet
+		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys)
+		{
+			return BatchGet(keys, null, false);
+		}
+		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection)
+		{
+			return BatchGet(keys, projection, false);
+		}
+		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent)
+		{
+			return BatchGet(keys, null, consistent);
 		}
 		#endregion
 	}

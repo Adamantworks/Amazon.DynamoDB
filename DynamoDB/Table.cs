@@ -55,16 +55,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken);
 		DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent);
 
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead = ReadAhead.Some);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead = ReadAhead.Some);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead = ReadAhead.Some);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead = ReadAhead.Some);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead = ReadAhead.Some);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead = ReadAhead.Some);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead = ReadAhead.Some);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead = ReadAhead.Some);
-		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent = false);
-		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent = false);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent);
 
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead = ReadAhead.Some);
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent, ReadAhead readAhead = ReadAhead.Some);
@@ -349,34 +341,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region BatchGet
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), null, false, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), null, consistent, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, false, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, consistent, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys, null, false, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys, null, consistent, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys, projection, false, readAhead);
-		}
 		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead)
 		{
 			var awsKeys = keys.Select(k => k.ToAws(Schema.Key));
@@ -408,11 +372,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			});
 		}
 
-		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent = false)
-		{
-			return BatchGet(keys, null, consistent);
-		}
-		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent = false)
+		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent)
 		{
 			var awsKeys = keys.Select(k => k.ToAws(Schema.Key));
 

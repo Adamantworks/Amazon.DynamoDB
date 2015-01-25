@@ -37,7 +37,11 @@
 	var timeout = Param("TimeSpan", "timeout");
 	var provisionedThroughput = ParamTransform("ProvisionedThroughput", "provisionedThroughput","(ProvisionedThroughput?)provisionedThroughput", "null");
 	var indexProvisionedThroughputs = Param("IDictionary<string, ProvisionedThroughput>", "indexProvisionedThroughputs", "null");
-
+	var keysAsync = Param("IAsyncEnumerable<ItemKey>", "keys");
+	var keysSyncToAsync = ParamTransform("IEnumerable<ItemKey>", "keys", "keys.ToAsyncEnumerable()");
+	var keys = Param("IEnumerable<ItemKey>", "keys");
+	var readAhead = Param("ReadAhead", "readAhead", "ReadAhead.Some");
+	
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));
 	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
 		GenOverloads(status, cancellationToken)
@@ -58,12 +62,18 @@
 		GenOverloads(true, hashKeyOnly, projection, consistent)
 		.Concat(GenOverloads(true, hashKey, rangeKey, projection, consistent))
 		.Concat(GenOverloads(itemKey, projection, consistent)));
+	var batchGetAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync",
+		GenOverloads(true, keysSyncToAsync, projection, consistent, readAhead)
+		.Concat(GenOverloads(keysAsync, projection, consistent, readAhead)));
+	var batchGet = new Method("IEnumerable<DynamoDBMap>", "BatchGet",
+		GenOverloads(keys, projection, consistent));
 #>
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -78,6 +88,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(getAsync); #>
 <#		GenInterface(get); #>
+
+<#		GenInterface(batchGetAsync); #>
+<#		GenInterface(batchGet); #>
 	}
 
 	internal partial class Table
@@ -93,6 +106,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(getAsync); #>
 
 <#		GenMethods(get); #>
+
+<#		GenMethods(batchGetAsync); #>
+
+<#		GenMethods(batchGet); #>
 	}
 }
 <#+
