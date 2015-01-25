@@ -12,34 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Internal;
 
-namespace Adamantworks.Amazon.DynamoDB
+namespace Adamantworks.Amazon.DynamoDB.Internal
 {
-	public interface IBatchWriteAsync
+	internal interface IBatchWriteOperations
 	{
-		Task Complete();
-	}
-
-	internal class BatchWriteAsync : IBatchWriteAsync, IBatchWriteOperations
-	{
-		private readonly Region region;
-
-		public BatchWriteAsync(Region region)
-		{
-			this.region = region;
-		}
-
-		public void Put(ITable table, DynamoDBMap item)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public Task Complete()
-		{
-			throw new System.NotImplementedException();
-		}
+		void Put(ITable table, DynamoDBMap item);
 	}
 }

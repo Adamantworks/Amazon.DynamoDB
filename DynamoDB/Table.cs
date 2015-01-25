@@ -61,8 +61,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent, ReadAhead readAhead);
 		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent);
 
-		// TODO:Task PutAsync(IBatchWriteAsync batch, Item item);
+		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
+		void Put(IBatchWrite batch, DynamoDBMap item);
 		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem);
 
 		// TODO:Task InsertAsync() // does a put with a condition that the row doesn't exist
@@ -122,7 +123,6 @@ namespace Adamantworks.Amazon.DynamoDB
 	// See Overloads.tt and Overloads.cs for all the method overloads of this class
 	internal partial class Table : ITable
 	{
-		private const int BatchGetBatchSizeLimit = 100;
 		internal readonly Region Region;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
@@ -338,13 +338,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			return AsyncEnumerable.Using(awsKeys.GetEnumerator, enumerator =>
 			{
 				// These must be in the using so they are deferred until GetEnumerator() is called on us (need one per enumerator)
-				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);
+				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 				var request = BuildBatchGetItemRequest(batchKeys, projection, consistent);
 
 				return AsyncEnumerableEx.GenerateChunked<Aws.BatchGetItemResponse, DynamoDBMap>(null,
 					async (lastResponse, cancellationToken) =>
 					{
-						while(batchKeys.Count < BatchGetBatchSizeLimit && await enumerator.MoveNext().ConfigureAwait(false))
+						while(batchKeys.Count < Limits.BatchGetSize && await enumerator.MoveNext().ConfigureAwait(false))
 							batchKeys.Add(enumerator.Current);
 
 						if(batchKeys.Count == 0) // No more items to get
@@ -366,14 +366,14 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			var awsKeys = keys.Select(k => k.ToAws(Schema.Key));
 
-			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);
+			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 			var request = BuildBatchGetItemRequest(batchKeys, projection, consistent);
 
 			using(var enumerator = awsKeys.GetEnumerator())
 			{
 				for(; ; )
 				{
-					while(batchKeys.Count < BatchGetBatchSizeLimit && enumerator.MoveNext())
+					while(batchKeys.Count < Limits.BatchGetSize && enumerator.MoveNext())
 						batchKeys.Add(enumerator.Current);
 
 					if(batchKeys.Count == 0) // No more items to get
@@ -425,16 +425,16 @@ namespace Adamantworks.Amazon.DynamoDB
 			{
 				// These must be in the using so they are deferred until GetEnumerator() is called on us (need one per enumerator)
 				var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
-				var batchItems = new Dictionary<ItemKey, T>(BatchGetBatchSizeLimit);
-				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);
+				var batchItems = new Dictionary<ItemKey, T>(Limits.BatchGetSize);
+				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 				var request = BuildBatchGetItemRequest(batchKeys, projection, consistent);
 
 				return AsyncEnumerableEx.GenerateChunked<Tuple<List<TResult>, bool>, TResult>(null,
 					async (lastResults, cancellationToken) =>
 					{
-						var batchResults = new List<TResult>(BatchGetBatchSizeLimit);
+						var batchResults = new List<TResult>(Limits.BatchGetSize);
 
-						while(batchItems.Count < BatchGetBatchSizeLimit && await enumerator.MoveNext().ConfigureAwait(false))
+						while(batchItems.Count < Limits.BatchGetSize && await enumerator.MoveNext().ConfigureAwait(false))
 						{
 							var outerItem = enumerator.Current;
 							var key = keySelector(outerItem);
@@ -473,15 +473,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent)
 		{
 			var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
-			var batchItems = new Dictionary<ItemKey, T>(BatchGetBatchSizeLimit);
-			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(BatchGetBatchSizeLimit);
+			var batchItems = new Dictionary<ItemKey, T>(Limits.BatchGetSize);
+			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 			var request = BuildBatchGetItemRequest(batchKeys, projection, consistent);
 
 			using(var enumerator = outerItems.GetEnumerator())
 			{
 				for(; ; )
 				{
-					while(batchItems.Count < BatchGetBatchSizeLimit && enumerator.MoveNext())
+					while(batchItems.Count < Limits.BatchGetSize && enumerator.MoveNext())
 					{
 						var outerItem = enumerator.Current;
 						var key = keySelector(outerItem);
@@ -550,12 +550,22 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region Put
+		public void PutAsync(IBatchWriteAsync batch, DynamoDBMap item)
+		{
+			((IBatchWriteOperations)batch).Put(this, item);
+		}
+
 		public async Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
 		{
 			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
 			var response = await Region.DB.PutItemAsync(request, cancellationToken);
 			if(!returnOldItem) return null;
 			return response.Attributes.ToGetValue();
+		}
+
+		public void Put(IBatchWrite batch, DynamoDBMap item)
+		{
+			((IBatchWriteOperations)batch).Put(this, item);
 		}
 
 		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)

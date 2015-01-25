@@ -66,6 +66,8 @@
     <Compile Include="Internal\IAwsAttributeNameProvider.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Internal\IAwsAttributeValuesProvider.cs" />
+    <Compile Include="Internal\IBatchWriteOperations.cs" />
+    <Compile Include="Internal\Limits.cs" />
     <Compile Include="Internal\TaskConstants.cs" />
     <Compile Include="Internal\TaskExtensions.cs" />
     <Compile Include="Internal\TimeSpanEx.cs" />
