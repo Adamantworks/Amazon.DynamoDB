@@ -26,7 +26,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	// See Overloads.tt and Overloads.cs for all the method overloads of this interface
+	// See Overloads.tt and Overloads.cs for more method overloads of this interface
 	public partial interface ITable
 	{
 		string Name { get; }
@@ -46,9 +46,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		void WaitUntilNot(TableStatus status);
 		void WaitUntilNot(TableStatus status, TimeSpan timeout);
 
-		// These methods are private, all overloads are in Overloads.tt and call the private implementations
-		// Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken);
-		// void UpdateTable(ProvisionedThroughput? provisionedThroughput, IDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
+		// A overloads of these methods are in Overloads.tt and call the private implementations
+		// Task UpdateTableAsync(...);
+		// void UpdateTable(...);
 
 		ItemKey GetKey(DynamoDBMap item);
 
@@ -81,12 +81,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		void Delete(IBatchWrite batch, ItemKey key);
 		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem);
 
-		IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent = false);
-		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent = false);
-		IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent = false);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent = false);
-		IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent = false);
+		// A overloads of these methods are in Overloads.tt
+		// IQueryContext Query(...);
 
 		IScanContext Scan();
 		IScanContext Scan(PredicateExpression filter);
@@ -95,15 +91,14 @@ namespace Adamantworks.Amazon.DynamoDB
 		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter);
 		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values);
 
-		// TODO: Count()
-		// TODO: Task GetStatus(); // TODO maybe this is part of some larger op
-		// TODO: Task UpdateProvisionedThroughput();
+		// TODO: QueryCount
+		// TODO: ScanCount()
 
 		// TODO: bool ReportConsumedCapacity
 		// TODO: CapacityConsumedEvent
 	}
 
-	// See Overloads.tt and Overloads.cs for all the method overloads of this class
+	// See Overloads.tt and Overloads.cs for more method overloads of this class
 	internal partial class Table : ITable
 	{
 		internal readonly Region Region;
@@ -696,33 +691,6 @@ namespace Adamantworks.Amazon.DynamoDB
 				request.ConditionExpression = condition.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
 			return request;
-		}
-		#endregion
-
-		#region Query
-		public IQueryContext Query(DynamoDBKeyValue hashKey, bool consistent)
-		{
-			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, null, null, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
-		{
-			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, filter, null, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
-		{
-			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, filter, values, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
-		{
-			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, null, null, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
-		{
-			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, filter, null, consistent);
-		}
-		public IQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
-		{
-			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, filter, values, consistent);
 		}
 		#endregion
 
