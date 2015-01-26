@@ -80,9 +80,12 @@
     <Compile Include="ProvisionedThroughput.cs" />
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Schema\IndexProjectionType.cs" />
-    <Compile Include="Syntax\CompositeHashKey.cs" />
+    <Compile Include="Syntax\CompositeKey.cs" />
     <Compile Include="Syntax\Convertable.cs" />
-    <Compile Include="Syntax\QueryContext.cs" />
+    <Compile Include="Syntax\ILimitableQueryContext.cs" />
+    <Compile Include="Syntax\IQueryContext.cs" />
+    <Compile Include="Syntax\IReversibleQueryContext.cs" />
+    <Compile Include="QueryContext.cs" />
     <Compile Include="Syntax\ScanContext.cs" />
     <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />

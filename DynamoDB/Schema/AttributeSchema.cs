@@ -11,8 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-using System;
+
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using System;
+using System.Collections.Generic;
+using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Schema
 {
@@ -24,10 +27,20 @@ namespace Adamantworks.Amazon.DynamoDB.Schema
 		public AttributeSchema(string name, DynamoDBValueType type)
 		{
 			if(string.IsNullOrWhiteSpace(name))
-				throw new ArgumentException("Invalid name","name");
+				throw new ArgumentException("Invalid name", "name");
 
 			Name = name;
 			Type = type;
+		}
+
+		internal void Between(DynamoDBKeyValue start, DynamoDBKeyValue end, Dictionary<string, Aws.Condition> keyConditions)
+		{
+			if(start.Type != Type)
+				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", start.Type, Name, Type));
+			if(end.Type != Type)
+				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", end.Type, Name, Type));
+
+			keyConditions.Add(Name, new Aws.Condition() { ComparisonOperator = "BETWEEN ", AttributeValueList = new List<Aws.AttributeValue>() { start.ToAws(), end.ToAws() } });
 		}
 	}
 }

@@ -138,7 +138,7 @@
 		.Concat(GenOverloads(itemKey, condition, values, returnOldItem))
 		// Can't have values without condition
 		.Where(noValuesWithoutCondition));
-	var query = new Method("IQueryContext", "Query", "new QueryContext",
+	var query = new Method("IReversibleQueryContext", "Query", "new QueryContext",
 		GenOverloads(true, regionArg, tableNameArg, indexNameNoneArg, keySchemaArg, hashKey, projection, filter, values, consistent)
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanContext", "Scan", "new ScanContext",

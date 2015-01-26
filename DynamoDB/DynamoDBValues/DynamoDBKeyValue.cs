@@ -236,12 +236,24 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		}
 		#endregion
 
+		// TODO move this to AttributeSchema
 		internal Dictionary<string, Aws.Condition> ToAws(AttributeSchema hashKeySchema)
 		{
 			if(Type != hashKeySchema.Type)
 				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", Type, hashKeySchema.Name, hashKeySchema.Type));
 
 			return new Dictionary<string, Aws.Condition>() { { hashKeySchema.Name, new Aws.Condition() { ComparisonOperator = "EQ", AttributeValueList = new List<Aws.AttributeValue>() { ToAws() } } } };
+		}
+
+		// TODO move this to AttributeSchema
+		internal void ToAws(AttributeSchema rangeKeySchema, Dictionary<string, Aws.Condition> keyConditions, string comparisonOperator)
+		{
+			if(rangeKeySchema == null)
+				throw new NotSupportedException("Can't specify range key condition for table or index without a range key");
+			if(Type != rangeKeySchema.Type)
+				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", Type, rangeKeySchema.Name, rangeKeySchema.Type));
+
+			keyConditions.Add(rangeKeySchema.Name, new Aws.Condition() { ComparisonOperator = comparisonOperator, AttributeValueList = new List<Aws.AttributeValue>() { ToAws() } });
 		}
 	}
 }

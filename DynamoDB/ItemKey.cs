@@ -77,12 +77,12 @@ namespace Adamantworks.Amazon.DynamoDB
 			CompositeValueSeparator = ';';
 		}
 
-		public static CompositeHashKey CompositeHashKey(params DynamoDBKeyValue[] hashKey)
+		public static CompositeKey Composite(params DynamoDBKeyValue[] hashKey)
 		{
 			if(hashKey == null || hashKey.Length == 0)
 				throw new ArgumentException("Must provide a key value", "hashKey");
 
-			return new CompositeHashKey(CompositeValue(hashKey));
+			return new CompositeKey(CompositeValue(hashKey));
 		}
 
 		internal static string CompositeValue(DynamoDBKeyValue[] values)

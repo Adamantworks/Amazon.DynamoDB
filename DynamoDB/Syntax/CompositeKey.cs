@@ -11,15 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public struct CompositeHashKey
+	public struct CompositeKey
 	{
 		private readonly DynamoDBString hashKey;
 
-		public CompositeHashKey(DynamoDBString hashKey)
+		public CompositeKey(DynamoDBString hashKey)
 		{
 			this.hashKey = hashKey;
 		}
@@ -29,12 +30,12 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			return new ItemKey(hashKey, ItemKey.CompositeValue(rangeKey));
 		}
 
-		public static implicit operator ItemKey(CompositeHashKey value)
+		public static implicit operator ItemKey(CompositeKey value)
 		{
 			return new ItemKey(value.hashKey);
 		}
 
-		public static implicit operator DynamoDBString(CompositeHashKey value)
+		public static implicit operator DynamoDBString(CompositeKey value)
 		{
 			return value.hashKey;
 		}
