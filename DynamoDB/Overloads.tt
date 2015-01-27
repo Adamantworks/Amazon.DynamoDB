@@ -109,22 +109,6 @@
 		GenOverloads(true, item, returnOldItem, cancellationToken));
 	var putForwards = new Method("DynamoDBMap", "Put", "writeContext.Put",
 		GenOverloads(true, item, returnOldItem));
-	var updateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
-		GenOverloads(true, hashKeyOnly, updateExp, condition, values, updateReturnValue, cancellationToken)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, updateExp, condition, values, updateReturnValue, cancellationToken))
-		.Concat(GenOverloads(itemKey, updateExp, condition, values, updateReturnValue, cancellationToken)));
-	var update = new Method("DynamoDBMap", "Update",
-		GenOverloads(true, hashKeyOnly, updateExp, condition, values, updateReturnValue)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, updateExp, condition, values, updateReturnValue))
-		.Concat(GenOverloads(itemKey, updateExp, condition, values, updateReturnValue)));
-	var tryUpdateAsync = new Method("Task<bool>", "TryUpdateAsync",
-		GenOverloads(true, hashKeyOnly, updateExp, condition, values, cancellationToken)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, updateExp, condition, values, cancellationToken))
-		.Concat(GenOverloads(itemKey, updateExp, condition, values, cancellationToken)));
-	var tryUpdate = new Method("bool", "TryUpdate",
-		GenOverloads(true, hashKeyOnly, updateExp, condition, values)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, updateExp, condition, values))
-		.Concat(GenOverloads(itemKey, updateExp, condition, values)));
 	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
 		GenOverloads(true, hashKeyOnly, condition, values, returnOldItem, cancellationToken)
 		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, condition, values, returnOldItem, cancellationToken))
@@ -167,6 +151,14 @@
 		GenOverloads(item, returnOldItem, cancellationToken));
 	var put = new Method("DynamoDBMap", "Put",
 		GenOverloads(item, returnOldItem));
+	var updateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
+		GenOverloads(updateExp, values, updateReturnValue, cancellationToken));
+	var update = new Method("DynamoDBMap", "Update",
+		GenOverloads(updateExp, values, updateReturnValue));
+	var tryUpdateAsync = new Method("Task<bool>", "TryUpdateAsync",
+		GenOverloads(updateExp, values, cancellationToken));
+	var tryUpdate = new Method("bool", "TryUpdate",
+		GenOverloads(updateExp, values));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -205,12 +197,6 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
 
-<#		GenInterface(updateAsync); #>
-<#		GenInterface(update); #>
-
-<#		GenInterface(tryUpdateAsync); #>
-<#		GenInterface(tryUpdate); #>
-
 <#		GenInterface(deleteAsync); #>
 <#		GenInterface(delete); #>
 
@@ -245,14 +231,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(putForwards); #>
 
-<#		GenMethods(updateAsync); #>
-
-<#		GenMethods(update); #>
-
-<#		GenMethods(tryUpdateAsync); #>
-
-<#		GenMethods(tryUpdate); #>
-
 <#		GenMethods(deleteAsync); #>
 
 <#		GenMethods(delete); #>
@@ -283,6 +261,17 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(put); #>
 	}
+
+	partial class TableUpdateContext
+	{
+<#		GenMethods(updateAsync); #>
+
+<#		GenMethods(update); #>
+
+<#		GenMethods(tryUpdateAsync); #>
+
+<#		GenMethods(tryUpdate); #>
+	}
 }
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
@@ -303,6 +292,15 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 <#		GenInterface(putAsync); #>
 <#		GenInterface(put); #>
+	}
+
+	public partial interface ITableUpdateSyntax
+	{
+<#		GenInterface(updateAsync); #>
+<#		GenInterface(update); #>
+
+<#		GenInterface(tryUpdateAsync); #>
+<#		GenInterface(tryUpdate); #>
 	}
 }
 <#+

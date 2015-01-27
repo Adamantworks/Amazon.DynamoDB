@@ -57,18 +57,16 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITableWriteSyntax If(PredicateExpression condition);
 		ITableWriteSyntax If(PredicateExpression condition, Values values);
 
+		ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey);
+		ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		ITableUpdateIfSyntax On(ItemKey key);
+
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		void Put(IBatchWrite batch, DynamoDBMap item);
 
 		Task InsertAsync(DynamoDBMap item);
 		Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken);
 		void Insert(DynamoDBMap item);
-
-		Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
-		DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue);
-
-		Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken);
-		bool TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values);
 
 		void DeleteAsync(IBatchWriteAsync batch, ItemKey key);
 		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
@@ -291,6 +289,19 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new TableWriteContext(this, condition, values);
 		}
 
+		public ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey)
+		{
+			return new TableUpdateContext(this, new ItemKey(hashKey));
+		}
+		public ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new TableUpdateContext(this, new ItemKey(hashKey, rangeKey));
+		}
+		public ITableUpdateIfSyntax On(ItemKey key)
+		{
+			return new TableUpdateContext(this, key);
+		}
+
 		#region Put
 		public void PutAsync(IBatchWriteAsync batch, DynamoDBMap item)
 		{
@@ -316,69 +327,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		public void Insert(DynamoDBMap item)
 		{
 			insertContext.Put(item, false);
-		}
-		#endregion
-
-		#region Update
-		public async Task<DynamoDBMap> UpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
-		{
-			var request = BuildUpdateRequest(key, update, condition, values, returnValue);
-			var response = await Region.DB.UpdateItemAsync(request, cancellationToken).ConfigureAwait(false);
-			if(returnValue == UpdateReturnValue.None) return null;
-			return response.Attributes.ToGetValue();
-		}
-
-		public DynamoDBMap Update(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
-		{
-			var request = BuildUpdateRequest(key, update, condition, values, returnValue);
-			var response = Region.DB.UpdateItem(request);
-			if(returnValue == UpdateReturnValue.None) return null;
-			return response.Attributes.ToGetValue();
-		}
-
-		private Aws.UpdateItemRequest BuildUpdateRequest(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, UpdateReturnValue returnValue)
-		{
-			var request = new Aws.UpdateItemRequest()
-			{
-				TableName = Name,
-				Key = key.ToAws(Schema.Key),
-				UpdateExpression = update.Expression,
-				ExpressionAttributeNames = AwsAttributeNames.GetCombined(update, condition),
-				ReturnValues = returnValue.ToAws(),
-			};
-			if(condition != null)
-				request.ConditionExpression = condition.Expression;
-			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(update, condition, values);
-
-			return request;
-		}
-		#endregion
-
-		#region TryUpdate
-		public async Task<bool> TryUpdateAsync(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			try
-			{
-				await UpdateAsync(key, update, condition, values, UpdateReturnValue.None, cancellationToken).ConfigureAwait(false);
-				return true;
-			}
-			catch(Aws.ConditionalCheckFailedException)
-			{
-				return false;
-			}
-		}
-
-		public bool TryUpdate(ItemKey key, UpdateExpression update, PredicateExpression condition, Values values)
-		{
-			try
-			{
-				Update(key, update, condition, values, UpdateReturnValue.None);
-				return true;
-			}
-			catch(Aws.ConditionalCheckFailedException)
-			{
-				return false;
-			}
 		}
 		#endregion
 
