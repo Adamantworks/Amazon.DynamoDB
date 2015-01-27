@@ -22,25 +22,25 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	internal partial class TableUpdateContext : ITableUpdateIfSyntax
+	internal partial class TableModifyContext : ITableModifyIfSyntax
 	{
 		private readonly Table table;
 		private readonly ItemKey key;
 		private PredicateExpression condition;
 		private Values conditionValues;
 
-		public TableUpdateContext(Table table, ItemKey key)
+		public TableModifyContext(Table table, ItemKey key)
 		{
 			this.table = table;
 			this.key = key;
 		}
 
-		public ITableUpdateSyntax If(PredicateExpression condition)
+		public ITableModifySyntax If(PredicateExpression condition)
 		{
 			this.condition = condition;
 			return this;
 		}
-		public ITableUpdateSyntax If(PredicateExpression condition, Values values)
+		public ITableModifySyntax If(PredicateExpression condition, Values values)
 		{
 			this.condition = condition;
 			conditionValues = values;

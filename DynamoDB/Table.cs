@@ -57,9 +57,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITablePutSyntax If(PredicateExpression condition);
 		ITablePutSyntax If(PredicateExpression condition, Values values);
 
-		ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey);
-		ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		ITableUpdateIfSyntax On(ItemKey key);
+		ITableModifyIfSyntax On(DynamoDBKeyValue hashKey);
+		ITableModifyIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		ITableModifyIfSyntax On(ItemKey key);
 
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		void Put(IBatchWrite batch, DynamoDBMap item);
@@ -289,17 +289,17 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new TablePutContext(this, condition, values);
 		}
 
-		public ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey)
+		public ITableModifyIfSyntax On(DynamoDBKeyValue hashKey)
 		{
-			return new TableUpdateContext(this, new ItemKey(hashKey));
+			return new TableModifyContext(this, new ItemKey(hashKey));
 		}
-		public ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		public ITableModifyIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return new TableUpdateContext(this, new ItemKey(hashKey, rangeKey));
+			return new TableModifyContext(this, new ItemKey(hashKey, rangeKey));
 		}
-		public ITableUpdateIfSyntax On(ItemKey key)
+		public ITableModifyIfSyntax On(ItemKey key)
 		{
-			return new TableUpdateContext(this, key);
+			return new TableModifyContext(this, key);
 		}
 
 		#region Put

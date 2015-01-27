@@ -758,7 +758,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 	}
 
-	partial class TableUpdateContext
+	partial class TableModifyContext
 	{
 		#region UpdateAsync
 		public Task<DynamoDBMap> UpdateAsync(UpdateExpression update)
@@ -859,7 +859,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		DynamoDBMap Put(DynamoDBMap item);
 	}
 
-	public partial interface ITableUpdateSyntax
+	public partial interface ITableModifySyntax
 	{
 		Task<DynamoDBMap> UpdateAsync(UpdateExpression update);
 		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values);

@@ -18,7 +18,7 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface ITableUpdateSyntax
+	public partial interface ITableModifySyntax
 	{
 		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
 		DynamoDBMap Update(UpdateExpression update, Values values, UpdateReturnValue returnValue);

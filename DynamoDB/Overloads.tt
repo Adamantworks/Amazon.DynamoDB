@@ -262,7 +262,7 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(put); #>
 	}
 
-	partial class TableUpdateContext
+	partial class TableModifyContext
 	{
 <#		GenMethods(updateAsync); #>
 
@@ -294,7 +294,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#		GenInterface(put); #>
 	}
 
-	public partial interface ITableUpdateSyntax
+	public partial interface ITableModifySyntax
 	{
 <#		GenInterface(updateAsync); #>
 <#		GenInterface(update); #>

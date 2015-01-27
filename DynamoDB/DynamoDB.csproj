@@ -54,8 +54,8 @@
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
     <Compile Include="Converters\Basic\SetConverter.cs" />
-    <Compile Include="Syntax\ITableUpdateIfSyntax.cs" />
-    <Compile Include="Syntax\ITableUpdateSyntax.cs" />
+    <Compile Include="Syntax\ITableModifyIfSyntax.cs" />
+    <Compile Include="Syntax\ITableModifySyntax.cs" />
     <Compile Include="Syntax\ITablePutSyntax.cs" />
     <Compile Include="TableGetContext.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Syntax\ITableConsistentSyntax.cs" />
     <Compile Include="Syntax\ITableGetSyntax.cs" />
     <Compile Include="Syntax\ScanContext.cs" />
-    <Compile Include="TableUpdateContext.cs" />
+    <Compile Include="TableModifyContext.cs" />
     <Compile Include="TablePutContext.cs" />
     <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />

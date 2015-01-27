@@ -14,9 +14,9 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface ITableUpdateIfSyntax : ITableUpdateSyntax
+	public interface ITableModifyIfSyntax : ITableModifySyntax
 	{
-		ITableUpdateSyntax If(PredicateExpression condition);
-		ITableUpdateSyntax If(PredicateExpression condition, Values values);
+		ITableModifySyntax If(PredicateExpression condition);
+		ITableModifySyntax If(PredicateExpression condition, Values values);
 	}
 }
