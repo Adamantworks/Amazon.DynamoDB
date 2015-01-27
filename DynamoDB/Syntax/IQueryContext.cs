@@ -21,7 +21,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 		// TODO change default values to overloads
 
-		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> AllKeysAsync(ReadAhead readAhead = ReadAhead.Some);
 		IEnumerable<DynamoDBMap> AllKeys();
 
 		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead = ReadAhead.Some);

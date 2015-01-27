@@ -77,7 +77,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 
 		#region AllKeys
-		public IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead)
+		public IAsyncEnumerable<DynamoDBMap> AllKeysAsync(ReadAhead readAhead)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			return QueryAsync(keyConditions, readAhead);

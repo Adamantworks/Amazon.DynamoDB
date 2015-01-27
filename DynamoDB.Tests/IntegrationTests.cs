@@ -60,7 +60,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 				var hashKey = Guid.NewGuid().ToDynamoDBKeyValue();
 
-				var items = await table.Indexes["global"].Query(hashKey).AllAsync().ToList();
+				var items = await table.Indexes["global"].Query(hashKey).AllKeysAsync().ToList();
 				// TODO test query limits
 			}
 			finally
