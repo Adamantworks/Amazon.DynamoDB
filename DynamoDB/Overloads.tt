@@ -53,11 +53,16 @@
 	var updateReturnValue = Param("UpdateReturnValue", "returnValue", "UpdateReturnValue.None");
 	var regionArg = Argument("Region");
 	var tableDotRegionArg = Argument("table.Region");
-	var tableNameArg = Argument("Name");
+	var indexRegionArg = Argument("Table.Region");
+	var indexDotTableDotRegionArg = Argument("index.Table.Region");
+	var nameArg = Argument("Name");
 	var tableDotTableNameArg = Argument("table.Name");
+	var indexDotTableDotTableNameArg = Argument("index.Table.Name");
+	var indexTableNameArg = Argument("Table.Name");
 	var indexNameNoneArg = Argument("null");
 	var keySchemaArg = Argument("Schema.Key");
 	var tableDotKeySchemaArg = Argument("table.Schema.Key");
+	var indexDotKeySchemaArg = Argument("index.Schema.Key");
 	var projectionNoneArg = Argument("null");
 	var projectionArg = Argument("projection");
 	var consistentNoneArg = Argument("false");
@@ -66,6 +71,7 @@
 	var filter = Param("PredicateExpression", "filter", "null");
 	var tableName = Param("string", "tableName");
 	var schema = Param("TableSchema", "schema");
+	var indexNameArg = Argument("index.Name");
 
 	Func<IReadOnlyList<Parameter>, bool> noIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(indexProvisionedThroughputs) && ! overload.Contains(provisionedThroughput));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
@@ -115,10 +121,13 @@
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
 		GenOverloads(true, item, returnOldItem));
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
-		GenOverloads(true, regionArg, tableNameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
+		GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
-		GenOverloads(true, regionArg, tableNameArg, projectionNoneArg, filter, values)
+		GenOverloads(true, regionArg, nameArg, projectionNoneArg, filter, values)
+		.Where(noValuesWithoutFilter));
+	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
+		GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
 
 	// Syntax
@@ -161,6 +170,9 @@
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, projectionArg, filter, values)
+		.Where(noValuesWithoutFilter));
+	var indexQuery = new Method("IReverseSyntax", "Query", "new QueryContext",
+		GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
@@ -232,6 +244,11 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(scanForwards); #>
 	}
+
+	internal partial class Index
+	{
+<#		GenMethods(indexQueryForwards); #>
+	}
 }
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
@@ -251,8 +268,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 <#		GenInterface(batchGetJoinAsync); #>
 <#		GenInterface(batchGetJoin); #>
-
-<#		GenInterface(query); #>
 	}
 
 	public partial interface IModifySyntax
@@ -271,6 +286,11 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 <#		GenInterface(putAsync); #>
 <#		GenInterface(put); #>
+	}
+
+	public partial interface IQuerySyntax
+	{
+<#		GenInterface(query); #>
 	}
 }
 
@@ -293,6 +313,11 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(query); #>
 
 <#		GenMethods(scan); #>
+	}
+
+	internal partial class IndexContext
+	{
+<#		GenMethods(indexQuery); #>
 	}
 
 	internal partial class ModifyContext

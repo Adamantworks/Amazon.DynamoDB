@@ -49,12 +49,14 @@
   <ItemGroup>
     <Compile Include="BatchGet.cs" />
     <Compile Include="BatchWrite.cs" />
+    <Compile Include="Contexts\IndexContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
     <Compile Include="Converters\Basic\ImmutableArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\BooleanConverter.cs" />
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
     <Compile Include="Converters\Basic\SetConverter.cs" />
+    <Compile Include="Syntax\IConsistentSyntax.cs" />
     <Compile Include="Syntax\IIfSyntax.cs" />
     <Compile Include="Syntax\IModifySyntax.cs" />
     <Compile Include="Syntax\IPutSyntax.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Syntax\Convertable.cs" />
     <Compile Include="Syntax\IQueryLimitToSyntax.cs" />
     <Compile Include="Syntax\IQueryCompletionSyntax.cs" />
+    <Compile Include="Syntax\IQuerySyntax.cs" />
     <Compile Include="Syntax\IReverseSyntax.cs" />
     <Compile Include="Contexts\QueryContext.cs" />
     <Compile Include="Syntax\IConsistentOrScanSyntax.cs" />

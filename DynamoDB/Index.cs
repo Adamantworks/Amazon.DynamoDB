@@ -21,7 +21,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IIndex
+	public interface IIndex : IConsistentSyntax
 	{
 		ITable Table { get; }
 		string Name { get; }
@@ -29,28 +29,21 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
-		// In the following interface API, the only one argument per method group should have a default value. The priority of those arguments is:
-		//     cancellationToken for async methods (not returning IAsyncEnumerable)
-		//     readAhead for methods returning IAsyncEnumerable
-		//     consistent (either non-async or not returning IAsyncEnumerable)
-		// That will ensure a consistent set of overloads and prevent users from needing to specify parameter names
-
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, bool consistent = false);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent = false);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent = false);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent = false);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent = false);
+		IConsistentSyntax With(ProjectionExpression projection);
 	}
 
-	internal class Index : IIndex
+	internal partial class Index : IIndex
 	{
-		private readonly Table table;
+		internal readonly Table Table;
+		private readonly IndexContext consistentContext;
+		private readonly IndexContext eventuallyConsistentContext;
 
 		public Index(Table table, string name)
 		{
-			this.table = table;
+			Table = table;
 			Name = name;
+			consistentContext = new IndexContext(this, null, true);
+			eventuallyConsistentContext = new IndexContext(this, null, false);
 		}
 
 		internal void UpdateDescription(Aws.GlobalSecondaryIndexDescription description, IndexSchema schema)
@@ -64,40 +57,27 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			//TODO in debug check that index names match
 			Schema = schema;
-			Status = table.Status;
+			Status = Table.Status;
 		}
 
-		public ITable Table { get { return table; } }
+		ITable IIndex.Table { get { return Table; } }
 		public string Name { get; private set; }
 		public IndexSchema Schema { get; private set; }
 		public TableStatus Status { get; private set; }
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
-		#region Query
-		public IReverseSyntax Query(DynamoDBKeyValue hashKey, bool consistent)
+		public IConsistentSyntax With(ProjectionExpression projection)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, null, consistent, hashKey, null, null);
+			return new IndexContext(this, projection);
 		}
-		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
+
+		public IQuerySyntax Consistent
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, null, consistent, hashKey, filter, null);
+			get { return consistentContext; }
 		}
-		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
+		public IQuerySyntax IsConsistent(bool consistent)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, null, consistent, hashKey, filter, values);
+			return consistent ? consistentContext : eventuallyConsistentContext;
 		}
-		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, projection, consistent, hashKey, null, null);
-		}
-		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, projection, consistent, hashKey, filter, null);
-		}
-		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
-		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, projection, consistent, hashKey, filter, values);
-		}
-		#endregion
 	}
 }

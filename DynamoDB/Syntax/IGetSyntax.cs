@@ -20,7 +20,7 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IGetSyntax
+	public partial interface IGetSyntax : IQuerySyntax
 	{
 		Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken);
 		DynamoDBMap Get(ItemKey key);

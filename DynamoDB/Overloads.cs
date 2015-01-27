@@ -325,6 +325,24 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 	}
+
+	internal partial class Index
+	{
+		#region Query
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
+		{
+			return new QueryContext(Table.Region, Table.Name, Name, Schema.Key, null, false, hashKey, null, null);
+		}
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
+		{
+			return new QueryContext(Table.Region, Table.Name, Name, Schema.Key, null, false, hashKey, filter, null);
+		}
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
+		{
+			return new QueryContext(Table.Region, Table.Name, Name, Schema.Key, null, false, hashKey, filter, values);
+		}
+		#endregion
+	}
 }
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
@@ -353,10 +371,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-
-		IReverseSyntax Query(DynamoDBKeyValue hashKey);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
 	}
 
 	public partial interface IModifySyntax
@@ -389,6 +403,13 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken);
 		DynamoDBMap Put(DynamoDBMap item);
+	}
+
+	public partial interface IQuerySyntax
+	{
+		IReverseSyntax Query(DynamoDBKeyValue hashKey);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
 	}
 }
 
@@ -493,6 +514,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
 		{
 			return new ScanContext(table.Region, table.Name, projection, filter, values);
+		}
+		#endregion
+	}
+
+	internal partial class IndexContext
+	{
+		#region Query
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
+		{
+			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Schema.Key, projection, consistentRead ?? false, hashKey, null, null);
+		}
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
+		{
+			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Schema.Key, projection, consistentRead ?? false, hashKey, filter, null);
+		}
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
+		{
+			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Schema.Key, projection, consistentRead ?? false, hashKey, filter, values);
 		}
 		#endregion
 	}
