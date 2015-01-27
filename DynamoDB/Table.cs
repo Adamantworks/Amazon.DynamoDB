@@ -27,7 +27,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB
 {
 	// See Overloads.tt and Overloads.cs for more method overloads of this interface
-	public partial interface ITable : ITableWithSyntax, ITableIfSyntax
+	public partial interface ITable : ITableConsistentSyntax, ITableWriteSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -51,6 +51,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		// void UpdateTable(...);
 
 		ItemKey GetKey(DynamoDBMap item);
+
+		ITableConsistentSyntax With(ProjectionExpression projection);
+
+		ITableWriteSyntax If(PredicateExpression condition);
+		ITableWriteSyntax If(PredicateExpression condition, Values values);
 
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		void Put(IBatchWrite batch, DynamoDBMap item);
