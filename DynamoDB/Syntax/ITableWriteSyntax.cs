@@ -12,9 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface ITableWriteSyntax
+	public partial interface ITableWriteSyntax
 	{
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken);
+		DynamoDBMap Put(DynamoDBMap item, bool returnOldItem);
 	}
 }

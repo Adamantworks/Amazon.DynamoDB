@@ -53,9 +53,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		ItemKey GetKey(DynamoDBMap item);
 
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
-		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
 		void Put(IBatchWrite batch, DynamoDBMap item);
-		DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem);
 
 		Task InsertAsync(DynamoDBMap item);
 		Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken);
@@ -89,6 +87,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		internal readonly Region Region;
 		private readonly TableGetContext consistentContext;
 		private readonly TableGetContext eventuallyConsistentContext;
+		private readonly TableWriteContext writeContext;
+		private readonly TableWriteContext insertContext;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
 		{
@@ -96,6 +96,8 @@ namespace Adamantworks.Amazon.DynamoDB
 			UpdateTableDescription(tableDescription);
 			consistentContext = new TableGetContext(this, null, true);
 			eventuallyConsistentContext = new TableGetContext(this, null, false);
+			writeContext = new TableWriteContext(this, null, null);
+			insertContext = new TableWriteContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
 		}
 
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
@@ -289,62 +291,26 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			((IBatchWriteOperations)batch).Put(this, item);
 		}
-		public async Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
-			var response = await Region.DB.PutItemAsync(request, cancellationToken).ConfigureAwait(false);
-			if(!returnOldItem) return null;
-			return response.Attributes.ToGetValue();
-		}
 
 		public void Put(IBatchWrite batch, DynamoDBMap item)
 		{
 			((IBatchWriteOperations)batch).Put(this, item);
-		}
-		public DynamoDBMap Put(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			var request = BuildPutItemRequest(item, condition, values, returnOldItem);
-			var response = Region.DB.PutItem(request);
-			if(!returnOldItem) return null;
-			return response.Attributes.ToGetValue();
-		}
-
-		private Aws.PutItemRequest BuildPutItemRequest(DynamoDBMap item, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			var request = new Aws.PutItemRequest()
-			{
-				TableName = Name,
-				Item = item.ToAwsDictionary(),
-				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
-			};
-			if(condition != null)
-				request.ConditionExpression = condition.Expression;
-			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
-			return request;
 		}
 		#endregion
 
 		#region Insert
 		public Task InsertAsync(DynamoDBMap item)
 		{
-			return PutAsync(item, GetInsertExpression(), null, false, CancellationToken.None);
+			return insertContext.PutAsync(item, false, CancellationToken.None);
 		}
 		public Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken)
 		{
-			return PutAsync(item, GetInsertExpression(), null, false, cancellationToken);
+			return insertContext.PutAsync(item, false, cancellationToken);
 		}
 
 		public void Insert(DynamoDBMap item)
 		{
-			Put(item, GetInsertExpression(), null, false);
-		}
-
-		private PredicateExpression insertExpression;
-		private PredicateExpression GetInsertExpression()
-		{
-			if(insertExpression == null)
-				insertExpression = new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name);
-			return insertExpression;
+			insertContext.Put(item, false);
 		}
 		#endregion
 

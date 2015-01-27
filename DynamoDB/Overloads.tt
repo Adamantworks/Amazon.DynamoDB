@@ -105,14 +105,10 @@
 		.Concat(GenOverloads(true, outerItemsAsync, keySelector, resultSelector, readAhead)));
 	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
 		GenOverloads(true, outerItemsSync, keySelector, resultSelector));
-	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
-		GenOverloads(item, condition, values, returnOldItem, cancellationToken)
-		// Can't have values without condition
-		.Where(noValuesWithoutCondition));
-	var put = new Method("DynamoDBMap", "Put",
-		GenOverloads(item, condition, values, returnOldItem)
-		// Can't have values without condition
-		.Where(noValuesWithoutCondition));
+	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "writeContext.PutAsync",
+		GenOverloads(true, item, returnOldItem, cancellationToken));
+	var putForwards = new Method("DynamoDBMap", "Put", "writeContext.Put",
+		GenOverloads(true, item, returnOldItem));
 	var updateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
 		GenOverloads(true, hashKeyOnly, updateExp, condition, values, updateReturnValue, cancellationToken)
 		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, updateExp, condition, values, updateReturnValue, cancellationToken))
@@ -167,6 +163,10 @@
 		.Concat(GenOverloads(outerItemsAsync, keySelector, resultSelector, readAhead)));
 	var batchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
 		GenOverloads(outerItemsSync, keySelector, resultSelector));
+	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
+		GenOverloads(item, returnOldItem, cancellationToken));
+	var put = new Method("DynamoDBMap", "Put",
+		GenOverloads(item, returnOldItem));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -205,9 +205,6 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
 
-<#		GenInterface(putAsync); #>
-<#		GenInterface(put); #>
-
 <#		GenInterface(updateAsync); #>
 <#		GenInterface(update); #>
 
@@ -244,9 +241,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(batchGetJoinForwards); #>
 
-<#		GenMethods(putAsync); #>
+<#		GenMethods(putAsyncForwards); #>
 
-<#		GenMethods(put); #>
+<#		GenMethods(putForwards); #>
 
 <#		GenMethods(updateAsync); #>
 
@@ -279,6 +276,13 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(batchGetJoin); #>
 	}
+
+	partial class TableWriteContext
+	{
+<#		GenMethods(putAsync); #>
+
+<#		GenMethods(put); #>
+	}
 }
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
@@ -293,6 +297,12 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 <#		GenInterface(batchGetJoinAsync); #>
 <#		GenInterface(batchGetJoin); #>
+	}
+
+	public partial interface ITableWriteSyntax
+	{
+<#		GenInterface(putAsync); #>
+<#		GenInterface(put); #>
 	}
 }
 <#+
