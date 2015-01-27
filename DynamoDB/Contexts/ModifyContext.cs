@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Aws = Amazon.DynamoDBv2.Model;
+using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -108,5 +110,37 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
+
+		#region Delete
+		public async Task<DynamoDBMap> DeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
+		{
+			var request = BuildDeleteRequest(returnOldItem);
+			var response = await table.Region.DB.DeleteItemAsync(request, cancellationToken).ConfigureAwait(false);
+			if(!returnOldItem) return null;
+			return response.Attributes.ToGetValue();
+		}
+
+		public DynamoDBMap Delete(bool returnOldItem)
+		{
+			var request = BuildDeleteRequest(returnOldItem);
+			var response = table.Region.DB.DeleteItem(request);
+			if(!returnOldItem) return null;
+			return response.Attributes.ToGetValue();
+		}
+
+		private Aws.DeleteItemRequest BuildDeleteRequest(bool returnOldItem)
+		{
+			var request = new Aws.DeleteItemRequest()
+			{
+				TableName = table.Name,
+				Key = key.ToAws(table.Schema.Key),
+				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
+			};
+			if(condition != null)
+				request.ConditionExpression = condition.Expression;
+			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, conditionValues);
+			return request;
+		}
+		#endregion
 	}
 }

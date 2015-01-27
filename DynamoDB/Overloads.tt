@@ -47,7 +47,6 @@
 	var keySelector = Param("Func<T, ItemKey>","keySelector");
 	var resultSelector = Param("Func<T, DynamoDBMap, TResult>", "resultSelector");
 	var item = Param("DynamoDBMap", "item");
-	var condition = Param("PredicateExpression", "condition", "null");
 	var values = Param("Values", "values", "null");
 	var returnOldItem = Param("bool", "returnOldItem", "false");
 	var updateExp  = Param("UpdateExpression", "update");
@@ -63,7 +62,6 @@
 
 	Func<IReadOnlyList<Parameter>, bool> noIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(indexProvisionedThroughputs) && ! overload.Contains(provisionedThroughput));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
-	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutCondition = overload => !(overload.Contains(values) && !overload.Contains(condition));
 
 	// Region
 	var listTablesAsync = new Method("IAsyncEnumerable<string>", "ListTablesAsync", GenOverloads(readAhead));
@@ -109,22 +107,10 @@
 		GenOverloads(true, item, returnOldItem, cancellationToken));
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
 		GenOverloads(true, item, returnOldItem));
-	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
-		GenOverloads(true, hashKeyOnly, condition, values, returnOldItem, cancellationToken)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, condition, values, returnOldItem, cancellationToken))
-		.Concat(GenOverloads(itemKey, condition, values, returnOldItem, cancellationToken))
-		// Can't have values without condition
-		.Where(noValuesWithoutCondition));
-	var delete = new Method("DynamoDBMap", "Delete",
-		GenOverloads(true, hashKeyOnly, condition, values, returnOldItem)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, condition, values, returnOldItem))
-		.Concat(GenOverloads(itemKey, condition, values, returnOldItem))
-		// Can't have values without condition
-		.Where(noValuesWithoutCondition));
-	var query = new Method("IReversibleQueryContext", "Query", "new QueryContext",
+	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, regionArg, tableNameArg, indexNameNoneArg, keySchemaArg, hashKey, projection, filter, values, consistent)
 		.Where(noValuesWithoutFilter));
-	var scan = new Method("IScanContext", "Scan", "new ScanContext",
+	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, regionArg, tableNameArg, projection, filter, values)
 		.Where(noValuesWithoutFilter));
 
@@ -159,6 +145,10 @@
 		GenOverloads(updateExp, values, cancellationToken));
 	var tryUpdate = new Method("bool", "TryUpdate",
 		GenOverloads(updateExp, values));
+	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
+		GenOverloads(returnOldItem, cancellationToken));
+	var delete = new Method("DynamoDBMap", "Delete",
+		GenOverloads( returnOldItem));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -198,9 +188,6 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
 
-<#		GenInterface(deleteAsync); #>
-<#		GenInterface(delete); #>
-
 <#		GenInterface(query); #>
 
 <#		GenInterface(scan); #>
@@ -232,13 +219,42 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(putForwards); #>
 
-<#		GenMethods(deleteAsync); #>
-
-<#		GenMethods(delete); #>
-
 <#		GenMethods(query); #>
 
 <#		GenMethods(scan); #>
+	}
+}
+
+namespace Adamantworks.Amazon.DynamoDB.Syntax
+{
+	public partial interface IGetSyntax
+	{
+<#		GenInterface(getAsync); #>
+<#		GenInterface(get); #>
+
+<#		GenInterface(batchGetAsync); #>
+<#		GenInterface(batchGet); #>
+
+<#		GenInterface(batchGetJoinAsync); #>
+<#		GenInterface(batchGetJoin); #>
+	}
+
+	public partial interface IModifySyntax
+	{
+<#		GenInterface(updateAsync); #>
+<#		GenInterface(update); #>
+
+<#		GenInterface(tryUpdateAsync); #>
+<#		GenInterface(tryUpdate); #>
+
+<#		GenInterface(deleteAsync); #>
+<#		GenInterface(delete); #>
+	}
+
+	public partial interface IPutSyntax
+	{
+<#		GenInterface(putAsync); #>
+<#		GenInterface(put); #>
 	}
 }
 
@@ -268,6 +284,10 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(tryUpdateAsync); #>
 
 <#		GenMethods(tryUpdate); #>
+
+<#		GenMethods(deleteAsync); #>
+
+<#		GenMethods(delete); #>
 	}
 
 	internal partial class PutContext
@@ -275,36 +295,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(putAsync); #>
 
 <#		GenMethods(put); #>
-	}
-}
-
-namespace Adamantworks.Amazon.DynamoDB.Syntax
-{
-	public partial interface IGetSyntax
-	{
-<#		GenInterface(getAsync); #>
-<#		GenInterface(get); #>
-
-<#		GenInterface(batchGetAsync); #>
-<#		GenInterface(batchGet); #>
-
-<#		GenInterface(batchGetJoinAsync); #>
-<#		GenInterface(batchGetJoin); #>
-	}
-
-	public partial interface IModifySyntax
-	{
-<#		GenInterface(updateAsync); #>
-<#		GenInterface(update); #>
-
-<#		GenInterface(tryUpdateAsync); #>
-<#		GenInterface(tryUpdate); #>
-	}
-
-	public partial interface IPutSyntax
-	{
-<#		GenInterface(putAsync); #>
-<#		GenInterface(put); #>
 	}
 }
 <#+

@@ -70,9 +70,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		void Insert(DynamoDBMap item);
 
 		void DeleteAsync(IBatchWriteAsync batch, ItemKey key);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
 		void Delete(IBatchWrite batch, ItemKey key);
-		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem);
 
 		// The overloads of these methods are in Overloads.tt
 		// IQueryCompletionSyntax Query(...);
@@ -336,38 +334,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			((IBatchWriteOperations)batch).Delete(this, key);
 		}
-		public async Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			var request = BuildDeleteRequest(key, condition, values, returnOldItem);
-			var response = await Region.DB.DeleteItemAsync(request, cancellationToken).ConfigureAwait(false);
-			if(!returnOldItem) return null;
-			return response.Attributes.ToGetValue();
-		}
 
 		public void Delete(IBatchWrite batch, ItemKey key)
 		{
 			((IBatchWriteOperations)batch).Delete(this, key);
-		}
-		public DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			var request = BuildDeleteRequest(key, condition, values, returnOldItem);
-			var response = Region.DB.DeleteItem(request);
-			if(!returnOldItem) return null;
-			return response.Attributes.ToGetValue();
-		}
-
-		private Aws.DeleteItemRequest BuildDeleteRequest(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			var request = new Aws.DeleteItemRequest()
-			{
-				TableName = Name,
-				Key = key.ToAws(Schema.Key),
-				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
-			};
-			if(condition != null)
-				request.ConditionExpression = condition.Expression;
-			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
-			return request;
 		}
 		#endregion
 	}

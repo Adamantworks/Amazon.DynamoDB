@@ -108,59 +108,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		void UpdateTable(IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		void UpdateTable(ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, bool returnOldItem, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool returnOldItem, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, bool returnOldItem, CancellationToken cancellationToken);
-		Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, bool returnOldItem);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition, bool returnOldItem);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, bool returnOldItem);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool returnOldItem);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, bool returnOldItem);
-		DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, bool returnOldItem);
-		DynamoDBMap Delete(ItemKey key);
-		DynamoDBMap Delete(ItemKey key, PredicateExpression condition);
-		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values);
-		DynamoDBMap Delete(ItemKey key, bool returnOldItem);
-		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, bool returnOldItem);
-
 		IReverseSyntax Query(DynamoDBKeyValue hashKey);
 		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection);
 		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
@@ -368,220 +315,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
-		#region DeleteAsync
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey)
-		{
-			return DeleteAsync(new ItemKey(hashKey), null, null, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, null, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, values, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, bool returnOldItem)
-		{
-			return DeleteAsync(new ItemKey(hashKey), null, null, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, bool returnOldItem)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, null, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, values, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey), null, null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, values, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey), null, null, returnOldItem, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, null, returnOldItem, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey), condition, values, returnOldItem, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), null, null, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, null, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, values, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool returnOldItem)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), null, null, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, bool returnOldItem)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, null, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, values, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), null, null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, values, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), null, null, returnOldItem, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, null, returnOldItem, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(new ItemKey(hashKey, rangeKey), condition, values, returnOldItem, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key)
-		{
-			return DeleteAsync(key, null, null, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition)
-		{
-			return DeleteAsync(key, condition, null, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values)
-		{
-			return DeleteAsync(key, condition, values, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, bool returnOldItem)
-		{
-			return DeleteAsync(key, null, null, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, bool returnOldItem)
-		{
-			return DeleteAsync(key, condition, null, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			return DeleteAsync(key, condition, values, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(key, null, null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(key, condition, null, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, Values values, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(key, condition, values, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(key, null, null, returnOldItem, cancellationToken);
-		}
-		public Task<DynamoDBMap> DeleteAsync(ItemKey key, PredicateExpression condition, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return DeleteAsync(key, condition, null, returnOldItem, cancellationToken);
-		}
-		#endregion
-
-		#region Delete
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey)
-		{
-			return Delete(new ItemKey(hashKey), null, null, false);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition)
-		{
-			return Delete(new ItemKey(hashKey), condition, null, false);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values)
-		{
-			return Delete(new ItemKey(hashKey), condition, values, false);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, bool returnOldItem)
-		{
-			return Delete(new ItemKey(hashKey), null, null, returnOldItem);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition, bool returnOldItem)
-		{
-			return Delete(new ItemKey(hashKey), condition, null, returnOldItem);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			return Delete(new ItemKey(hashKey), condition, values, returnOldItem);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
-		{
-			return Delete(new ItemKey(hashKey, rangeKey), null, null, false);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition)
-		{
-			return Delete(new ItemKey(hashKey, rangeKey), condition, null, false);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values)
-		{
-			return Delete(new ItemKey(hashKey, rangeKey), condition, values, false);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, bool returnOldItem)
-		{
-			return Delete(new ItemKey(hashKey, rangeKey), null, null, returnOldItem);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, bool returnOldItem)
-		{
-			return Delete(new ItemKey(hashKey, rangeKey), condition, null, returnOldItem);
-		}
-		public DynamoDBMap Delete(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, PredicateExpression condition, Values values, bool returnOldItem)
-		{
-			return Delete(new ItemKey(hashKey, rangeKey), condition, values, returnOldItem);
-		}
-		public DynamoDBMap Delete(ItemKey key)
-		{
-			return Delete(key, null, null, false);
-		}
-		public DynamoDBMap Delete(ItemKey key, PredicateExpression condition)
-		{
-			return Delete(key, condition, null, false);
-		}
-		public DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values)
-		{
-			return Delete(key, condition, values, false);
-		}
-		public DynamoDBMap Delete(ItemKey key, bool returnOldItem)
-		{
-			return Delete(key, null, null, returnOldItem);
-		}
-		public DynamoDBMap Delete(ItemKey key, PredicateExpression condition, bool returnOldItem)
-		{
-			return Delete(key, condition, null, returnOldItem);
-		}
-		#endregion
-
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
@@ -659,6 +392,60 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new ScanContext(Region, Name, projection, filter, values);
 		}
 		#endregion
+	}
+}
+
+namespace Adamantworks.Amazon.DynamoDB.Syntax
+{
+	public partial interface IGetSyntax
+	{
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(ItemKey key);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys);
+
+		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
+		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
+		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
+	}
+
+	public partial interface IModifySyntax
+	{
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update);
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values);
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		DynamoDBMap Update(UpdateExpression update);
+		DynamoDBMap Update(UpdateExpression update, Values values);
+		DynamoDBMap Update(UpdateExpression update, UpdateReturnValue returnValue);
+
+		Task<bool> TryUpdateAsync(UpdateExpression update);
+		Task<bool> TryUpdateAsync(UpdateExpression update, Values values);
+		Task<bool> TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
+		bool TryUpdate(UpdateExpression update);
+
+		Task<DynamoDBMap> DeleteAsync();
+		Task<DynamoDBMap> DeleteAsync(bool returnOldItem);
+		Task<DynamoDBMap> DeleteAsync(CancellationToken cancellationToken);
+		DynamoDBMap Delete();
+	}
+
+	public partial interface IPutSyntax
+	{
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken);
+		DynamoDBMap Put(DynamoDBMap item);
 	}
 }
 
@@ -806,6 +593,28 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return TryUpdate(update, null);
 		}
 		#endregion
+
+		#region DeleteAsync
+		public Task<DynamoDBMap> DeleteAsync()
+		{
+			return DeleteAsync(false, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> DeleteAsync(bool returnOldItem)
+		{
+			return DeleteAsync(returnOldItem, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> DeleteAsync(CancellationToken cancellationToken)
+		{
+			return DeleteAsync(false, cancellationToken);
+		}
+		#endregion
+
+		#region Delete
+		public DynamoDBMap Delete()
+		{
+			return Delete(false);
+		}
+		#endregion
 	}
 
 	internal partial class PutContext
@@ -831,54 +640,5 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return Put(item, false);
 		}
 		#endregion
-	}
-}
-
-namespace Adamantworks.Amazon.DynamoDB.Syntax
-{
-	public partial interface IGetSyntax
-	{
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(ItemKey key);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys);
-
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-	}
-
-	public partial interface IModifySyntax
-	{
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update);
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values);
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue);
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue);
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken);
-		DynamoDBMap Update(UpdateExpression update);
-		DynamoDBMap Update(UpdateExpression update, Values values);
-		DynamoDBMap Update(UpdateExpression update, UpdateReturnValue returnValue);
-
-		Task<bool> TryUpdateAsync(UpdateExpression update);
-		Task<bool> TryUpdateAsync(UpdateExpression update, Values values);
-		Task<bool> TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
-		bool TryUpdate(UpdateExpression update);
-	}
-
-	public partial interface IPutSyntax
-	{
-		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
-		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);
-		Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken);
-		DynamoDBMap Put(DynamoDBMap item);
 	}
 }
