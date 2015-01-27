@@ -71,12 +71,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		void DeleteAsync(IBatchWriteAsync batch, ItemKey key);
 		void Delete(IBatchWrite batch, ItemKey key);
-
-		// TODO: QueryCount
-		// TODO: ScanCount()
-
-		// TODO: bool ReportConsumedCapacity
-		// TODO: CapacityConsumedEvent
 	}
 
 	// See Overloads.tt and Overloads.cs for more method overloads of this class
@@ -274,7 +268,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			get { return consistentContext; }
 		}
-		public IGetSyntax IsConsistent(bool consistent)
+		public IGetSyntax ConsistentIf(bool consistent)
 		{
 			return consistent ? consistentContext : eventuallyConsistentContext;
 		}

@@ -14,9 +14,9 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IConsistentSyntax : IQuerySyntax
+	public interface IConsistentSyntax : IQuerySyntax
 	{
 		IQuerySyntax Consistent { get; }
-		IQuerySyntax IsConsistent(bool consistentRead);
+		IQuerySyntax ConsistentIf(bool consistentRead);
 	}
 }

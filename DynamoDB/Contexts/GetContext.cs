@@ -42,8 +42,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.consistentRead = consistentRead;
 		}
 
-		public IGetSyntax Consistent { get { return IsConsistent(true); } }
-		public IGetSyntax IsConsistent(bool consistent)
+		public IGetSyntax Consistent { get { return ConsistentIf(true); } }
+		public IGetSyntax ConsistentIf(bool consistent)
 		{
 			if(consistentRead != null)
 				throw new InvalidOperationException("Can't set Consistent twice");

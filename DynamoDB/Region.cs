@@ -38,8 +38,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead);
 		IEnumerable<string> ListTables();
 
-		// TODO ListTableNamesBeginningWith // Could use exclusive start key to do this
-
 		// The overloads of these methods are in Overloads.tt and call the private implementations
 		// Task<ITable> CreateTableAsync(...);
 		// ITable CreateTable();

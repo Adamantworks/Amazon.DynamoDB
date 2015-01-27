@@ -17,6 +17,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public partial interface IConsistentOrScanSyntax : IGetSyntax
 	{
 		IGetSyntax Consistent { get; }
-		IGetSyntax IsConsistent(bool consistentRead);
+		IGetSyntax ConsistentIf(bool consistentRead);
 	}
 }

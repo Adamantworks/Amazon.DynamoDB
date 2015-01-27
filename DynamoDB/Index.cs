@@ -75,7 +75,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			get { return consistentContext; }
 		}
-		public IQuerySyntax IsConsistent(bool consistent)
+		public IQuerySyntax ConsistentIf(bool consistent)
 		{
 			return consistent ? consistentContext : eventuallyConsistentContext;
 		}

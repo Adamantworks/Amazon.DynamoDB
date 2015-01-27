@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -138,9 +139,6 @@ namespace Adamantworks.Amazon.DynamoDB
 			values.Add(BuildName(position), value.ToDynamoDBValue(converter));
 			return this;
 		}
-
-		// TODO do something better. Make Values implement IReadOnlyDictionary?
-		public IReadOnlyDictionary<string, DynamoDBValue> AttributeValues { get { return values; } }
 
 		internal DynamoDBMap DynamoDBMapDeepClone()
 		{
