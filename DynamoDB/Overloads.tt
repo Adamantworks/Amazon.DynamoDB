@@ -117,8 +117,8 @@
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, regionArg, tableNameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
-	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
-		GenOverloads(true, regionArg, tableNameArg, projection, filter, values)
+	var scanForwards = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
+		GenOverloads(true, regionArg, tableNameArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
 
 	// Syntax
@@ -159,6 +159,9 @@
 	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
+	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
+		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, projectionArg, filter, values)
+		.Where(noValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -197,8 +200,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
-
-<#		GenInterface(scan); #>
 	}
 
 	internal partial class Table
@@ -229,12 +230,17 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(queryForwards); #>
 
-<#		GenMethods(scan); #>
+<#		GenMethods(scanForwards); #>
 	}
 }
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
+	public partial interface IConsistentOrScanSyntax
+	{
+<#		GenInterface(scan); #>
+	}
+
 	public partial interface IGetSyntax
 	{
 <#		GenInterface(getAsync); #>
@@ -285,6 +291,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(batchGetJoin); #>
 
 <#		GenMethods(query); #>
+
+<#		GenMethods(scan); #>
 	}
 
 	internal partial class ModifyContext

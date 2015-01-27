@@ -24,7 +24,7 @@ using Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class GetContext : IConsistentSyntax
+	internal partial class GetContext : IConsistentOrScanSyntax
 	{
 		private readonly Table table;
 		private readonly ProjectionExpression projection;
@@ -42,15 +42,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.consistentRead = consistentRead;
 		}
 
-		public IConsistentSyntax Consistent
+		public IGetSyntax Consistent { get { return IsConsistent(true); } }
+		public IGetSyntax IsConsistent(bool consistent)
 		{
-			get
-			{
-				if(consistentRead != null)
-					throw new InvalidOperationException("Can't set Consistent twice");
-				consistentRead = true;
-				return this;
-			}
+			if(consistentRead != null)
+				throw new InvalidOperationException("Can't set Consistent twice");
+			consistentRead = consistent;
+			return this;
 		}
 
 		#region Get
@@ -86,7 +84,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#endregion
 
 		#region BatchGet
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys,  ReadAhead readAhead)
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead)
 		{
 			var awsKeys = keys.Select(k => k.ToAws(table.Schema.Key));
 
@@ -122,7 +120,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var awsKeys = keys.Select(k => k.ToAws(table.Schema.Key));
 
 			var batchKeys = new List<Dictionary<string, AttributeValue>>(Limits.BatchGetSize);
-			var request = BuildBatchGetItemRequest(batchKeys );
+			var request = BuildBatchGetItemRequest(batchKeys);
 
 			using(var enumerator = awsKeys.GetEnumerator())
 			{

@@ -28,7 +28,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB
 {
 	// See Overloads.tt and Overloads.cs for more method overloads of this interface
-	public partial interface ITable : IConsistentSyntax, IPutSyntax
+	public partial interface ITable : IConsistentOrScanSyntax, IPutSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -53,7 +53,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		IConsistentSyntax With(ProjectionExpression projection);
+		IConsistentOrScanSyntax With(ProjectionExpression projection);
 
 		IPutSyntax If(PredicateExpression condition);
 		IPutSyntax If(PredicateExpression condition, Values values);
@@ -265,14 +265,18 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Schema.Key.GetKey(item);
 		}
 
-		public IConsistentSyntax With(ProjectionExpression projection)
+		public IConsistentOrScanSyntax With(ProjectionExpression projection)
 		{
 			return new GetContext(this, projection);
 		}
 
-		public IConsistentSyntax Consistent
+		public IGetSyntax Consistent
 		{
 			get { return consistentContext; }
+		}
+		public IGetSyntax IsConsistent(bool consistent)
+		{
+			return consistent ? consistentContext : eventuallyConsistentContext;
 		}
 
 		public IPutSyntax If(PredicateExpression condition)

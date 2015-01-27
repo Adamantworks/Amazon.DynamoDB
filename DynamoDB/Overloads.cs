@@ -107,13 +107,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		void UpdateTable(ProvisionedThroughput provisionedThroughput);
 		void UpdateTable(IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		void UpdateTable(ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
-
-		IScanLimitToSyntax Scan();
-		IScanLimitToSyntax Scan(ProjectionExpression projection);
-		IScanLimitToSyntax Scan(PredicateExpression filter);
-		IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter);
-		IScanLimitToSyntax Scan(PredicateExpression filter, Values values);
-		IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter, Values values);
 	}
 
 	internal partial class Table
@@ -322,25 +315,13 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new ScanContext(Region, Name, null, null, null);
 		}
-		public IScanLimitToSyntax Scan(ProjectionExpression projection)
-		{
-			return new ScanContext(Region, Name, projection, null, null);
-		}
 		public IScanLimitToSyntax Scan(PredicateExpression filter)
 		{
 			return new ScanContext(Region, Name, null, filter, null);
 		}
-		public IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter)
-		{
-			return new ScanContext(Region, Name, projection, filter, null);
-		}
 		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
 		{
 			return new ScanContext(Region, Name, null, filter, values);
-		}
-		public IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter, Values values)
-		{
-			return new ScanContext(Region, Name, projection, filter, values);
 		}
 		#endregion
 	}
@@ -348,6 +329,13 @@ namespace Adamantworks.Amazon.DynamoDB
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
+	public partial interface IConsistentOrScanSyntax
+	{
+		IScanLimitToSyntax Scan();
+		IScanLimitToSyntax Scan(PredicateExpression filter);
+		IScanLimitToSyntax Scan(PredicateExpression filter, Values values);
+	}
+
 	public partial interface IGetSyntax
 	{
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
@@ -490,6 +478,21 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
 		{
 			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, projection, consistentRead ?? false, hashKey, filter, values);
+		}
+		#endregion
+
+		#region Scan
+		public IScanLimitToSyntax Scan()
+		{
+			return new ScanContext(table.Region, table.Name, projection, null, null);
+		}
+		public IScanLimitToSyntax Scan(PredicateExpression filter)
+		{
+			return new ScanContext(table.Region, table.Name, projection, filter, null);
+		}
+		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
+		{
+			return new ScanContext(table.Region, table.Name, projection, filter, values);
 		}
 		#endregion
 	}

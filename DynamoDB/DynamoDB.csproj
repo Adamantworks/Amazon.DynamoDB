@@ -91,7 +91,7 @@
     <Compile Include="Syntax\IQueryCompletionSyntax.cs" />
     <Compile Include="Syntax\IReverseSyntax.cs" />
     <Compile Include="Contexts\QueryContext.cs" />
-    <Compile Include="Syntax\IConsistentSyntax.cs" />
+    <Compile Include="Syntax\IConsistentOrScanSyntax.cs" />
     <Compile Include="Syntax\IGetSyntax.cs" />
     <Compile Include="Syntax\IScanCompletionSyntax.cs" />
     <Compile Include="Contexts\ModifyContext.cs" />
