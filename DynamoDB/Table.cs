@@ -27,7 +27,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB
 {
 	// See Overloads.tt and Overloads.cs for more method overloads of this interface
-	public partial interface ITable
+	public partial interface ITable : ITableWithSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -52,8 +52,8 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken);
-		DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent);
+		//Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken);
+		//DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent);
 
 		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent);
@@ -96,11 +96,15 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Table : ITable
 	{
 		internal readonly Region Region;
+		private readonly TableGetContext consistentContext;
+		private readonly TableGetContext eventuallyConsistentContext;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
 		{
 			Region = region;
 			UpdateTableDescription(tableDescription);
+			consistentContext = new TableGetContext(this, null, true);
+			eventuallyConsistentContext = new TableGetContext(this, null, false);
 		}
 
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
@@ -270,37 +274,15 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Schema.Key.GetKey(item);
 		}
 
-		#region Get
-		public async Task<DynamoDBMap> GetAsync(ItemKey key, ProjectionExpression projection, bool consistent, CancellationToken cancellationToken)
+		public ITableConsistentSyntax With(ProjectionExpression projection)
 		{
-			var request = BuildGetRequest(key, projection, consistent);
-			var result = await Region.DB.GetItemAsync(request, cancellationToken).ConfigureAwait(false);
-			return result.Item.ToGetValue();
+			return new TableGetContext(this, projection);
 		}
 
-		public DynamoDBMap Get(ItemKey key, ProjectionExpression projection, bool consistent)
+		public ITableConsistentSyntax Consistent
 		{
-			var request = BuildGetRequest(key, projection, consistent);
-			var result = Region.DB.GetItem(request);
-			return result.Item.ToGetValue();
+			get { return consistentContext; }
 		}
-
-		private Aws.GetItemRequest BuildGetRequest(ItemKey key, ProjectionExpression projection, bool consistent)
-		{
-			var request = new Aws.GetItemRequest()
-			{
-				TableName = Name,
-				Key = key.ToAws(Schema.Key),
-				ConsistentRead = consistent,
-			};
-			if(projection != null)
-			{
-				request.ProjectionExpression = projection.Expression;
-				request.ExpressionAttributeNames = AwsAttributeNames.Get(projection);
-			}
-			return request;
-		}
-		#endregion
 
 		#region BatchGet
 		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead)

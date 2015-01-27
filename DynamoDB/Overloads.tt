@@ -87,14 +87,14 @@
 		GenOverloads(true, provisionedThroughput, indexProvisionedThroughputs)
 		// must pass either provisionedThroughput or indexProvisionedThroughputs
 		.Where(overload => overload.Contains(provisionedThroughput) || overload.Contains(indexProvisionedThroughputs)));
-	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
-		GenOverloads(true, hashKeyOnly, projection, consistent, cancellationToken)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, projection, consistent, cancellationToken))
-		.Concat(GenOverloads(itemKey, projection, consistent, cancellationToken)));
-	var get = new Method("DynamoDBMap", "Get",
-		GenOverloads(true, hashKeyOnly, projection, consistent)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, projection, consistent))
-		.Concat(GenOverloads(itemKey, projection, consistent)));
+	var getAsyncForwards = new Method("Task<DynamoDBMap>", "GetAsync", "eventuallyConsistentContext.GetAsync",
+		GenOverloads(true, hashKeyOnly, cancellationToken)
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, cancellationToken))
+		.Concat(GenOverloads(true, itemKey, cancellationToken)));
+	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentContext.Get",
+		GenOverloads(true, hashKeyOnly)
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
+		.Concat(GenOverloads(true, itemKey)));
 	var batchGetAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync",
 		GenOverloads(true, keysSyncToAsync, projection, consistent, readAhead)
 		.Concat(GenOverloads(keysAsync, projection, consistent, readAhead)));
@@ -147,6 +147,16 @@
 	var scan = new Method("IScanContext", "Scan", "new ScanContext",
 		GenOverloads(true, regionArg, tableNameArg, projection, filter, values)
 		.Where(noValuesWithoutFilter));
+
+	// Syntax
+	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
+		GenOverloads(true, hashKeyOnly, cancellationToken)
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, cancellationToken))
+		.Concat(GenOverloads(itemKey, cancellationToken)));
+	var get = new Method("DynamoDBMap", "Get",
+		GenOverloads(true, hashKeyOnly)
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
+		.Concat(GenOverloads(itemKey)));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -185,9 +195,6 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
 
-<#		GenInterface(getAsync); #>
-<#		GenInterface(get); #>
-
 <#		GenInterface(batchGetAsync); #>
 <#		GenInterface(batchGet); #>
 
@@ -221,9 +228,9 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(updateTable); #>
 
-<#		GenMethods(getAsync); #>
+<#		GenMethods(getAsyncForwards); #>
 
-<#		GenMethods(get); #>
+<#		GenMethods(getForwards); #>
 
 <#		GenMethods(batchGetAsync); #>
 
@@ -252,6 +259,22 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(query); #>
 
 <#		GenMethods(scan); #>
+	}
+
+	partial class TableGetContext
+	{
+<#		GenMethods(getAsync); #>
+
+<#		GenMethods(get); #>
+	}
+}
+
+namespace Adamantworks.Amazon.DynamoDB.Syntax
+{
+	public partial interface ITableGetSyntax
+	{
+<#		GenInterface(getAsync); #>
+<#		GenInterface(get); #>
 	}
 }
 <#+

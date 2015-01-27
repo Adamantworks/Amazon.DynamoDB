@@ -54,6 +54,7 @@
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
     <Compile Include="Converters\Basic\SetConverter.cs" />
+    <Compile Include="TableGetContext.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
     <Compile Include="Internal\AwsExtensions.cs" />
     <Compile Include="BatchGetAsync.cs" />
@@ -86,6 +87,9 @@
     <Compile Include="Syntax\IQueryContext.cs" />
     <Compile Include="Syntax\IReversibleQueryContext.cs" />
     <Compile Include="QueryContext.cs" />
+    <Compile Include="Syntax\ITableConsistentSyntax.cs" />
+    <Compile Include="Syntax\ITableGetSyntax.cs" />
+    <Compile Include="Syntax\ITableWithSyntax.cs" />
     <Compile Include="Syntax\ScanContext.cs" />
     <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />
