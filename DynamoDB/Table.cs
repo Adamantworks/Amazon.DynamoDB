@@ -27,7 +27,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB
 {
 	// See Overloads.tt and Overloads.cs for more method overloads of this interface
-	public partial interface ITable : ITableWithSyntax
+	public partial interface ITable : ITableWithSyntax, ITableIfSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -273,6 +273,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		public ITableConsistentSyntax Consistent
 		{
 			get { return consistentContext; }
+		}
+
+		public ITableWriteSyntax If(PredicateExpression condition)
+		{
+			return new TableWriteContext(this, condition, null);
+		}
+		public ITableWriteSyntax If(PredicateExpression condition, Values values)
+		{
+			return new TableWriteContext(this, condition, values);
 		}
 
 		#region Put
