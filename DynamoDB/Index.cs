@@ -35,12 +35,12 @@ namespace Adamantworks.Amazon.DynamoDB
 		//     consistent (either non-async or not returning IAsyncEnumerable)
 		// That will ensure a consistent set of overloads and prevent users from needing to specify parameter names
 
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, bool consistent = false);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent = false);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent = false);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent = false);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent = false);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, bool consistent = false);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent = false);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent = false);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent = false);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent = false);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent = false);
 	}
 
 	internal class Index : IIndex
@@ -74,27 +74,27 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		#region Query
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, null, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, values, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, null, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, filter, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
 		{
 			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, filter, values, consistent);
 		}

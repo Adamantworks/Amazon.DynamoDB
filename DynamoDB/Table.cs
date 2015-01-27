@@ -28,7 +28,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB
 {
 	// See Overloads.tt and Overloads.cs for more method overloads of this interface
-	public partial interface ITable : ITableConsistentSyntax, ITablePutSyntax
+	public partial interface ITable : IConsistentSyntax, IPutSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -53,10 +53,10 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		ITableConsistentSyntax With(ProjectionExpression projection);
+		IConsistentSyntax With(ProjectionExpression projection);
 
-		ITablePutSyntax If(PredicateExpression condition);
-		ITablePutSyntax If(PredicateExpression condition, Values values);
+		IPutSyntax If(PredicateExpression condition);
+		IPutSyntax If(PredicateExpression condition, Values values);
 
 		IIfSyntax On(DynamoDBKeyValue hashKey);
 		IIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
@@ -75,8 +75,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, Values values, bool returnOldItem);
 
 		// The overloads of these methods are in Overloads.tt
-		// IQueryContext Query(...);
-		// IScanContext Scan(...);
+		// IQueryCompletionSyntax Query(...);
+		// IScanCompletionSyntax Scan(...);
 
 		// TODO: QueryCount
 		// TODO: ScanCount()
@@ -89,19 +89,19 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Table : ITable
 	{
 		internal readonly Region Region;
-		private readonly TableGetContext consistentContext;
-		private readonly TableGetContext eventuallyConsistentContext;
-		private readonly TablePutContext putContext;
-		private readonly TablePutContext insertContext;
+		private readonly GetContext consistentContext;
+		private readonly GetContext eventuallyConsistentContext;
+		private readonly PutContext putContext;
+		private readonly PutContext insertContext;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
 		{
 			Region = region;
 			UpdateTableDescription(tableDescription);
-			consistentContext = new TableGetContext(this, null, true);
-			eventuallyConsistentContext = new TableGetContext(this, null, false);
-			putContext = new TablePutContext(this, null, null);
-			insertContext = new TablePutContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
+			consistentContext = new GetContext(this, null, true);
+			eventuallyConsistentContext = new GetContext(this, null, false);
+			putContext = new PutContext(this, null, null);
+			insertContext = new PutContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
 		}
 
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
@@ -271,36 +271,36 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Schema.Key.GetKey(item);
 		}
 
-		public ITableConsistentSyntax With(ProjectionExpression projection)
+		public IConsistentSyntax With(ProjectionExpression projection)
 		{
-			return new TableGetContext(this, projection);
+			return new GetContext(this, projection);
 		}
 
-		public ITableConsistentSyntax Consistent
+		public IConsistentSyntax Consistent
 		{
 			get { return consistentContext; }
 		}
 
-		public ITablePutSyntax If(PredicateExpression condition)
+		public IPutSyntax If(PredicateExpression condition)
 		{
-			return new TablePutContext(this, condition, null);
+			return new PutContext(this, condition, null);
 		}
-		public ITablePutSyntax If(PredicateExpression condition, Values values)
+		public IPutSyntax If(PredicateExpression condition, Values values)
 		{
-			return new TablePutContext(this, condition, values);
+			return new PutContext(this, condition, values);
 		}
 
 		public IIfSyntax On(DynamoDBKeyValue hashKey)
 		{
-			return new TableModifyContext(this, new ItemKey(hashKey));
+			return new ModifyContext(this, new ItemKey(hashKey));
 		}
 		public IIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return new TableModifyContext(this, new ItemKey(hashKey, rangeKey));
+			return new ModifyContext(this, new ItemKey(hashKey, rangeKey));
 		}
 		public IIfSyntax On(ItemKey key)
 		{
-			return new TableModifyContext(this, key);
+			return new ModifyContext(this, key);
 		}
 
 		#region Put

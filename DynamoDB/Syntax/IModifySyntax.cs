@@ -12,10 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface ITableConsistentSyntax : ITableGetSyntax
+	public partial interface IModifySyntax
 	{
-		ITableConsistentSyntax Consistent { get; }
+		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		DynamoDBMap Update(UpdateExpression update, Values values, UpdateReturnValue returnValue);
+
+		Task<bool> TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
+		bool TryUpdate(UpdateExpression update, Values values);
 	}
 }

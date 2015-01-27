@@ -24,25 +24,25 @@ using Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class TableGetContext : ITableConsistentSyntax
+	internal partial class GetContext : IConsistentSyntax
 	{
 		private readonly Table table;
 		private readonly ProjectionExpression projection;
 		private bool? consistentRead;
 
-		public TableGetContext(Table table, ProjectionExpression projection)
+		public GetContext(Table table, ProjectionExpression projection)
 		{
 			this.table = table;
 			this.projection = projection;
 		}
-		public TableGetContext(Table table, ProjectionExpression projection, bool consistentRead)
+		public GetContext(Table table, ProjectionExpression projection, bool consistentRead)
 		{
 			this.table = table;
 			this.projection = projection;
 			this.consistentRead = consistentRead;
 		}
 
-		public ITableConsistentSyntax Consistent
+		public IConsistentSyntax Consistent
 		{
 			get
 			{

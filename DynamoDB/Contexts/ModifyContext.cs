@@ -20,25 +20,25 @@ using Adamantworks.Amazon.DynamoDB.Syntax;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class TableModifyContext : IIfSyntax
+	internal partial class ModifyContext : IIfSyntax
 	{
 		private readonly Table table;
 		private readonly ItemKey key;
 		private PredicateExpression condition;
 		private Values conditionValues;
 
-		public TableModifyContext(Table table, ItemKey key)
+		public ModifyContext(Table table, ItemKey key)
 		{
 			this.table = table;
 			this.key = key;
 		}
 
-		public ITableModifySyntax If(PredicateExpression condition)
+		public IModifySyntax If(PredicateExpression condition)
 		{
 			this.condition = condition;
 			return this;
 		}
-		public ITableModifySyntax If(PredicateExpression condition, Values values)
+		public IModifySyntax If(PredicateExpression condition, Values values)
 		{
 			this.condition = condition;
 			conditionValues = values;

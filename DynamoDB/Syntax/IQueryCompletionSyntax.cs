@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IQueryContext
+	public interface IQueryCompletionSyntax
 	{
 		// TODO change default values to overloads
 

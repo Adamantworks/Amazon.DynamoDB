@@ -14,9 +14,8 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IIfSyntax : IModifySyntax
+	public interface IReverseSyntax : IQueryLimitToSyntax
 	{
-		IModifySyntax If(PredicateExpression condition);
-		IModifySyntax If(PredicateExpression condition, Values values);
+		IQueryLimitToSyntax Reverse();
 	}
 }

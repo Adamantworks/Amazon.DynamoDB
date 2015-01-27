@@ -244,7 +244,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class TableGetContext
+	internal partial class GetContext
 	{
 <#		GenMethods(getAsync); #>
 
@@ -259,14 +259,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(batchGetJoin); #>
 	}
 
-	internal partial class TablePutContext
-	{
-<#		GenMethods(putAsync); #>
-
-<#		GenMethods(put); #>
-	}
-
-	internal partial class TableModifyContext
+	internal partial class ModifyContext
 	{
 <#		GenMethods(updateAsync); #>
 
@@ -276,11 +269,18 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 <#		GenMethods(tryUpdate); #>
 	}
+
+	internal partial class PutContext
+	{
+<#		GenMethods(putAsync); #>
+
+<#		GenMethods(put); #>
+	}
 }
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface ITableGetSyntax
+	public partial interface IGetSyntax
 	{
 <#		GenInterface(getAsync); #>
 <#		GenInterface(get); #>
@@ -292,19 +292,19 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#		GenInterface(batchGetJoin); #>
 	}
 
-	public partial interface ITablePutSyntax
-	{
-<#		GenInterface(putAsync); #>
-<#		GenInterface(put); #>
-	}
-
-	public partial interface ITableModifySyntax
+	public partial interface IModifySyntax
 	{
 <#		GenInterface(updateAsync); #>
 <#		GenInterface(update); #>
 
 <#		GenInterface(tryUpdateAsync); #>
 <#		GenInterface(tryUpdate); #>
+	}
+
+	public partial interface IPutSyntax
+	{
+<#		GenInterface(putAsync); #>
+<#		GenInterface(put); #>
 	}
 }
 <#+

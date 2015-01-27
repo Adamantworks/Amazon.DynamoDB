@@ -23,7 +23,7 @@ using Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal class QueryContext : IReversibleQueryContext
+	internal class QueryContext : IReverseSyntax
 	{
 		private readonly Region region;
 		private readonly string tableName;
@@ -60,13 +60,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.consistent = consistent;
 		}
 
-		public ILimitableQueryContext Reverse()
+		public IQueryLimitToSyntax Reverse()
 		{
 			scanIndexForward = false;
 			return this;
 		}
 
-		public IQueryContext LimitTo(int? limit)
+		public IQueryCompletionSyntax LimitTo(int? limit)
 		{
 			if(limitSet)
 				throw new Exception("Limit of Scan operation already set");

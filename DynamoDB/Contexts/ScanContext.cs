@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal class ScanContext : IScanContext
+	internal class ScanContext : IScanLimitToSyntax
 	{
 		private readonly Region region;
 		private readonly string tableName;
@@ -45,7 +45,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.values = values;
 		}
 
-		public IScanContext LimitTo(int? limit)
+		public IScanCompletionSyntax LimitTo(int? limit)
 		{
 			if(limitSet)
 				throw new Exception("Limit of Scan operation already set");

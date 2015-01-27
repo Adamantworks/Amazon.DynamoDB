@@ -12,10 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using System.Collections.Generic;
+
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IReversibleQueryContext : ILimitableQueryContext
+	public interface IScanCompletionSyntax
 	{
-		ILimitableQueryContext Reverse();
+		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some);
+		IEnumerable<DynamoDBMap> All();
+		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
+		// TODO: HashKeyBeginsWith() // use last key to create a key begins with query
+		// TODO: HashKeyBetween() // use last key to create a key between query
+		// TODO: Parallel(totalSegments, currentSegment)
 	}
 }

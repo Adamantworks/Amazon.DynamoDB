@@ -12,18 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface ITableModifySyntax
+	public partial interface IGetSyntax
 	{
-		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken);
-		DynamoDBMap Update(UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken);
+		DynamoDBMap Get(ItemKey key);
 
-		Task<bool> TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
-		bool TryUpdate(UpdateExpression update, Values values);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys);
+
+		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
+		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
 	}
 }

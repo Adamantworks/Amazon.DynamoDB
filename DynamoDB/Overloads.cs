@@ -161,25 +161,25 @@ namespace Adamantworks.Amazon.DynamoDB
 		DynamoDBMap Delete(ItemKey key, bool returnOldItem);
 		DynamoDBMap Delete(ItemKey key, PredicateExpression condition, bool returnOldItem);
 
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, bool consistent);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent);
-		IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, bool consistent);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent);
+		IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent);
 
-		IScanContext Scan();
-		IScanContext Scan(ProjectionExpression projection);
-		IScanContext Scan(PredicateExpression filter);
-		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter);
-		IScanContext Scan(PredicateExpression filter, Values values);
-		IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values);
+		IScanLimitToSyntax Scan();
+		IScanLimitToSyntax Scan(ProjectionExpression projection);
+		IScanLimitToSyntax Scan(PredicateExpression filter);
+		IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter);
+		IScanLimitToSyntax Scan(PredicateExpression filter, Values values);
+		IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter, Values values);
 	}
 
 	internal partial class Table
@@ -583,78 +583,78 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region Query
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, null, null, false);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, null, null, false);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, filter, null, false);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, filter, null, false);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, filter, values, false);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, filter, values, false);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, bool consistent)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, null, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, null, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, filter, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, filter, null, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, null, filter, values, consistent);
 		}
-		public IReversibleQueryContext Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
+		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
 		{
 			return new QueryContext(Region, Name, null, Schema.Key, hashKey, projection, filter, values, consistent);
 		}
 		#endregion
 
 		#region Scan
-		public IScanContext Scan()
+		public IScanLimitToSyntax Scan()
 		{
 			return new ScanContext(Region, Name, null, null, null);
 		}
-		public IScanContext Scan(ProjectionExpression projection)
+		public IScanLimitToSyntax Scan(ProjectionExpression projection)
 		{
 			return new ScanContext(Region, Name, projection, null, null);
 		}
-		public IScanContext Scan(PredicateExpression filter)
+		public IScanLimitToSyntax Scan(PredicateExpression filter)
 		{
 			return new ScanContext(Region, Name, null, filter, null);
 		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter)
+		public IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter)
 		{
 			return new ScanContext(Region, Name, projection, filter, null);
 		}
-		public IScanContext Scan(PredicateExpression filter, Values values)
+		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
 		{
 			return new ScanContext(Region, Name, null, filter, values);
 		}
-		public IScanContext Scan(ProjectionExpression projection, PredicateExpression filter, Values values)
+		public IScanLimitToSyntax Scan(ProjectionExpression projection, PredicateExpression filter, Values values)
 		{
 			return new ScanContext(Region, Name, projection, filter, values);
 		}
@@ -664,7 +664,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class TableGetContext
+	internal partial class GetContext
 	{
 		#region GetAsync
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey)
@@ -737,32 +737,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#endregion
 	}
 
-	internal partial class TablePutContext
-	{
-		#region PutAsync
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
-		{
-			return PutAsync(item, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
-		{
-			return PutAsync(item, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
-		{
-			return PutAsync(item, false, cancellationToken);
-		}
-		#endregion
-
-		#region Put
-		public DynamoDBMap Put(DynamoDBMap item)
-		{
-			return Put(item, false);
-		}
-		#endregion
-	}
-
-	internal partial class TableModifyContext
+	internal partial class ModifyContext
 	{
 		#region UpdateAsync
 		public Task<DynamoDBMap> UpdateAsync(UpdateExpression update)
@@ -832,11 +807,36 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 	}
+
+	internal partial class PutContext
+	{
+		#region PutAsync
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
+		{
+			return PutAsync(item, false, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
+		{
+			return PutAsync(item, returnOldItem, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
+		{
+			return PutAsync(item, false, cancellationToken);
+		}
+		#endregion
+
+		#region Put
+		public DynamoDBMap Put(DynamoDBMap item)
+		{
+			return Put(item, false);
+		}
+		#endregion
+	}
 }
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface ITableGetSyntax
+	public partial interface IGetSyntax
 	{
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken);
@@ -855,15 +855,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
 	}
 
-	public partial interface ITablePutSyntax
-	{
-		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
-		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);
-		Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken);
-		DynamoDBMap Put(DynamoDBMap item);
-	}
-
-	public partial interface ITableModifySyntax
+	public partial interface IModifySyntax
 	{
 		Task<DynamoDBMap> UpdateAsync(UpdateExpression update);
 		Task<DynamoDBMap> UpdateAsync(UpdateExpression update, Values values);
@@ -880,5 +872,13 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		Task<bool> TryUpdateAsync(UpdateExpression update, Values values);
 		Task<bool> TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
 		bool TryUpdate(UpdateExpression update);
+	}
+
+	public partial interface IPutSyntax
+	{
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken);
+		DynamoDBMap Put(DynamoDBMap item);
 	}
 }

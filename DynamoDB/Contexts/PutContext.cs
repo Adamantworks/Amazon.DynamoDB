@@ -20,13 +20,13 @@ using Adamantworks.Amazon.DynamoDB.Syntax;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class TablePutContext : ITablePutSyntax
+	internal partial class PutContext : IPutSyntax
 	{
 		private readonly Table table;
 		private readonly PredicateExpression condition;
 		private readonly Values values;
 
-		public TablePutContext(Table table, PredicateExpression condition, Values values)
+		public PutContext(Table table, PredicateExpression condition, Values values)
 		{
 			this.table = table;
 			this.condition = condition;
