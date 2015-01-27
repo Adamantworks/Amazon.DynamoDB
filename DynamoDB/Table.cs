@@ -72,10 +72,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		void DeleteAsync(IBatchWriteAsync batch, ItemKey key);
 		void Delete(IBatchWrite batch, ItemKey key);
 
-		// The overloads of these methods are in Overloads.tt
-		// IQueryCompletionSyntax Query(...);
-		// IScanCompletionSyntax Scan(...);
-
 		// TODO: QueryCount
 		// TODO: ScanCount()
 

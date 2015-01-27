@@ -76,27 +76,27 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, bool consistent)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, null, null, consistent);
+			return new QueryContext(table.Region, table.Name, Name, Schema.Key, null, consistent, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, bool consistent)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, null, consistent);
+			return new QueryContext(table.Region, table.Name, Name, Schema.Key, null, consistent, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values, bool consistent)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, null, filter, values, consistent);
+			return new QueryContext(table.Region, table.Name, Name, Schema.Key, null, consistent, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, bool consistent)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, null, null, consistent);
+			return new QueryContext(table.Region, table.Name, Name, Schema.Key, projection, consistent, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, bool consistent)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, filter, null, consistent);
+			return new QueryContext(table.Region, table.Name, Name, Schema.Key, projection, consistent, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, ProjectionExpression projection, PredicateExpression filter, Values values, bool consistent)
 		{
-			return new QueryContext(table.Region, table.Name, Name, Schema.Key, hashKey, projection, filter, values, consistent);
+			return new QueryContext(table.Region, table.Name, Name, Schema.Key, projection, consistent, hashKey, filter, values);
 		}
 		#endregion
 	}

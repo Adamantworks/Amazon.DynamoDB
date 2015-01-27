@@ -27,7 +27,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#
 	var itemKey = Param("ItemKey","key");
-	var projection = Param("ProjectionExpression","projection","null");
+	var projection = Param("ProjectionExpression", "projection", "null");
 	var consistent = Param("bool","consistent","false");
 	var cancellationToken = Param("CancellationToken", "cancellationToken","CancellationToken.None");
 	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "new ItemKey(hashKey)");
@@ -52,9 +52,16 @@
 	var updateExp  = Param("UpdateExpression", "update");
 	var updateReturnValue = Param("UpdateReturnValue", "returnValue", "UpdateReturnValue.None");
 	var regionArg = Argument("Region");
+	var tableDotRegionArg = Argument("table.Region");
 	var tableNameArg = Argument("Name");
+	var tableDotTableNameArg = Argument("table.Name");
 	var indexNameNoneArg = Argument("null");
 	var keySchemaArg = Argument("Schema.Key");
+	var tableDotKeySchemaArg = Argument("table.Schema.Key");
+	var projectionNoneArg = Argument("null");
+	var projectionArg = Argument("projection");
+	var consistentNoneArg = Argument("false");
+	var consistentArg = Argument("consistentRead ?? false");
 	var hashKey = Param("DynamoDBKeyValue", "hashKey");
 	var filter = Param("PredicateExpression", "filter", "null");
 	var tableName = Param("string", "tableName");
@@ -107,8 +114,8 @@
 		GenOverloads(true, item, returnOldItem, cancellationToken));
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
 		GenOverloads(true, item, returnOldItem));
-	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
-		GenOverloads(true, regionArg, tableNameArg, indexNameNoneArg, keySchemaArg, hashKey, projection, filter, values, consistent)
+	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
+		GenOverloads(true, regionArg, tableNameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, regionArg, tableNameArg, projection, filter, values)
@@ -149,6 +156,9 @@
 		GenOverloads(returnOldItem, cancellationToken));
 	var delete = new Method("DynamoDBMap", "Delete",
 		GenOverloads( returnOldItem));
+	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
+		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
+		.Where(noValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -188,8 +198,6 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
 
-<#		GenInterface(query); #>
-
 <#		GenInterface(scan); #>
 	}
 
@@ -219,7 +227,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(putForwards); #>
 
-<#		GenMethods(query); #>
+<#		GenMethods(queryForwards); #>
 
 <#		GenMethods(scan); #>
 	}
@@ -237,6 +245,8 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 <#		GenInterface(batchGetJoinAsync); #>
 <#		GenInterface(batchGetJoin); #>
+
+<#		GenInterface(query); #>
 	}
 
 	public partial interface IModifySyntax
@@ -273,6 +283,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(batchGetJoinAsync); #>
 
 <#		GenMethods(batchGetJoin); #>
+
+<#		GenMethods(query); #>
 	}
 
 	internal partial class ModifyContext

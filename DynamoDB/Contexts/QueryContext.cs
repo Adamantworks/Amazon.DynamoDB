@@ -43,11 +43,11 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			string tableName,
 			string indexName,
 			KeySchema keySchema,
-			DynamoDBKeyValue hashKey,
 			ProjectionExpression projection,
+			bool consistent,
+			DynamoDBKeyValue hashKey,
 			PredicateExpression filter,
-			Values values,
-			bool consistent)
+			Values values)
 		{
 			this.region = region;
 			this.tableName = tableName;
