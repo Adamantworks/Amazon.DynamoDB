@@ -47,6 +47,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
 		ITable LoadTable(string tableName);
 
+		Task<ITable> TryLoadTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
+		ITable TryLoadTable(string tableName);
+
 		Task DeleteTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
 		void DeleteTable(string tableName);
 	}
@@ -188,6 +191,32 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			var response = DB.DescribeTable(tableName);
 			return new Table(this, response.Table);
+		}
+		#endregion
+
+		#region TryLoadTable
+		public async Task<ITable> TryLoadTableAsync(string tableName, CancellationToken cancellationToken)
+		{
+			try
+			{
+				return await LoadTableAsync(tableName, cancellationToken).ConfigureAwait(false);
+			}
+			catch(Aws.ResourceNotFoundException)
+			{
+				return null;
+			}
+		}
+
+		public ITable TryLoadTable(string tableName)
+		{
+			try
+			{
+				return  LoadTable(tableName);
+			}
+			catch(Aws.ResourceNotFoundException)
+			{
+				return null;
+			}
 		}
 		#endregion
 
