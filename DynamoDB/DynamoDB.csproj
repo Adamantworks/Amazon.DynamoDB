@@ -49,15 +49,16 @@
   <ItemGroup>
     <Compile Include="BatchGet.cs" />
     <Compile Include="BatchWrite.cs" />
+    <Compile Include="Contexts\ScanContext.cs" />
     <Compile Include="Converters\Basic\ImmutableArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\BooleanConverter.cs" />
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
     <Compile Include="Converters\Basic\SetConverter.cs" />
-    <Compile Include="Syntax\ITableModifyIfSyntax.cs" />
+    <Compile Include="Syntax\IIfSyntax.cs" />
     <Compile Include="Syntax\ITableModifySyntax.cs" />
     <Compile Include="Syntax\ITablePutSyntax.cs" />
-    <Compile Include="TableGetContext.cs" />
+    <Compile Include="Contexts\TableGetContext.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
     <Compile Include="Internal\AwsExtensions.cs" />
     <Compile Include="BatchGetAsync.cs" />
@@ -89,12 +90,12 @@
     <Compile Include="Syntax\ILimitableQueryContext.cs" />
     <Compile Include="Syntax\IQueryContext.cs" />
     <Compile Include="Syntax\IReversibleQueryContext.cs" />
-    <Compile Include="QueryContext.cs" />
+    <Compile Include="Contexts\QueryContext.cs" />
     <Compile Include="Syntax\ITableConsistentSyntax.cs" />
     <Compile Include="Syntax\ITableGetSyntax.cs" />
-    <Compile Include="Syntax\ScanContext.cs" />
-    <Compile Include="TableModifyContext.cs" />
-    <Compile Include="TablePutContext.cs" />
+    <Compile Include="Syntax\IScanContext.cs" />
+    <Compile Include="Contexts\TableModifyContext.cs" />
+    <Compile Include="Contexts\TablePutContext.cs" />
     <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="PredicateExpression.cs" />

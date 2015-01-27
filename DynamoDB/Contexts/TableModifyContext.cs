@@ -17,12 +17,10 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Syntax;
-using Aws = Amazon.DynamoDBv2.Model;
-using AwsEnums = Amazon.DynamoDBv2;
 
-namespace Adamantworks.Amazon.DynamoDB
+namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class TableModifyContext : ITableModifyIfSyntax
+	internal partial class TableModifyContext : IIfSyntax
 	{
 		private readonly Table table;
 		private readonly ItemKey key;
@@ -64,9 +62,9 @@ namespace Adamantworks.Amazon.DynamoDB
 			return response.Attributes.ToGetValue();
 		}
 
-		private Aws.UpdateItemRequest BuildUpdateRequest(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		private global::Amazon.DynamoDBv2.Model.UpdateItemRequest BuildUpdateRequest(UpdateExpression update, Values values, UpdateReturnValue returnValue)
 		{
-			var request = new Aws.UpdateItemRequest()
+			var request = new global::Amazon.DynamoDBv2.Model.UpdateItemRequest()
 			{
 				TableName = table.Name,
 				Key = key.ToAws(table.Schema.Key),
@@ -90,7 +88,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				await UpdateAsync(update, values, UpdateReturnValue.None, cancellationToken).ConfigureAwait(false);
 				return true;
 			}
-			catch(Aws.ConditionalCheckFailedException)
+			catch(global::Amazon.DynamoDBv2.Model.ConditionalCheckFailedException)
 			{
 				return false;
 			}
@@ -103,7 +101,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				Update(update, values, UpdateReturnValue.None);
 				return true;
 			}
-			catch(Aws.ConditionalCheckFailedException)
+			catch(global::Amazon.DynamoDBv2.Model.ConditionalCheckFailedException)
 			{
 				return false;
 			}

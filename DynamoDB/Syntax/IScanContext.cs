@@ -12,11 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
+using Aws = Amazon.DynamoDBv2.Model;
+
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IIfSyntax : ITableModifySyntax
+	public interface IScanContext
 	{
-		ITableModifySyntax If(PredicateExpression condition);
-		ITableModifySyntax If(PredicateExpression condition, Values values);
+		IScanContext LimitTo(int? limit);
+
+		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some);
+		IEnumerable<DynamoDBMap> All();
+		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
+		// TODO: HashKeyBeginsWith() // use last key to create a key begins with query
+		// TODO: HashKeyBetween() // use last key to create a key between query
+		// TODO: Parallel(totalSegments, currentSegment)
 	}
 }

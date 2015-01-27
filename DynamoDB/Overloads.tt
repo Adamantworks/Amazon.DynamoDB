@@ -160,6 +160,7 @@
 	var tryUpdate = new Method("bool", "TryUpdate",
 		GenOverloads(updateExp, values));
 #>
+using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
@@ -239,8 +240,11 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(scan); #>
 	}
+}
 
-	partial class TableGetContext
+namespace Adamantworks.Amazon.DynamoDB.Contexts
+{
+	internal partial class TableGetContext
 	{
 <#		GenMethods(getAsync); #>
 
@@ -255,14 +259,14 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(batchGetJoin); #>
 	}
 
-	partial class TablePutContext
+	internal partial class TablePutContext
 	{
 <#		GenMethods(putAsync); #>
 
 <#		GenMethods(put); #>
 	}
 
-	partial class TableModifyContext
+	internal partial class TableModifyContext
 	{
 <#		GenMethods(updateAsync); #>
 

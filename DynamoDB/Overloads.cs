@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
@@ -659,8 +660,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 	}
+}
 
-	partial class TableGetContext
+namespace Adamantworks.Amazon.DynamoDB.Contexts
+{
+	internal partial class TableGetContext
 	{
 		#region GetAsync
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey)
@@ -733,7 +737,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 	}
 
-	partial class TablePutContext
+	internal partial class TablePutContext
 	{
 		#region PutAsync
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
@@ -758,7 +762,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 	}
 
-	partial class TableModifyContext
+	internal partial class TableModifyContext
 	{
 		#region UpdateAsync
 		public Task<DynamoDBMap> UpdateAsync(UpdateExpression update)

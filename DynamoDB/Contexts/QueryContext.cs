@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Aws = Amazon.DynamoDBv2.Model;
+using Amazon.DynamoDBv2.Model;
 
-namespace Adamantworks.Amazon.DynamoDB
+namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
 	internal class QueryContext : IReversibleQueryContext
 	{
@@ -205,13 +205,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(keySchema.RangeKey == null)
 				throw new NotSupportedException("Can't specify range key condition for table or index without a range key");
 		}
-		private IAsyncEnumerable<DynamoDBMap> QueryAsync(Dictionary<string, Aws.Condition> keyConditions, ReadAhead readAhead)
+		private IAsyncEnumerable<DynamoDBMap> QueryAsync(Dictionary<string, Condition> keyConditions, ReadAhead readAhead)
 		{
 			return AsyncEnumerable.Defer(() =>
 			{
 				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
 				var request = BuildQueryRequest(keyConditions);
-				return AsyncEnumerableEx.GenerateChunked<Aws.QueryResponse, DynamoDBMap>(null,
+				return AsyncEnumerableEx.GenerateChunked<global::Amazon.DynamoDBv2.Model.QueryResponse, DynamoDBMap>(null,
 					(lastResponse, cancellationToken) =>
 					{
 						if(lastResponse != null)
@@ -223,10 +223,10 @@ namespace Adamantworks.Amazon.DynamoDB
 					readAhead);
 			});
 		}
-		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Aws.Condition> keyConditions)
+		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Condition> keyConditions)
 		{
 			var request = BuildQueryRequest(keyConditions);
-			Aws.QueryResponse lastResponse = null;
+			global::Amazon.DynamoDBv2.Model.QueryResponse lastResponse = null;
 			do
 			{
 				if(lastResponse != null)
@@ -236,9 +236,9 @@ namespace Adamantworks.Amazon.DynamoDB
 					yield return item.ToValue();
 			} while(!IsComplete(lastResponse));
 		}
-		private Aws.QueryRequest BuildQueryRequest(Dictionary<string, Aws.Condition> keyConditions)
+		private global::Amazon.DynamoDBv2.Model.QueryRequest BuildQueryRequest(Dictionary<string, Condition> keyConditions)
 		{
-			var request = new Aws.QueryRequest()
+			var request = new global::Amazon.DynamoDBv2.Model.QueryRequest()
 			{
 				TableName = tableName,
 				IndexName = indexName,
@@ -256,7 +256,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
 			return request;
 		}
-		private static bool IsComplete(Aws.QueryResponse lastResponse)
+		private static bool IsComplete(global::Amazon.DynamoDBv2.Model.QueryResponse lastResponse)
 		{
 			return lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0;
 		}

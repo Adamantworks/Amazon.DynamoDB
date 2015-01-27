@@ -12,27 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Internal;
-using Aws = Amazon.DynamoDBv2.Model;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	public interface IScanContext
-	{
-		IScanContext LimitTo(int? limit);
-
-		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some);
-		IEnumerable<DynamoDBMap> All();
-		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
-		// TODO: HashKeyBeginsWith() // use last key to create a key begins with query
-		// TODO: HashKeyBetween() // use last key to create a key between query
-		// TODO: Parallel(totalSegments, currentSegment)
-	}
-
 	internal class ScanContext : IScanContext
 	{
 		private readonly Region region;
@@ -74,7 +62,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			{
 				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
 				var request = BuildScanRequest();
-				return AsyncEnumerableEx.GenerateChunked<Aws.ScanResponse, DynamoDBMap>(null,
+				return AsyncEnumerableEx.GenerateChunked<global::Amazon.DynamoDBv2.Model.ScanResponse, DynamoDBMap>(null,
 					(lastResponse, cancellationToken) =>
 					{
 						if(lastResponse != null)
@@ -89,7 +77,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		public IEnumerable<DynamoDBMap> All()
 		{
 			var request = BuildScanRequest();
-			Aws.ScanResponse lastResponse = null;
+			global::Amazon.DynamoDBv2.Model.ScanResponse lastResponse = null;
 			do
 			{
 				if(lastResponse != null)
@@ -101,9 +89,9 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		}
 		#endregion
 
-		private Aws.ScanRequest BuildScanRequest()
+		private global::Amazon.DynamoDBv2.Model.ScanRequest BuildScanRequest()
 		{
-			var request = new Aws.ScanRequest()
+			var request = new global::Amazon.DynamoDBv2.Model.ScanRequest()
 			{
 				TableName = tableName,
 				ExpressionAttributeNames = AwsAttributeNames.GetCombined(projection, filter),
@@ -117,7 +105,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
 			return request;
 		}
-		private static bool IsComplete(Aws.ScanResponse lastResponse)
+		private static bool IsComplete(global::Amazon.DynamoDBv2.Model.ScanResponse lastResponse)
 		{
 			return lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0;
 		}

@@ -17,10 +17,8 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Syntax;
-using Aws = Amazon.DynamoDBv2.Model;
-using AwsEnums = Amazon.DynamoDBv2;
 
-namespace Adamantworks.Amazon.DynamoDB
+namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
 	internal partial class TablePutContext : ITablePutSyntax
 	{
@@ -52,13 +50,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			return response.Attributes.ToGetValue();
 		}
 
-		private Aws.PutItemRequest BuildPutItemRequest(DynamoDBMap item, bool returnOldItem)
+		private global::Amazon.DynamoDBv2.Model.PutItemRequest BuildPutItemRequest(DynamoDBMap item, bool returnOldItem)
 		{
-			var request = new Aws.PutItemRequest()
+			var request = new global::Amazon.DynamoDBv2.Model.PutItemRequest()
 			{
 				TableName = table.Name,
 				Item = item.ToAwsDictionary(),
-				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
+				ReturnValues = returnOldItem ? global::Amazon.DynamoDBv2.ReturnValue.ALL_OLD : global::Amazon.DynamoDBv2.ReturnValue.NONE,
 			};
 			if(condition != null)
 				request.ConditionExpression = condition.Expression;

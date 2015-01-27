@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -57,9 +58,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITablePutSyntax If(PredicateExpression condition);
 		ITablePutSyntax If(PredicateExpression condition, Values values);
 
-		ITableModifyIfSyntax On(DynamoDBKeyValue hashKey);
-		ITableModifyIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		ITableModifyIfSyntax On(ItemKey key);
+		IIfSyntax On(DynamoDBKeyValue hashKey);
+		IIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		IIfSyntax On(ItemKey key);
 
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		void Put(IBatchWrite batch, DynamoDBMap item);
@@ -289,15 +290,15 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new TablePutContext(this, condition, values);
 		}
 
-		public ITableModifyIfSyntax On(DynamoDBKeyValue hashKey)
+		public IIfSyntax On(DynamoDBKeyValue hashKey)
 		{
 			return new TableModifyContext(this, new ItemKey(hashKey));
 		}
-		public ITableModifyIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		public IIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
 			return new TableModifyContext(this, new ItemKey(hashKey, rangeKey));
 		}
-		public ITableModifyIfSyntax On(ItemKey key)
+		public IIfSyntax On(ItemKey key)
 		{
 			return new TableModifyContext(this, key);
 		}
