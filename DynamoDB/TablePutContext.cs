@@ -22,13 +22,13 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	internal partial class TableWriteContext : ITableWriteSyntax
+	internal partial class TablePutContext : ITablePutSyntax
 	{
 		private readonly Table table;
 		private readonly PredicateExpression condition;
 		private readonly Values values;
 
-		public TableWriteContext(Table table, PredicateExpression condition, Values values)
+		public TablePutContext(Table table, PredicateExpression condition, Values values)
 		{
 			this.table = table;
 			this.condition = condition;

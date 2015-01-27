@@ -27,7 +27,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB
 {
 	// See Overloads.tt and Overloads.cs for more method overloads of this interface
-	public partial interface ITable : ITableConsistentSyntax, ITableWriteSyntax
+	public partial interface ITable : ITableConsistentSyntax, ITablePutSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -54,8 +54,8 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ITableConsistentSyntax With(ProjectionExpression projection);
 
-		ITableWriteSyntax If(PredicateExpression condition);
-		ITableWriteSyntax If(PredicateExpression condition, Values values);
+		ITablePutSyntax If(PredicateExpression condition);
+		ITablePutSyntax If(PredicateExpression condition, Values values);
 
 		ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey);
 		ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
@@ -90,8 +90,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		internal readonly Region Region;
 		private readonly TableGetContext consistentContext;
 		private readonly TableGetContext eventuallyConsistentContext;
-		private readonly TableWriteContext writeContext;
-		private readonly TableWriteContext insertContext;
+		private readonly TablePutContext putContext;
+		private readonly TablePutContext insertContext;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
 		{
@@ -99,8 +99,8 @@ namespace Adamantworks.Amazon.DynamoDB
 			UpdateTableDescription(tableDescription);
 			consistentContext = new TableGetContext(this, null, true);
 			eventuallyConsistentContext = new TableGetContext(this, null, false);
-			writeContext = new TableWriteContext(this, null, null);
-			insertContext = new TableWriteContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
+			putContext = new TablePutContext(this, null, null);
+			insertContext = new TablePutContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
 		}
 
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
@@ -280,13 +280,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			get { return consistentContext; }
 		}
 
-		public ITableWriteSyntax If(PredicateExpression condition)
+		public ITablePutSyntax If(PredicateExpression condition)
 		{
-			return new TableWriteContext(this, condition, null);
+			return new TablePutContext(this, condition, null);
 		}
-		public ITableWriteSyntax If(PredicateExpression condition, Values values)
+		public ITablePutSyntax If(PredicateExpression condition, Values values)
 		{
-			return new TableWriteContext(this, condition, values);
+			return new TablePutContext(this, condition, values);
 		}
 
 		public ITableUpdateIfSyntax On(DynamoDBKeyValue hashKey)

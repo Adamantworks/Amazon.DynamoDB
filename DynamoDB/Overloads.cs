@@ -340,30 +340,30 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region PutAsync
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
 		{
-			return writeContext.PutAsync(item, false, CancellationToken.None);
+			return putContext.PutAsync(item, false, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
 		{
-			return writeContext.PutAsync(item, returnOldItem, CancellationToken.None);
+			return putContext.PutAsync(item, returnOldItem, CancellationToken.None);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
 		{
-			return writeContext.PutAsync(item, false, cancellationToken);
+			return putContext.PutAsync(item, false, cancellationToken);
 		}
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken)
 		{
-			return writeContext.PutAsync(item, returnOldItem, cancellationToken);
+			return putContext.PutAsync(item, returnOldItem, cancellationToken);
 		}
 		#endregion
 
 		#region Put
 		public DynamoDBMap Put(DynamoDBMap item)
 		{
-			return writeContext.Put(item, false);
+			return putContext.Put(item, false);
 		}
 		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
 		{
-			return writeContext.Put(item, returnOldItem);
+			return putContext.Put(item, returnOldItem);
 		}
 		#endregion
 
@@ -733,7 +733,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 	}
 
-	partial class TableWriteContext
+	partial class TablePutContext
 	{
 		#region PutAsync
 		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
@@ -851,7 +851,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
 	}
 
-	public partial interface ITableWriteSyntax
+	public partial interface ITablePutSyntax
 	{
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);

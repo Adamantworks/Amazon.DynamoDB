@@ -105,9 +105,9 @@
 		.Concat(GenOverloads(true, outerItemsAsync, keySelector, resultSelector, readAhead)));
 	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
 		GenOverloads(true, outerItemsSync, keySelector, resultSelector));
-	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "writeContext.PutAsync",
+	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
 		GenOverloads(true, item, returnOldItem, cancellationToken));
-	var putForwards = new Method("DynamoDBMap", "Put", "writeContext.Put",
+	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
 		GenOverloads(true, item, returnOldItem));
 	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
 		GenOverloads(true, hashKeyOnly, condition, values, returnOldItem, cancellationToken)
@@ -255,7 +255,7 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(batchGetJoin); #>
 	}
 
-	partial class TableWriteContext
+	partial class TablePutContext
 	{
 <#		GenMethods(putAsync); #>
 
@@ -288,7 +288,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#		GenInterface(batchGetJoin); #>
 	}
 
-	public partial interface ITableWriteSyntax
+	public partial interface ITablePutSyntax
 	{
 <#		GenInterface(putAsync); #>
 <#		GenInterface(put); #>

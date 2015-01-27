@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface ITableWriteSyntax
+	public partial interface ITablePutSyntax
 	{
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken);
 		DynamoDBMap Put(DynamoDBMap item, bool returnOldItem);
