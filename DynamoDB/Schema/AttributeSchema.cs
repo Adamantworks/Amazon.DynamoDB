@@ -40,7 +40,7 @@ namespace Adamantworks.Amazon.DynamoDB.Schema
 			if(end.Type != Type)
 				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", end.Type, Name, Type));
 
-			keyConditions.Add(Name, new Aws.Condition() { ComparisonOperator = "BETWEEN ", AttributeValueList = new List<Aws.AttributeValue>() { start.ToAws(), end.ToAws() } });
+			keyConditions.Add(Name, new Aws.Condition() { ComparisonOperator = "BETWEEN", AttributeValueList = new List<Aws.AttributeValue>() { start.ToAws(), end.ToAws() } });
 		}
 	}
 }

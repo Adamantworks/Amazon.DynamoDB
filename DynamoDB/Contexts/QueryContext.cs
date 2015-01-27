@@ -19,7 +19,7 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
-using Amazon.DynamoDBv2.Model;
+using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -182,7 +182,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region
+		#region RangeKeyBetween
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, ReadAhead readAhead)
 		{
 			CheckHasRangeKey();
@@ -205,7 +205,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			if(keySchema.RangeKey == null)
 				throw new NotSupportedException("Can't specify range key condition for table or index without a range key");
 		}
-		private IAsyncEnumerable<DynamoDBMap> QueryAsync(Dictionary<string, Condition> keyConditions, ReadAhead readAhead)
+		private IAsyncEnumerable<DynamoDBMap> QueryAsync(Dictionary<string, Aws.Condition> keyConditions, ReadAhead readAhead)
 		{
 			return AsyncEnumerable.Defer(() =>
 			{
@@ -223,7 +223,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					readAhead);
 			});
 		}
-		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Condition> keyConditions)
+		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Aws.Condition> keyConditions)
 		{
 			var request = BuildQueryRequest(keyConditions);
 			global::Amazon.DynamoDBv2.Model.QueryResponse lastResponse = null;
@@ -236,7 +236,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					yield return item.ToValue();
 			} while(!IsComplete(lastResponse));
 		}
-		private global::Amazon.DynamoDBv2.Model.QueryRequest BuildQueryRequest(Dictionary<string, Condition> keyConditions)
+		private Aws.QueryRequest BuildQueryRequest(Dictionary<string, Aws.Condition> keyConditions)
 		{
 			var request = new global::Amazon.DynamoDBv2.Model.QueryRequest()
 			{
