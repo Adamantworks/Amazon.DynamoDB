@@ -61,15 +61,18 @@
 	var tableName = Param("string", "tableName");
 	var schema = Param("TableSchema", "schema");
 
+	Func<IReadOnlyList<Parameter>, bool> noIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(indexProvisionedThroughputs) && ! overload.Contains(provisionedThroughput));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutCondition = overload => !(overload.Contains(values) && !overload.Contains(condition));
 
 	// Region
 	var listTablesAsync = new Method("IAsyncEnumerable<string>", "ListTablesAsync", GenOverloads(readAhead));
 	var createTableAsync = new Method("Task<ITable>", "CreateTableAsync",
-		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs, cancellationToken));
+		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs, cancellationToken)
+		.Where(noIndexThroughputWithoutTableThroughput));
 	var createTable = new Method("ITable", "CreateTable",
-		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs));
+		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs)
+		.Where(noIndexThroughputWithoutTableThroughput));
 
 	// Table
 	var reloadAsync = new Method("Task", "ReloadAsync", GenOverloads(cancellationToken));

@@ -29,15 +29,12 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema);
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput);
-		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, CancellationToken cancellationToken);
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken);
-		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken);
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken);
 		ITable CreateTable(string tableName, TableSchema schema);
 		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput);
-		ITable CreateTable(string tableName, TableSchema schema, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 	}
 
@@ -59,10 +56,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return CreateTableAsync(tableName, schema, (ProvisionedThroughput?)provisionedThroughput, null, CancellationToken.None);
 		}
-		public Task<ITable> CreateTableAsync(string tableName, TableSchema schema, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
-		{
-			return CreateTableAsync(tableName, schema, null, indexProvisionedThroughputs, CancellationToken.None);
-		}
 		public Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
 			return CreateTableAsync(tableName, schema, (ProvisionedThroughput?)provisionedThroughput, indexProvisionedThroughputs, CancellationToken.None);
@@ -74,10 +67,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		public Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, CancellationToken cancellationToken)
 		{
 			return CreateTableAsync(tableName, schema, (ProvisionedThroughput?)provisionedThroughput, null, cancellationToken);
-		}
-		public Task<ITable> CreateTableAsync(string tableName, TableSchema schema, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
-		{
-			return CreateTableAsync(tableName, schema, null, indexProvisionedThroughputs, cancellationToken);
 		}
 		public Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
 		{
@@ -93,10 +82,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		public ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput)
 		{
 			return CreateTable(tableName, schema, (ProvisionedThroughput?)provisionedThroughput, null);
-		}
-		public ITable CreateTable(string tableName, TableSchema schema, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
-		{
-			return CreateTable(tableName, schema, null, indexProvisionedThroughputs);
 		}
 		public ITable CreateTable(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs)
 		{
