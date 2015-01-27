@@ -107,44 +107,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		void UpdateTable(IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		void UpdateTable(ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead);
-		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys);
-		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection);
-		IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent);
-
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent, ReadAhead readAhead);
-		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection);
-		IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent);
-
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition);
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, PredicateExpression condition, Values values);
@@ -449,156 +411,52 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region BatchGetAsync
 		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys)
 		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), null, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), null, consistent, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, consistent, ReadAhead.Some);
+			return eventuallyConsistentContext.BatchGetAsync(keys.ToAsyncEnumerable(), ReadAhead.Some);
 		}
 		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead)
 		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), null, false, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, false, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), null, consistent, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys.ToAsyncEnumerable(), projection, consistent, readAhead);
+			return eventuallyConsistentContext.BatchGetAsync(keys.ToAsyncEnumerable(), readAhead);
 		}
 		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys)
 		{
-			return BatchGetAsync(keys, null, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection)
-		{
-			return BatchGetAsync(keys, projection, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent)
-		{
-			return BatchGetAsync(keys, null, consistent, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, bool consistent)
-		{
-			return BatchGetAsync(keys, projection, consistent, ReadAhead.Some);
+			return eventuallyConsistentContext.BatchGetAsync(keys, ReadAhead.Some);
 		}
 		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ReadAhead readAhead)
 		{
-			return BatchGetAsync(keys, null, false, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, ProjectionExpression projection, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys, projection, false, readAhead);
-		}
-		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetAsync(keys, null, consistent, readAhead);
+			return eventuallyConsistentContext.BatchGetAsync(keys, readAhead);
 		}
 		#endregion
 
 		#region BatchGet
 		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys)
 		{
-			return BatchGet(keys, null, false);
-		}
-		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, ProjectionExpression projection)
-		{
-			return BatchGet(keys, projection, false);
-		}
-		public IEnumerable<DynamoDBMap> BatchGet(IEnumerable<ItemKey> keys, bool consistent)
-		{
-			return BatchGet(keys, null, consistent);
+			return eventuallyConsistentContext.BatchGet(keys);
 		}
 		#endregion
 
 		#region BatchGetJoinAsync<T, TResult>
 		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector)
 		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, null, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, projection, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, null, consistent, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, projection, consistent, ReadAhead.Some);
+			return eventuallyConsistentContext.BatchGetJoinAsync(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, ReadAhead.Some);
 		}
 		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead)
 		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, null, false, readAhead);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, ReadAhead readAhead)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, projection, false, readAhead);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, null, consistent, readAhead);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, projection, consistent, readAhead);
+			return eventuallyConsistentContext.BatchGetJoinAsync(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, readAhead);
 		}
 		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector)
 		{
-			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, null, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, projection, false, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, null, consistent, ReadAhead.Some);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, bool consistent)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, projection, consistent, ReadAhead.Some);
+			return eventuallyConsistentContext.BatchGetJoinAsync(outerItems, keySelector, resultSelector, ReadAhead.Some);
 		}
 		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead)
 		{
-			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, null, false, readAhead);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection, ReadAhead readAhead)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, projection, false, readAhead);
-		}
-		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent, ReadAhead readAhead)
-		{
-			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, null, consistent, readAhead);
+			return eventuallyConsistentContext.BatchGetJoinAsync(outerItems, keySelector, resultSelector, readAhead);
 		}
 		#endregion
 
 		#region BatchGetJoin<T, TResult>
 		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector)
 		{
-			return BatchGetJoin<T, TResult>(outerItems, keySelector, resultSelector, null, false);
-		}
-		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ProjectionExpression projection)
-		{
-			return BatchGetJoin<T, TResult>(outerItems, keySelector, resultSelector, projection, false);
-		}
-		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, bool consistent)
-		{
-			return BatchGetJoin<T, TResult>(outerItems, keySelector, resultSelector, null, consistent);
+			return eventuallyConsistentContext.BatchGetJoin(outerItems, keySelector, resultSelector);
 		}
 		#endregion
 
@@ -1428,6 +1286,42 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Get(new ItemKey(hashKey, rangeKey));
 		}
 		#endregion
+
+		#region BatchGetAsync
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead)
+		{
+			return BatchGetAsync(keys.ToAsyncEnumerable(), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys)
+		{
+			return BatchGetAsync(keys, ReadAhead.Some);
+		}
+		#endregion
+
+		#region BatchGet
+		#endregion
+
+		#region BatchGetJoinAsync<T, TResult>
+		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector)
+		{
+			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead)
+		{
+			return BatchGetJoinAsync<T, TResult>(outerItems.ToAsyncEnumerable(), keySelector, resultSelector, readAhead);
+		}
+		public IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector)
+		{
+			return BatchGetJoinAsync<T, TResult>(outerItems, keySelector, resultSelector, ReadAhead.Some);
+		}
+		#endregion
+
+		#region BatchGetJoin<T, TResult>
+		#endregion
 	}
 }
 
@@ -1442,5 +1336,13 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		Task<DynamoDBMap> GetAsync(ItemKey key);
 		DynamoDBMap Get(DynamoDBKeyValue hashKey);
 		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys);
+
+		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
+		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
+		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
 	}
 }

@@ -19,7 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
-using Amazon.DynamoDBv2;
+using AwsRoot = Amazon.DynamoDBv2;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -57,9 +57,9 @@ namespace Adamantworks.Amazon.DynamoDB
 	// See Overloads.tt and Overloads.cs for more method overloads of this class
 	internal partial class Region : IDynamoDBRegion
 	{
-		internal readonly IAmazonDynamoDB DB;
+		internal readonly AwsRoot.IAmazonDynamoDB DB;
 
-		internal Region(IAmazonDynamoDB db)
+		internal Region(AwsRoot.IAmazonDynamoDB db)
 		{
 			DB = db;
 			WaitStatusPollingInterval = TimeSpan.FromSeconds(5);

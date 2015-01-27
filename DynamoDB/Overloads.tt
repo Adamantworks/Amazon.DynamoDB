@@ -95,16 +95,16 @@
 		GenOverloads(true, hashKeyOnly)
 		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
 		.Concat(GenOverloads(true, itemKey)));
-	var batchGetAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync",
-		GenOverloads(true, keysSyncToAsync, projection, consistent, readAhead)
-		.Concat(GenOverloads(keysAsync, projection, consistent, readAhead)));
-	var batchGet = new Method("IEnumerable<DynamoDBMap>", "BatchGet",
-		GenOverloads(keys, projection, consistent));
-	var batchGetJoinAsync = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>",
-		GenOverloads(true, outerItemsSyncToAsync, keySelector, resultSelector, projection, consistent, readAhead)
-		.Concat(GenOverloads(outerItemsAsync, keySelector, resultSelector, projection, consistent, readAhead)));
-	var batchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
-		GenOverloads(outerItemsSync, keySelector, resultSelector, projection, consistent));
+	var batchGetAsyncForwards = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync", "eventuallyConsistentContext.BatchGetAsync",
+		GenOverloads(true, keysSyncToAsync, readAhead)
+		.Concat(GenOverloads(true, keysAsync, readAhead)));
+	var batchGetForwards = new Method("IEnumerable<DynamoDBMap>", "BatchGet", "eventuallyConsistentContext.BatchGet",
+		GenOverloads(true, keys));
+	var batchGetJoinAsyncForwards = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>", "eventuallyConsistentContext.BatchGetJoinAsync",
+		GenOverloads(true, outerItemsSyncToAsync, keySelector, resultSelector, readAhead)
+		.Concat(GenOverloads(true, outerItemsAsync, keySelector, resultSelector, readAhead)));
+	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
+		GenOverloads(true, outerItemsSync, keySelector, resultSelector));
 	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
 		GenOverloads(item, condition, values, returnOldItem, cancellationToken)
 		// Can't have values without condition
@@ -157,6 +157,16 @@
 		GenOverloads(true, hashKeyOnly)
 		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
 		.Concat(GenOverloads(itemKey)));
+	var batchGetAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync",
+		GenOverloads(true, keysSyncToAsync, readAhead)
+		.Concat(GenOverloads(keysAsync, readAhead)));
+	var batchGet = new Method("IEnumerable<DynamoDBMap>", "BatchGet",
+		GenOverloads(keys));
+	var batchGetJoinAsync = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>",
+		GenOverloads(true, outerItemsSyncToAsync, keySelector, resultSelector, readAhead)
+		.Concat(GenOverloads(outerItemsAsync, keySelector, resultSelector, readAhead)));
+	var batchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
+		GenOverloads(outerItemsSync, keySelector, resultSelector));
 #>
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -195,12 +205,6 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
 
-<#		GenInterface(batchGetAsync); #>
-<#		GenInterface(batchGet); #>
-
-<#		GenInterface(batchGetJoinAsync); #>
-<#		GenInterface(batchGetJoin); #>
-
 <#		GenInterface(putAsync); #>
 <#		GenInterface(put); #>
 
@@ -232,13 +236,13 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(getForwards); #>
 
-<#		GenMethods(batchGetAsync); #>
+<#		GenMethods(batchGetAsyncForwards); #>
 
-<#		GenMethods(batchGet); #>
+<#		GenMethods(batchGetForwards); #>
 
-<#		GenMethods(batchGetJoinAsync); #>
+<#		GenMethods(batchGetJoinAsyncForwards); #>
 
-<#		GenMethods(batchGetJoin); #>
+<#		GenMethods(batchGetJoinForwards); #>
 
 <#		GenMethods(putAsync); #>
 
@@ -266,6 +270,14 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(getAsync); #>
 
 <#		GenMethods(get); #>
+
+<#		GenMethods(batchGetAsync); #>
+
+<#		GenMethods(batchGet); #>
+
+<#		GenMethods(batchGetJoinAsync); #>
+
+<#		GenMethods(batchGetJoin); #>
 	}
 }
 
@@ -275,6 +287,12 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 <#		GenInterface(getAsync); #>
 <#		GenInterface(get); #>
+
+<#		GenInterface(batchGetAsync); #>
+<#		GenInterface(batchGet); #>
+
+<#		GenInterface(batchGetJoinAsync); #>
+<#		GenInterface(batchGetJoin); #>
 	}
 }
 <#+
