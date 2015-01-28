@@ -89,6 +89,7 @@
     <Compile Include="Schema\IndexProjectionType.cs" />
     <Compile Include="Syntax\CompositeKey.cs" />
     <Compile Include="Syntax\Convertable.cs" />
+    <Compile Include="Syntax\IQueryExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IQueryLimitToSyntax.cs" />
     <Compile Include="Syntax\IQueryCompletionSyntax.cs" />
     <Compile Include="Syntax\IQuerySyntax.cs" />

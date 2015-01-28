@@ -37,6 +37,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private bool scanIndexForward = true;
 		private bool limitSet;
 		private int? limit;
+		private ItemKey? exclusiveStartKey;
 
 		public QueryContext(
 			Region region,
@@ -66,13 +67,19 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return this;
 		}
 
-		public IQueryCompletionSyntax LimitTo(int? limit)
+		public IQueryExclusiveStartKeySyntax LimitTo(int? limit)
 		{
 			if(limitSet)
-				throw new Exception("Limit of Scan operation already set");
+				throw new Exception("Limit of Query operation already set");
 
 			limitSet = true;
 			this.limit = limit;
+			return this;
+		}
+
+		public IQueryCompletionSyntax ExclusiveStartKey(ItemKey key)
+		{
+			exclusiveStartKey = key;
 			return this;
 		}
 
@@ -254,9 +261,11 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			if(filter != null)
 				request.FilterExpression = filter.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
+			if(exclusiveStartKey != null)
+				request.ExclusiveStartKey = exclusiveStartKey.Value.ToAws(keySchema);
 			return request;
 		}
-		private static bool IsComplete(global::Amazon.DynamoDBv2.Model.QueryResponse lastResponse)
+		private static bool IsComplete(Aws.QueryResponse lastResponse)
 		{
 			return lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0;
 		}
