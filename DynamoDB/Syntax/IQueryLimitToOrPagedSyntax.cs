@@ -14,8 +14,10 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IQuerySyntax
+	public interface IQueryLimitToOrPagedSyntax : IQueryExclusiveStartKeySyntax
 	{
-		// IReverseSyntax Query(DynamoDBKeyValue hashKey...);
+		IQueryExclusiveStartKeySyntax LimitTo(int? limit);
+		IPagedQueryRangeSyntax Paged(int pageSize);
+		IPagedQueryRangeSyntax Paged(int pageSize, ItemKey? exclusiveStartKey);
 	}
 }

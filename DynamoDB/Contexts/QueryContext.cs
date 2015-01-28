@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -23,7 +25,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal class QueryContext : IReverseSyntax
+	internal class QueryContext : IReverseSyntax, IPagedQueryRangeSyntax
 	{
 		private readonly Region region;
 		private readonly string tableName;
@@ -61,7 +63,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.consistent = consistent;
 		}
 
-		public IQueryLimitToSyntax Reverse()
+		public IQueryLimitToOrPagedSyntax Reverse()
 		{
 			scanIndexForward = false;
 			return this;
@@ -77,9 +79,26 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return this;
 		}
 
-		public IQueryCompletionSyntax ExclusiveStartKey(ItemKey key)
+		public IQueryRangeSyntax ExclusiveStartKey(ItemKey key)
 		{
 			exclusiveStartKey = key;
+			return this;
+		}
+
+		public IPagedQueryRangeSyntax Paged(int pageSize)
+		{
+			if(limitSet)
+				throw new Exception("Limit of Query operation already set");
+			limit = pageSize;
+			return this;
+		}
+
+		public IPagedQueryRangeSyntax Paged(int pageSize, ItemKey? exclusiveStartKey)
+		{
+			if(limitSet)
+				throw new Exception("Limit of Query operation already set");
+			limit = pageSize;
+			this.exclusiveStartKey = exclusiveStartKey;
 			return this;
 		}
 
@@ -89,11 +108,21 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.AllKeysAsync(CancellationToken cancellationToken)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> AllKeys()
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.AllKeys()
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			return QueryPaged(keyConditions);
 		}
 		#endregion
 
@@ -104,12 +133,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> RangeKeyBeginsWith(DynamoDBKeyValue rangeKey)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBeginsWith(DynamoDBKeyValue rangeKey)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
+			return QueryPaged(keyConditions);
 		}
 		#endregion
 
@@ -120,12 +161,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> RangeKeyEquals(DynamoDBKeyValue rangeKey)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyEquals(DynamoDBKeyValue rangeKey)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
+			return QueryPaged(keyConditions);
 		}
 		#endregion
 
@@ -136,12 +189,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LT");
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LT");
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> RangeKeyLessThan(DynamoDBKeyValue rangeKey)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThan(DynamoDBKeyValue rangeKey)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
+			return QueryPaged(keyConditions);
 		}
 
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
@@ -150,12 +215,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
+			return QueryPaged(keyConditions);
 		}
 		#endregion
 
@@ -166,12 +243,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> RangeKeyGreaterThan(DynamoDBKeyValue rangeKey)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThan(DynamoDBKeyValue rangeKey)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
+			return QueryPaged(keyConditions);
 		}
 
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
@@ -180,12 +269,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey)
+		{
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
+			return QueryPaged(keyConditions);
 		}
 		#endregion
 
@@ -197,6 +298,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			keySchema.RangeKey.Between(startInclusive, endExclusive, keyConditions);
 			return QueryAsync(keyConditions, readAhead);
 		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken)
+		{
+			CheckHasRangeKey();
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			keySchema.RangeKey.Between(startInclusive, endExclusive, keyConditions);
+			return QueryPagedAsync(keyConditions, cancellationToken);
+		}
 
 		public IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
 		{
@@ -204,6 +312,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			keySchema.RangeKey.Between(startInclusive, endExclusive, keyConditions);
 			return Query(keyConditions);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
+		{
+			CheckHasRangeKey();
+			var keyConditions = hashKey.ToAws(keySchema.HashKey);
+			keySchema.RangeKey.Between(startInclusive, endExclusive, keyConditions);
+			return QueryPaged(keyConditions);
 		}
 		#endregion
 
@@ -230,6 +345,21 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					readAhead);
 			});
 		}
+		private async Task<ItemPage> QueryPagedAsync(Dictionary<string, Aws.Condition> keyConditions, CancellationToken cancellationToken)
+		{
+			var request = BuildQueryRequest(keyConditions);
+			var items = new List<DynamoDBMap>();
+			Aws.QueryResponse lastResponse = null;
+			do
+			{
+				if(lastResponse != null)
+					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				lastResponse = await region.DB.QueryAsync(request, cancellationToken).ConfigureAwait(false);
+				items.AddRange(lastResponse.Items.Select(item => item.ToValue()));
+			} while(!IsComplete(lastResponse));
+			var lastEvaluatedKey = lastResponse.LastEvaluatedKey;
+			return new ItemPage(items, lastEvaluatedKey != null ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));
+		}
 		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Aws.Condition> keyConditions)
 		{
 			var request = BuildQueryRequest(keyConditions);
@@ -242,6 +372,21 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				foreach(var item in lastResponse.Items)
 					yield return item.ToValue();
 			} while(!IsComplete(lastResponse));
+		}
+		private ItemPage QueryPaged(Dictionary<string, Aws.Condition> keyConditions)
+		{
+			var request = BuildQueryRequest(keyConditions);
+			var items = new List<DynamoDBMap>();
+			Aws.QueryResponse lastResponse = null;
+			do
+			{
+				if(lastResponse != null)
+					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				lastResponse = region.DB.Query(request);
+				items.AddRange(lastResponse.Items.Select(item => item.ToValue()));
+			} while(!IsComplete(lastResponse));
+			var lastEvaluatedKey = lastResponse.LastEvaluatedKey;
+			return new ItemPage(items, lastEvaluatedKey != null ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));
 		}
 		private Aws.QueryRequest BuildQueryRequest(Dictionary<string, Aws.Condition> keyConditions)
 		{

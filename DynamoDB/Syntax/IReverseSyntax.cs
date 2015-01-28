@@ -14,8 +14,8 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IReverseSyntax : IQueryLimitToSyntax
+	public interface IReverseSyntax : IQueryLimitToOrPagedSyntax
 	{
-		IQueryLimitToSyntax Reverse();
+		IQueryLimitToOrPagedSyntax Reverse();
 	}
 }

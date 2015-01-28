@@ -14,8 +14,8 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IQueryExclusiveStartKeySyntax : IQueryCompletionSyntax
+	public interface IQueryExclusiveStartKeySyntax : IQueryRangeSyntax
 	{
-		IQueryCompletionSyntax ExclusiveStartKey(ItemKey key);
+		IQueryRangeSyntax ExclusiveStartKey(ItemKey key);
 	}
 }

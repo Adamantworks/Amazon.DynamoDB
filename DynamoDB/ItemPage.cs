@@ -12,10 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using System.Collections.Generic;
+
+namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IQueryLimitToSyntax : IQueryExclusiveStartKeySyntax
+	public struct ItemPage
 	{
-		IQueryExclusiveStartKeySyntax LimitTo(int? limit);
+		public readonly IList<DynamoDBMap> Items;
+		public readonly ItemKey? LastEvaluatedKey;
+
+		public ItemPage(IList<DynamoDBMap> items, ItemKey? lastEvaluatedKey)
+		{
+			Items = items;
+			LastEvaluatedKey = lastEvaluatedKey;
+		}
 	}
 }
