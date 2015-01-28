@@ -124,7 +124,7 @@
 		GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
-		GenOverloads(true, regionArg, nameArg, projectionNoneArg, filter, values)
+		GenOverloads(true, regionArg, nameArg, keySchemaArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
@@ -169,7 +169,7 @@
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
-		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, projectionArg, filter, values)
+		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, tableDotKeySchemaArg, projectionArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQuery = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)

@@ -14,10 +14,12 @@
 
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -25,33 +27,43 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 	{
 		private readonly Region region;
 		private readonly string tableName;
+		private readonly KeySchema keySchema;
 		private readonly ProjectionExpression projection;
 		private readonly PredicateExpression filter;
 		private readonly Values values;
 		private bool limitSet;
 		private int? limit;
+		private ItemKey? exclusiveStartKey;
 
 		public ScanContext(
 			Region region,
 			string tableName,
+			KeySchema keySchema,
 			ProjectionExpression projection,
 			PredicateExpression filter,
 			Values values)
 		{
 			this.region = region;
 			this.tableName = tableName;
+			this.keySchema = keySchema;
 			this.projection = projection;
 			this.filter = filter;
 			this.values = values;
 		}
 
-		public IScanCompletionSyntax LimitTo(int? limit)
+		public IScanExclusiveStartKeySyntax LimitTo(int? limit)
 		{
 			if(limitSet)
 				throw new Exception("Limit of Scan operation already set");
 
 			limitSet = true;
 			this.limit = limit;
+			return this;
+		}
+
+		public IScanCompletionSyntax ExclusiveStartKey(ItemKey key)
+		{
+			exclusiveStartKey = key;
 			return this;
 		}
 
@@ -62,7 +74,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			{
 				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
 				var request = BuildScanRequest();
-				return AsyncEnumerableEx.GenerateChunked<global::Amazon.DynamoDBv2.Model.ScanResponse, DynamoDBMap>(null,
+				return AsyncEnumerableEx.GenerateChunked<Aws.ScanResponse, DynamoDBMap>(null,
 					(lastResponse, cancellationToken) =>
 					{
 						if(lastResponse != null)
@@ -77,7 +89,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public IEnumerable<DynamoDBMap> All()
 		{
 			var request = BuildScanRequest();
-			global::Amazon.DynamoDBv2.Model.ScanResponse lastResponse = null;
+			Aws.ScanResponse lastResponse = null;
 			do
 			{
 				if(lastResponse != null)
@@ -89,9 +101,9 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		private global::Amazon.DynamoDBv2.Model.ScanRequest BuildScanRequest()
+		private Aws.ScanRequest BuildScanRequest()
 		{
-			var request = new global::Amazon.DynamoDBv2.Model.ScanRequest()
+			var request = new Aws.ScanRequest()
 			{
 				TableName = tableName,
 				ExpressionAttributeNames = AwsAttributeNames.GetCombined(projection, filter),
@@ -103,9 +115,11 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			if(filter != null)
 				request.FilterExpression = filter.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
+			if(exclusiveStartKey != null)
+				request.ExclusiveStartKey = exclusiveStartKey.Value.ToAws(keySchema);
 			return request;
 		}
-		private static bool IsComplete(global::Amazon.DynamoDBv2.Model.ScanResponse lastResponse)
+		private static bool IsComplete(Aws.ScanResponse lastResponse)
 		{
 			return lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0;
 		}

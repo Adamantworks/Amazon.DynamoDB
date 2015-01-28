@@ -218,7 +218,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			{
 				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
 				var request = BuildQueryRequest(keyConditions);
-				return AsyncEnumerableEx.GenerateChunked<global::Amazon.DynamoDBv2.Model.QueryResponse, DynamoDBMap>(null,
+				return AsyncEnumerableEx.GenerateChunked<Aws.QueryResponse, DynamoDBMap>(null,
 					(lastResponse, cancellationToken) =>
 					{
 						if(lastResponse != null)
@@ -233,7 +233,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Aws.Condition> keyConditions)
 		{
 			var request = BuildQueryRequest(keyConditions);
-			global::Amazon.DynamoDBv2.Model.QueryResponse lastResponse = null;
+			Aws.QueryResponse lastResponse = null;
 			do
 			{
 				if(lastResponse != null)
@@ -245,7 +245,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		private Aws.QueryRequest BuildQueryRequest(Dictionary<string, Aws.Condition> keyConditions)
 		{
-			var request = new global::Amazon.DynamoDBv2.Model.QueryRequest()
+			var request = new Aws.QueryRequest()
 			{
 				TableName = tableName,
 				IndexName = indexName,

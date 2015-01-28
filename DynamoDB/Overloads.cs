@@ -313,15 +313,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Scan
 		public IScanLimitToSyntax Scan()
 		{
-			return new ScanContext(Region, Name, null, null, null);
+			return new ScanContext(Region, Name, Schema.Key, null, null, null);
 		}
 		public IScanLimitToSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(Region, Name, null, filter, null);
+			return new ScanContext(Region, Name, Schema.Key, null, filter, null);
 		}
 		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(Region, Name, null, filter, values);
+			return new ScanContext(Region, Name, Schema.Key, null, filter, values);
 		}
 		#endregion
 	}
@@ -505,15 +505,15 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region Scan
 		public IScanLimitToSyntax Scan()
 		{
-			return new ScanContext(table.Region, table.Name, projection, null, null);
+			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, null, null);
 		}
 		public IScanLimitToSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(table.Region, table.Name, projection, filter, null);
+			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, filter, null);
 		}
 		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(table.Region, table.Name, projection, filter, values);
+			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, filter, values);
 		}
 		#endregion
 	}
