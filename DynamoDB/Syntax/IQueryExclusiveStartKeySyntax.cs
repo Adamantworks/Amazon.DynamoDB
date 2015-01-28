@@ -16,6 +16,10 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
 	public interface IQueryExclusiveStartKeySyntax : IQueryRangeSyntax
 	{
+		/// <summary>
+		/// Prefer .Paged() to this method.  This exists for unusual cases where
+		/// you are getting the exclusive start key by means other than pagining/
+		/// </summary>
 		IQueryRangeSyntax ExclusiveStartKey(ItemKey key);
 	}
 }

@@ -16,6 +16,10 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
 	public interface IScanExclusiveStartKeySyntax : IScanCompletionSyntax
 	{
+		/// <summary>
+		/// Prefer .Paged() to this method.  This exists for unusual cases where
+		/// you are getting the exclusive start key by means other than pagining/
+		/// </summary>
 		IScanCompletionSyntax ExclusiveStartKey(ItemKey key);
 	}
 }
