@@ -60,6 +60,7 @@
     <Compile Include="DynamoDBValues\DynamoDBStringTests.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Internal\AwsExtensionsTests.cs" />
+    <Compile Include="ItemKeyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

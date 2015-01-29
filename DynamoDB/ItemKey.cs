@@ -77,20 +77,59 @@ namespace Adamantworks.Amazon.DynamoDB
 			CompositeValueSeparator = ';';
 		}
 
-		public static CompositeKey Composite(params DynamoDBKeyValue[] hashKey)
+		public static CompositeSyntax CompositeStrict(params DynamoDBKeyValue[] key)
 		{
-			if(hashKey == null || hashKey.Length == 0)
-				throw new ArgumentException("Must provide a key value", "hashKey");
+			if(key == null || key.Length == 0)
+				throw new ArgumentException("Must provide a key value", "key");
 
-			return new CompositeKey(CompositeValue(hashKey));
+			return new CompositeSyntax(CompositeValue(key));
+		}
+		public static CompositeSyntax CompositeStrict(IEnumerable<DynamoDBKeyValue> key)
+		{
+			if(key == null)
+				throw new ArgumentException("Must provide a key value", "key");
+
+			return new CompositeSyntax(CompositeValue(key));
+		}
+		public static CompositeSyntax Composite<TKey1, TKey2>(TKey1 key1, TKey2 key2)
+		{
+			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(), key2.ToDynamoDBKeyValue()));
+		}
+		public static CompositeSyntax Composite<TKey1, TKey2>(TKey1 key1, TKey2 key2, IDynamoDBValueConverter converter)
+		{
+			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(converter), key2.ToDynamoDBKeyValue(converter)));
+		}
+		public static CompositeSyntax Composite<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3)
+		{
+			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(), key2.ToDynamoDBKeyValue(), key3.ToDynamoDBKeyValue()));
+		}
+		public static CompositeSyntax Composite<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IDynamoDBValueConverter converter)
+		{
+			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(converter), key2.ToDynamoDBKeyValue(converter), key3.ToDynamoDBKeyValue(converter)));
+		}
+		public static CompositeSyntax Composite<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4)
+		{
+			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(), key2.ToDynamoDBKeyValue(), key3.ToDynamoDBKeyValue(), key4.ToDynamoDBKeyValue()));
+		}
+		public static CompositeSyntax Composite<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IDynamoDBValueConverter converter)
+		{
+			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(converter), key2.ToDynamoDBKeyValue(converter), key3.ToDynamoDBKeyValue(converter), key4.ToDynamoDBKeyValue(converter)));
 		}
 
-		internal static string CompositeValue(DynamoDBKeyValue[] values)
+		internal static string CompositeValue(params DynamoDBKeyValue[] values)
+		{
+			return string.Join(separatorString, values.Select(v => v != null ? v.ToString() : null));
+		}
+		internal static string CompositeValue(IEnumerable<DynamoDBKeyValue> values)
 		{
 			return string.Join(separatorString, values.Select(v => v != null ? v.ToString() : null));
 		}
 
 		public static string CompositeName(params string[] names)
+		{
+			return string.Join(separatorString, names);
+		}
+		public static string CompositeName(IEnumerable<string> names)
 		{
 			return string.Join(separatorString, names);
 		}

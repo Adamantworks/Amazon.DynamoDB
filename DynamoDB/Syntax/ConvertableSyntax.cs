@@ -17,12 +17,12 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public struct Convertable<TValue>
+	public struct ConvertableSyntax<TValue>
 	{
 		public readonly TValue Value;
 		public readonly IDynamoDBValueConverter Converter;
 
-		public Convertable(TValue value, IDynamoDBValueConverter converter)
+		public ConvertableSyntax(TValue value, IDynamoDBValueConverter converter)
 		{
 			Value = value;
 			Converter = converter;

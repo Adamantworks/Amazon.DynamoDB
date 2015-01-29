@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,24 +104,166 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public int Count { get { return values.Count; } }
 		bool ICollection<KeyValuePair<string, DynamoDBValue>>.IsReadOnly { get { return values.IsReadOnly; } }
+
 		public bool ContainsKey(string key)
 		{
 			return values.ContainsKey(key);
 		}
+		public bool ContainsKey(params string[] keys)
+		{
+			return values.ContainsKey(ItemKey.CompositeName(keys));
+		}
+		public bool ContainsKey(IEnumerable<string> keys)
+		{
+			return values.ContainsKey(ItemKey.CompositeName(keys));
+		}
 
-		public void Add(string key, DynamoDBValue value)
+		void IDictionary<string, DynamoDBValue>.Add(string key, DynamoDBValue value)
 		{
 			values.Add(key, value);
+		}
+		public void AddStrict(string key, DynamoDBValue value)
+		{
+			values.Add(key, value);
+		}
+		public void Add<TValue>(string key, TValue value)
+		{
+			values.Add(key, value.ToDynamoDBValue());
+		}
+		public void Add<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		{
+			values.Add(key, value.ToDynamoDBValue());
+		}
+		public void AddStrict(IEnumerable<string> keys, params DynamoDBKeyValue[] values)
+		{
+			this.values.Add(ItemKey.CompositeName(keys), ItemKey.CompositeStrict(values));
+		}
+		public void AddStrict(IEnumerable<string> keys, IEnumerable<DynamoDBKeyValue> values)
+		{
+			this.values.Add(ItemKey.CompositeName(keys), ItemKey.CompositeStrict(values));
+		}
+		public void Add<T1, T2>(IEnumerable<string> keys, T1 value1, T2 value2)
+		{
+			values.Add(ItemKey.CompositeName(keys), ItemKey.Composite(value1, value2));
+		}
+		public void Add<T1, T2>(IEnumerable<string> keys, T1 value1, T2 value2, IDynamoDBValueConverter converter)
+		{
+			values.Add(ItemKey.CompositeName(keys), ItemKey.Composite(value1, value2, converter));
+		}
+		public void Add<T1, T2, T3>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3)
+		{
+			values.Add(ItemKey.CompositeName(keys), ItemKey.Composite(value1, value2, value3));
+		}
+		public void Add<T1, T2, T3>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3, IDynamoDBValueConverter converter)
+		{
+			values.Add(ItemKey.CompositeName(keys), ItemKey.Composite(value1, value2, value3, converter));
+		}
+		public void Add<T1, T2, T3, T4>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3, T4 value4)
+		{
+			values.Add(ItemKey.CompositeName(keys), ItemKey.Composite(value1, value2, value3, value4));
+		}
+		public void Add<T1, T2, T3, T4>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3, T4 value4, IDynamoDBValueConverter converter)
+		{
+			values.Add(ItemKey.CompositeName(keys), ItemKey.Composite(value1, value2, value3, value4));
+		}
+
+		public bool AddStrictIfNotNull(string key, DynamoDBValue value)
+		{
+			var notNull = value != null;
+			if(notNull)
+				values.Add(key, value);
+			return notNull;
+		}
+		public bool AddIfNotNull<TValue>(string key, TValue value)
+		{
+			return AddStrictIfNotNull(key, value.ToDynamoDBValue());
+		}
+		public bool AddIfNotNull<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		{
+			return AddStrictIfNotNull(key, value.ToDynamoDBValue(converter));
+		}
+
+		public void SetStrict(string key, DynamoDBValue value)
+		{
+			values[key] = value;
+		}
+		public void Set<TValue>(string key, TValue value)
+		{
+			values[key] = value.ToDynamoDBValue();
+		}
+		public void Set<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		{
+			values[key] = value.ToDynamoDBValue(converter);
+		}
+		public void SetStrict(IEnumerable<string> keys, params DynamoDBKeyValue[] values)
+		{
+			this.values[ItemKey.CompositeName(keys)] = ItemKey.CompositeStrict(values);
+		}
+		public void SetStrict(IEnumerable<string> keys, IEnumerable<DynamoDBKeyValue> values)
+		{
+			this.values[ItemKey.CompositeName(keys)] = ItemKey.CompositeStrict(values);
+		}
+		public void Set<T1, T2>(IEnumerable<string> keys, T1 value1, T2 value2)
+		{
+			values[ItemKey.CompositeName(keys)] = ItemKey.Composite(value1, value2);
+		}
+		public void Set<T1, T2>(IEnumerable<string> keys, T1 value1, T2 value2, IDynamoDBValueConverter converter)
+		{
+			values[ItemKey.CompositeName(keys)] = ItemKey.Composite(value1, value2, converter);
+		}
+		public void Set<T1, T2, T3>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3)
+		{
+			values[ItemKey.CompositeName(keys)] = ItemKey.Composite(value1, value2, value3);
+		}
+		public void Set<T1, T2, T3>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3, IDynamoDBValueConverter converter)
+		{
+			values[ItemKey.CompositeName(keys)] = ItemKey.Composite(value1, value2, value3, converter);
+		}
+		public void Set<T1, T2, T3, T4>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3, T4 value4)
+		{
+			values[ItemKey.CompositeName(keys)] = ItemKey.Composite(value1, value2, value3, value4);
+		}
+		public void Set<T1, T2, T3, T4>(IEnumerable<string> keys, T1 value1, T2 value2, T3 value3, T4 value4, IDynamoDBValueConverter converter)
+		{
+			values[ItemKey.CompositeName(keys)] = ItemKey.Composite(value1, value2, value3, value4, converter);
+		}
+
+		public bool SetStrictIfNotNull(string key, DynamoDBValue value)
+		{
+			var notNull = value != null;
+			if(notNull)
+				values[key] = value;
+			return notNull;
+		}
+		public bool SetIfNotNull<TValue>(string key, TValue value)
+		{
+			return SetStrictIfNotNull(key, value.ToDynamoDBValue());
+		}
+		public bool SetIfNotNull<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		{
+			return SetStrictIfNotNull(key, value.ToDynamoDBValue(converter));
 		}
 
 		public bool Remove(string key)
 		{
 			return values.Remove(key);
 		}
+		public bool Remove(params string[] keys)
+		{
+			return values.Remove(ItemKey.CompositeName(keys));
+		}
+		public bool Remove(IEnumerable<string> keys)
+		{
+			return values.Remove(ItemKey.CompositeName(keys));
+		}
 
 		public bool TryGetValue(string key, out DynamoDBValue value)
 		{
 			return values.TryGetValue(key, out value);
+		}
+		public bool TryGetValue(IEnumerable<string> keys, out DynamoDBValue value)
+		{
+			return values.TryGetValue(ItemKey.CompositeName(keys), out value);
 		}
 		public DynamoDBValue TryGetValue(string key)
 		{
@@ -134,6 +277,12 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			values.TryGetValue(ItemKey.CompositeName(keys), out value);
 			return value;
 		}
+		public DynamoDBValue TryGetValue(IEnumerable<string> keys)
+		{
+			DynamoDBValue value;
+			values.TryGetValue(ItemKey.CompositeName(keys), out value);
+			return value;
+		}
 
 		public DynamoDBValue this[string key]
 		{
@@ -141,6 +290,11 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			set { values[key] = value; }
 		}
 		public DynamoDBValue this[params string[] keys]
+		{
+			get { return values[ItemKey.CompositeName(keys)]; }
+			set { values[ItemKey.CompositeName(keys)] = value; }
+		}
+		public DynamoDBValue this[IEnumerable<string> keys]
 		{
 			get { return values[ItemKey.CompositeName(keys)]; }
 			set { values[ItemKey.CompositeName(keys)] = value; }

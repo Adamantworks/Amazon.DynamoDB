@@ -151,13 +151,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			throw new InvalidCastException();
 		}
 
-		public static Convertable<T> ToDynamoDB<T>(this T value)
+		public static ConvertableSyntax<T> ToDynamoDB<T>(this T value)
 		{
-			return new Convertable<T>(value, DynamoDBValueConverter.Default);
+			return new ConvertableSyntax<T>(value, DynamoDBValueConverter.Default);
 		}
-		public static Convertable<T> ToDynamoDB<T>(this T value, IDynamoDBValueConverter converter)
+		public static ConvertableSyntax<T> ToDynamoDB<T>(this T value, IDynamoDBValueConverter converter)
 		{
-			return new Convertable<T>(value, converter);
+			return new ConvertableSyntax<T>(value, converter);
 		}
 	}
 }

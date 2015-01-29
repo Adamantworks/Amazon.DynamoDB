@@ -88,8 +88,8 @@
     <Compile Include="ProvisionedThroughput.cs" />
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Schema\IndexProjectionType.cs" />
-    <Compile Include="Syntax\CompositeKey.cs" />
-    <Compile Include="Syntax\Convertable.cs" />
+    <Compile Include="Syntax\CompositeSyntax.cs" />
+    <Compile Include="Syntax\ConvertableSyntax.cs" />
     <Compile Include="Syntax\IQueryExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IQueryLimitToOrPagedSyntax.cs" />
     <Compile Include="Syntax\IQueryRangeSyntax.cs" />

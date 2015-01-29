@@ -43,5 +43,33 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			byte result;
 			Assert.Throws<InvalidOperationException>(() => result = (byte)foo);
 		}
+
+		/// <summary>
+		/// This comes up in cases like ItemKey and DynamoDBMap where we want to have generic overloads
+		/// for conversion, but there are also implicit conversions available. This is the reason why
+		/// there are "Strict" versions of methods.
+		/// </summary>
+		[Test]
+		public void PrefersGenericToImplicitConversion()
+		{
+			Assert.AreEqual("Generic", Method("string value"));
+		}
+
+		public string Method<T>(T value)
+		{
+			return "Generic";
+		}
+		public string Method(TestValue value)
+		{
+			return "Non-Generic";
+		}
+
+		public class TestValue
+		{
+			public static implicit operator TestValue(string value)
+			{
+				return null;
+			}
+		}
 	}
 }
