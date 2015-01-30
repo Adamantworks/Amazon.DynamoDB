@@ -61,7 +61,10 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
 			};
 			if(condition != null)
+			{
 				request.ConditionExpression = condition.Expression;
+				request.ExpressionAttributeNames = AwsAttributeNames.GetCombined(condition);
+			}
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
 			return request;
 		}
