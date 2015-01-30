@@ -63,5 +63,14 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 			Assert.IsTrue(expected.SetEquals(values.To<ISet<Guid>>()));
 		}
+
+		[Test]
+		public void HashSetOfGuidToSetOfString()
+		{
+			var values = new HashSet<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+			var value = DynamoDBValue.Convert(values);
+			Assert.IsInstanceOf<DynamoDBSet<DynamoDBString>>(value);
+			Assert.AreEqual(values.Count, ((DynamoDBSet<DynamoDBString>)value).Count);
+		}
 	}
 }

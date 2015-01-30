@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -29,11 +30,11 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 		private static bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context, out Type setOfType) where T : DynamoDBValue
 		{
 			setOfType = null;
+			Type setType;
 			return IsAssignableFromDynamoDBSet<T>()
-				   && type.IsGenericType
-				   && type.GetGenericTypeDefinition() == typeof(ISet<>)
+				   && (setType = type.GetInterfaces().Where(i => i.IsGenericType).FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(ISet<>))) != null
 				// DynamoDBKeyValue because only set of string, number or binary is allowed
-				   && context.CanConvertFrom<DynamoDBKeyValue>(setOfType = type.GetGenericArguments()[0], context);
+				   && context.CanConvertFrom<DynamoDBKeyValue>(setOfType = setType.GenericTypeArguments[0], context);
 		}
 
 		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
@@ -65,7 +66,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 			if(!CanConvertFrom<T>(type, context, out setOfType)) return false;
 
 			var values = new List<DynamoDBKeyValue>();
-			foreach(var fromElementValue in (IEnumerable<object>)fromValue)
+			foreach(var fromElementValue in (IEnumerable)fromValue)
 			{
 				DynamoDBKeyValue toElementValue;
 				if(!context.TryConvertFrom(setOfType, fromElementValue, out toElementValue, context) || toElementValue == null)

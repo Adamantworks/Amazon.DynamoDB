@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using NUnit.Framework;
 
@@ -42,6 +43,12 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			int? foo = null;
 			byte result;
 			Assert.Throws<InvalidOperationException>(() => result = (byte)foo);
+		}
+
+		[Test]
+		public void InstanceOfOpenGeneric()
+		{
+			Assert.IsFalse(typeof(ISet<>).IsInstanceOfType(new HashSet<Guid>()));
 		}
 
 		/// <summary>
