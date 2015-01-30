@@ -105,6 +105,7 @@
     <Compile Include="Syntax\IScanExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IScanLimitToSyntax.cs" />
     <Compile Include="Syntax\ITryPutSyntax.cs" />
+    <Compile Include="Syntax\ITryModifySyntax.cs" />
     <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="PredicateExpression.cs" />

@@ -386,11 +386,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		DynamoDBMap Update(UpdateExpression update, Values values);
 		DynamoDBMap Update(UpdateExpression update, UpdateReturnValue returnValue);
 
-		Task<bool> TryUpdateAsync(UpdateExpression update);
-		Task<bool> TryUpdateAsync(UpdateExpression update, Values values);
-		Task<bool> TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
-		bool TryUpdate(UpdateExpression update);
-
 		Task<DynamoDBMap> DeleteAsync();
 		Task<DynamoDBMap> DeleteAsync(bool returnOldItem);
 		Task<DynamoDBMap> DeleteAsync(CancellationToken cancellationToken);
@@ -410,6 +405,13 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IReverseSyntax Query(DynamoDBKeyValue hashKey);
 		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
 		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
+	}
+	public partial interface ITryModifySyntax
+	{
+		Task<bool> TryUpdateAsync(UpdateExpression update);
+		Task<bool> TryUpdateAsync(UpdateExpression update, Values values);
+		Task<bool> TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
+		bool TryUpdate(UpdateExpression update);
 	}
 }
 

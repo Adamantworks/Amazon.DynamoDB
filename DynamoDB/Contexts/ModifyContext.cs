@@ -22,7 +22,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class ModifyContext : IIfSyntax
+	internal partial class ModifyContext : IIfSyntax, ITryModifySyntax
 	{
 		private readonly Table table;
 		private readonly ItemKey key;
@@ -35,12 +35,12 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.key = key;
 		}
 
-		public IModifySyntax If(PredicateExpression condition)
+		public ITryModifySyntax If(PredicateExpression condition)
 		{
 			this.condition = condition;
 			return this;
 		}
-		public IModifySyntax If(PredicateExpression condition, Values values)
+		public ITryModifySyntax If(PredicateExpression condition, Values values)
 		{
 			this.condition = condition;
 			conditionValues = values;

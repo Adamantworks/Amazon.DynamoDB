@@ -275,9 +275,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#		GenInterface(updateAsync); #>
 <#		GenInterface(update); #>
 
-<#		GenInterface(tryUpdateAsync); #>
-<#		GenInterface(tryUpdate); #>
-
 <#		GenInterface(deleteAsync); #>
 <#		GenInterface(delete); #>
 	}
@@ -291,6 +288,11 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public partial interface IQuerySyntax
 	{
 <#		GenInterface(query); #>
+	}
+	public partial interface ITryModifySyntax
+	{
+<#		GenInterface(tryUpdateAsync); #>
+<#		GenInterface(tryUpdate); #>
 	}
 }
 

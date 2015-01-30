@@ -97,6 +97,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				To<T4>((DynamoDBString)values[3], converter));
 		}
 
+		// TODO all these extension methods on object need to go away. There needs to be a better way
 		public static DynamoDBValue ToDynamoDBValue<T>(this T value)
 		{
 			DynamoDBValue toValue;

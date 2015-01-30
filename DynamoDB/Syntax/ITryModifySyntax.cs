@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IIfSyntax : IModifySyntax
+	public partial interface ITryModifySyntax : IModifySyntax
 	{
-		ITryModifySyntax If(PredicateExpression condition);
-		ITryModifySyntax If(PredicateExpression condition, Values values);
+		Task<bool> TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
+		bool TryUpdate(UpdateExpression update, Values values);
+
+		// TODO add TryDelete here
 	}
 }
