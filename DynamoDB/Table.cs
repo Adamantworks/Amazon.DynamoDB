@@ -55,8 +55,8 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		IConsistentOrScanSyntax With(ProjectionExpression projection);
 
-		IPutSyntax If(PredicateExpression condition);
-		IPutSyntax If(PredicateExpression condition, Values values);
+		ITryPutSyntax If(PredicateExpression condition);
+		ITryPutSyntax If(PredicateExpression condition, Values values);
 
 		IIfSyntax On(DynamoDBKeyValue hashKey);
 		IIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
@@ -68,6 +68,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task InsertAsync(DynamoDBMap item);
 		Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken);
 		void Insert(DynamoDBMap item);
+
+		Task<bool> TryInsertAsync(DynamoDBMap item);
+		Task<bool> TryInsertAsync(DynamoDBMap item, CancellationToken cancellationToken);
+		bool TryInsert(DynamoDBMap item);
 
 		void DeleteAsync(IBatchWriteAsync batch, ItemKey key);
 		void Delete(IBatchWrite batch, ItemKey key);
@@ -273,11 +277,11 @@ namespace Adamantworks.Amazon.DynamoDB
 			return consistent ? consistentContext : eventuallyConsistentContext;
 		}
 
-		public IPutSyntax If(PredicateExpression condition)
+		public ITryPutSyntax If(PredicateExpression condition)
 		{
 			return new PutContext(this, condition, null);
 		}
-		public IPutSyntax If(PredicateExpression condition, Values values)
+		public ITryPutSyntax If(PredicateExpression condition, Values values)
 		{
 			return new PutContext(this, condition, values);
 		}
@@ -320,6 +324,22 @@ namespace Adamantworks.Amazon.DynamoDB
 		public void Insert(DynamoDBMap item)
 		{
 			insertContext.Put(item, false);
+		}
+		#endregion
+
+		#region TryInsert
+		public Task<bool> TryInsertAsync(DynamoDBMap item)
+		{
+			return insertContext.TryPutAsync(item, CancellationToken.None);
+		}
+		public Task<bool> TryInsertAsync(DynamoDBMap item, CancellationToken cancellationToken)
+		{
+			return insertContext.TryPutAsync(item, cancellationToken);
+		}
+
+		public bool TryInsert(DynamoDBMap item)
+		{
+			return insertContext.TryPut(item);
 		}
 		#endregion
 

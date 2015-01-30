@@ -17,10 +17,12 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Aws = Amazon.DynamoDBv2.Model;
+using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class PutContext : IPutSyntax
+	internal partial class PutContext : ITryPutSyntax
 	{
 		private readonly Table table;
 		private readonly PredicateExpression condition;
@@ -34,15 +36,15 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 
 		#region Put
-		public async Task<DynamoDBMap> PutAsync(DynamoDBMap item,  bool returnOldItem, CancellationToken cancellationToken)
+		public async Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken)
 		{
-			var request = BuildPutItemRequest(item,  returnOldItem);
+			var request = BuildPutItemRequest(item, returnOldItem);
 			var response = await table.Region.DB.PutItemAsync(request, cancellationToken).ConfigureAwait(false);
 			if(!returnOldItem) return null;
 			return response.Attributes.ToGetValue();
 		}
 
-		public DynamoDBMap Put(DynamoDBMap item,  bool returnOldItem)
+		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
 		{
 			var request = BuildPutItemRequest(item, returnOldItem);
 			var response = table.Region.DB.PutItem(request);
@@ -50,18 +52,58 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return response.Attributes.ToGetValue();
 		}
 
-		private global::Amazon.DynamoDBv2.Model.PutItemRequest BuildPutItemRequest(DynamoDBMap item, bool returnOldItem)
+		private Aws.PutItemRequest BuildPutItemRequest(DynamoDBMap item, bool returnOldItem)
 		{
-			var request = new global::Amazon.DynamoDBv2.Model.PutItemRequest()
+			var request = new Aws.PutItemRequest()
 			{
 				TableName = table.Name,
 				Item = item.ToAwsDictionary(),
-				ReturnValues = returnOldItem ? global::Amazon.DynamoDBv2.ReturnValue.ALL_OLD : global::Amazon.DynamoDBv2.ReturnValue.NONE,
+				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
 			};
 			if(condition != null)
 				request.ConditionExpression = condition.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, values);
 			return request;
+		}
+		#endregion
+
+		#region TryPut
+		public async Task<bool> TryPutAsync(DynamoDBMap item)
+		{
+			try
+			{
+				await PutAsync(item, false, CancellationToken.None).ConfigureAwait(false);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
+		}
+		public async Task<bool> TryPutAsync(DynamoDBMap item, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await PutAsync(item, false, cancellationToken).ConfigureAwait(false);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
+		}
+
+		public bool TryPut(DynamoDBMap item)
+		{
+			try
+			{
+				Put(item, false);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
 		}
 		#endregion
 	}

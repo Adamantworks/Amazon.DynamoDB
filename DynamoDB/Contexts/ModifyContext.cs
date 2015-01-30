@@ -90,7 +90,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				await UpdateAsync(update, values, UpdateReturnValue.None, cancellationToken).ConfigureAwait(false);
 				return true;
 			}
-			catch(global::Amazon.DynamoDBv2.Model.ConditionalCheckFailedException)
+			catch(Aws.ConditionalCheckFailedException)
 			{
 				return false;
 			}
@@ -103,13 +103,12 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				Update(update, values, UpdateReturnValue.None);
 				return true;
 			}
-			catch(global::Amazon.DynamoDBv2.Model.ConditionalCheckFailedException)
+			catch(Aws.ConditionalCheckFailedException)
 			{
 				return false;
 			}
 		}
 		#endregion
-
 
 		#region Delete
 		public async Task<DynamoDBMap> DeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
