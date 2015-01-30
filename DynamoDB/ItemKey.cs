@@ -89,11 +89,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter));
 		}
-		public static ItemKey Create(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		public static ItemKey Create<THash, TRange>(THash hashKey, TRange rangeKey)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey), DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public static ItemKey Create(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IDynamoDBValueConverter converter)
+		public static ItemKey Create<THash, TRange>(THash hashKey, TRange rangeKey, IDynamoDBValueConverter converter)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter), DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
