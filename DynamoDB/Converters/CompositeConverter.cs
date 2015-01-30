@@ -21,7 +21,8 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 {
 	public class CompositeConverter : IDynamoDBValueConverter
 	{
-		private readonly IDictionary<int, ISet<IDynamoDBValueConverter>> converters = new SortedList<int, ISet<IDynamoDBValueConverter>>();
+		private static readonly Comparer<int> ReverseIntComparer = Comparer<int>.Create((x, y) => -x.CompareTo(y));
+		private readonly IDictionary<int, ISet<IDynamoDBValueConverter>> converters = new SortedList<int, ISet<IDynamoDBValueConverter>>(ReverseIntComparer);
 
 		public CompositeConverter Add(IDynamoDBValueConverter converter, int priority = 0)
 		{

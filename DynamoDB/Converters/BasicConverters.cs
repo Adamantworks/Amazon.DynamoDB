@@ -18,6 +18,10 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 {
 	public static class BasicConverters
 	{
+		/// <summary>
+		/// The cast converter supports converting types inheriting from DynamoDBValue to other types be doing either up or down casts
+		/// </summary>
+		public static readonly IDynamoDBValueConverter Cast = new CastConverter();
 		public static readonly IDynamoDBValueConverter Number = new NumberConverter();
 		public static readonly IDynamoDBValueConverter String = new StringConverter();
 		public static readonly IDynamoDBValueConverter Boolean = new BooleanConverter();

@@ -22,7 +22,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 	public class DynamoDBBinaryTests
 	{
 		[Test]
-		public void ConvertFromToNullOrEmpty()
+		public void CastFromToNullOrEmpty()
 		{
 			DynamoDBBinary nullBinary = null;
 			Assert.IsNull((byte[])nullBinary, "null binary -> byte[]");
@@ -61,6 +61,13 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 			var value1 = new DynamoDBBinary(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 });
 			var value2 = new DynamoDBBinary(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1 });
 			Assert.AreNotEqual(value1.GetHashCode(), value2.GetHashCode());
+		}
+
+		[Test]
+		public new void ToString()
+		{
+			var value = new DynamoDBBinary(new byte[] { 0x01, 0xAF, 0x01, 0x00, 0x45, 0x00 });
+			Assert.AreEqual("01AF01004500", value.ToString());
 		}
 	}
 }

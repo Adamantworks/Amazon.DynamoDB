@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.Converters.Composite;
+
 namespace Adamantworks.Amazon.DynamoDB.Converters
 {
 	public static class CompositeConverters
 	{
-		// TODO Via Number converter
-		// TODO Via Binary converter
+		public static readonly IDynamoDBValueConverter ViaNumber = new ViaNumberConverter();
+		public static readonly IDynamoDBValueConverter ViaBinary = new ViaBinaryConverter();
 	}
 }

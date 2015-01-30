@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Globalization;
 using Aws = Amazon.DynamoDBv2.Model;
@@ -176,7 +177,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public static implicit operator DynamoDBNumber(float value)
 		{
-			return new DynamoDBNumber(value.ToString("G", CultureInfo.InvariantCulture));
+			return new DynamoDBNumber(value.ToString("R", CultureInfo.InvariantCulture));
 		}
 		public static explicit operator float(DynamoDBNumber value)
 		{
@@ -188,8 +189,20 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public static implicit operator DynamoDBNumber(double value)
 		{
-			return new DynamoDBNumber(value.ToString("G", CultureInfo.InvariantCulture));
+			var stringValue = value.ToString("R", CultureInfo.InvariantCulture);
+			if(Environment.Is64BitProcess)
+			{
+				// There is an issue with 'R' in which sometimes it doesn't round-trip in x64 processes
+				// see https://msdn.microsoft.com/en-us/library/dwhawy9k(v=vs.110).aspx#RFormatString
+				// so we check that it round-trips and if it doesn't, reformat it.
+
+				// ReSharper disable once CompareOfFloatsByEqualityOperator
+				if(double.Parse(stringValue) != value) // we want them exactly equal
+					stringValue = value.ToString("G17"); // switch to the suggested format that forces full 17 digits of precision
+			}
+			return new DynamoDBNumber(stringValue);
 		}
+
 		public static explicit operator double(DynamoDBNumber value)
 		{
 			if(value == null)
@@ -200,7 +213,8 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public static implicit operator DynamoDBNumber(decimal value)
 		{
-			return new DynamoDBNumber(value.ToString("D", CultureInfo.InvariantCulture));
+			// The standard ToString() of decimal is inherently round-trip
+			return new DynamoDBNumber(value.ToString(CultureInfo.InvariantCulture));
 		}
 		public static explicit operator decimal(DynamoDBNumber value)
 		{

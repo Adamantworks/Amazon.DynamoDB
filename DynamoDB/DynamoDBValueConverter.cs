@@ -63,6 +63,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static CompositeConverter CreateBasicConverter()
 		{
 			var converter = new CompositeConverter();
+
 			// We use the lowest possible priorities so any user ones will be higher
 			// Also, each priority is used only once to avoid ever needing to check wasted
 			// conversions (from multiple at the same priority)
@@ -74,6 +75,10 @@ namespace Adamantworks.Amazon.DynamoDB
 			converter.Add(BasicConverters.ByteArrayBinary, int.MinValue + 5);
 			converter.Add(BasicConverters.ImmutableArrayBinary, int.MinValue + 6);
 			converter.Add(BasicConverters.Set, int.MinValue + 7);
+
+			// Casting conversions are always first because no conversion is actually needed
+			converter.Add(BasicConverters.Cast, int.MaxValue);
+
 			return converter;
 		}
 
@@ -89,7 +94,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			var converter = new CompositeConverter();
 			converter.Add(baseConverter);
-			// TODO register more composite converters
+			converter.Add(CompositeConverters.ViaNumber, -1);
+			converter.Add(CompositeConverters.ViaBinary, -2);
 			return converter;
 		}
 	}

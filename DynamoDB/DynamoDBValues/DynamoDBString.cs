@@ -59,6 +59,8 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return value.GetHashCode();
 		}
 
+		public int Length { get { return value.Length; } }
+
 		public static bool operator ==(DynamoDBString a, DynamoDBString b)
 		{
 			return Equals(a, b);

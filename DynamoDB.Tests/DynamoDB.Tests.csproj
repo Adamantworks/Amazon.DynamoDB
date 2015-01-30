@@ -54,9 +54,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\Basic\CastConverterTests.cs" />
     <Compile Include="DotNetFrameworkTests.cs" />
     <Compile Include="DynamoDBValueConverterTests.cs" />
     <Compile Include="DynamoDBValues\DynamoDBBinaryTests.cs" />
+    <Compile Include="DynamoDBValues\DynamoDBNumberTests.cs" />
     <Compile Include="DynamoDBValues\DynamoDBStringTests.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Internal\AwsExtensionsTests.cs" />

@@ -52,12 +52,15 @@
     <Compile Include="Composite.cs" />
     <Compile Include="Contexts\IndexContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
+    <Compile Include="Converters\Basic\CastConverter.cs" />
     <Compile Include="Converters\Basic\ImmutableArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\BooleanConverter.cs" />
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
     <Compile Include="Converters\Basic\SetConverter.cs" />
     <Compile Include="Converters\CompositeConverters.cs" />
+    <Compile Include="Converters\Composite\ViaBinaryConverter.cs" />
+    <Compile Include="Converters\Composite\ViaNumberConverter.cs" />
     <Compile Include="ItemPage.cs" />
     <Compile Include="Syntax\IConsistentSyntax.cs" />
     <Compile Include="Syntax\IIfSyntax.cs" />
@@ -154,9 +157,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converters\Composite\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

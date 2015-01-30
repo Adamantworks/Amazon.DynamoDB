@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Immutable;
 using System.IO;
+using System.Text;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -141,7 +142,10 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public override string ToString()
 		{
-			return value.ToString();
+			var hex = new StringBuilder(value.Length * 2);
+			for(var i = 0; i < value.Length; i++) // for performance, don't use foreach
+				hex.AppendFormat("{0:X2}", value[i]);
+			return hex.ToString();
 		}
 	}
 }
