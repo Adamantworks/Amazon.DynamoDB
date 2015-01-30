@@ -58,7 +58,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				});
 				await table.WaitUntilNotAsync(TableStatus.Updating);
 
-				var hashKey = Guid.NewGuid().ToDynamoDBKeyValue();
+				var hashKey = DynamoDBKeyValue.Convert(Guid.NewGuid());
 
 				var items = await table.Indexes["global"].Query(hashKey).AllKeysAsync().ToList();
 				// TODO test query limits
@@ -86,7 +86,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				});
 				table.WaitUntilNot(TableStatus.Updating);
 
-				var hashKey = Guid.NewGuid().ToDynamoDBKeyValue();
+				var hashKey = DynamoDBKeyValue.Convert(Guid.NewGuid());
 
 				var items = table.Indexes["global"].Query(hashKey).AllKeys().ToList();
 				// TODO test query limits

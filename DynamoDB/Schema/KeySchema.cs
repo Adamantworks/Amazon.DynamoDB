@@ -79,7 +79,7 @@ namespace Adamantworks.Amazon.DynamoDB.Schema
 		{
 			var hashKeyValue = (DynamoDBKeyValue)item[HashKey.Name];
 			var rangeKeyValue = (DynamoDBKeyValue)(RangeKey != null ? item[RangeKey.Name] : null);
-			return new ItemKey(hashKeyValue, rangeKeyValue);
+			return ItemKey.CreateStrict(hashKeyValue, rangeKeyValue);
 		}
 	}
 }

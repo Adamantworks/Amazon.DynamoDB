@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
-using Adamantworks.Amazon.DynamoDB.Syntax;
+using System;
+using System.Collections.Generic;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -27,7 +25,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public readonly DynamoDBKeyValue HashKey;
 		public readonly DynamoDBKeyValue RangeKey;
 
-		public ItemKey(DynamoDBKeyValue hashKey)
+		private ItemKey(DynamoDBKeyValue hashKey)
 		{
 			if(hashKey == null)
 				throw new ArgumentNullException("hashKey");
@@ -35,8 +33,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			HashKey = hashKey;
 			RangeKey = null;
 		}
-
-		public ItemKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		private ItemKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
 			if(hashKey == null)
 				throw new ArgumentNullException("hashKey");
@@ -57,89 +54,6 @@ namespace Adamantworks.Amazon.DynamoDB
 			return value;
 		}
 
-		#region Composite
-		public static char CompositeValueSeparator
-		{
-			get { return compositeValueSeparator; }
-			set
-			{
-				compositeValueSeparator = value;
-				separatorString = new string(value, 1);
-				separatorArray = new[] { value };
-			}
-		}
-		private static char compositeValueSeparator;
-		private static string separatorString;
-		private static char[] separatorArray;
-
-		static ItemKey()
-		{
-			CompositeValueSeparator = ';';
-		}
-
-		public static CompositeSyntax CompositeStrict(params DynamoDBKeyValue[] key)
-		{
-			if(key == null || key.Length == 0)
-				throw new ArgumentException("Must provide a key value", "key");
-
-			return new CompositeSyntax(CompositeValue(key));
-		}
-		public static CompositeSyntax CompositeStrict(IEnumerable<DynamoDBKeyValue> key)
-		{
-			if(key == null)
-				throw new ArgumentException("Must provide a key value", "key");
-
-			return new CompositeSyntax(CompositeValue(key));
-		}
-		public static CompositeSyntax Composite<TKey1, TKey2>(TKey1 key1, TKey2 key2)
-		{
-			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(), key2.ToDynamoDBKeyValue()));
-		}
-		public static CompositeSyntax Composite<TKey1, TKey2>(TKey1 key1, TKey2 key2, IDynamoDBValueConverter converter)
-		{
-			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(converter), key2.ToDynamoDBKeyValue(converter)));
-		}
-		public static CompositeSyntax Composite<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3)
-		{
-			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(), key2.ToDynamoDBKeyValue(), key3.ToDynamoDBKeyValue()));
-		}
-		public static CompositeSyntax Composite<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IDynamoDBValueConverter converter)
-		{
-			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(converter), key2.ToDynamoDBKeyValue(converter), key3.ToDynamoDBKeyValue(converter)));
-		}
-		public static CompositeSyntax Composite<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4)
-		{
-			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(), key2.ToDynamoDBKeyValue(), key3.ToDynamoDBKeyValue(), key4.ToDynamoDBKeyValue()));
-		}
-		public static CompositeSyntax Composite<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IDynamoDBValueConverter converter)
-		{
-			return new CompositeSyntax(CompositeValue(key1.ToDynamoDBKeyValue(converter), key2.ToDynamoDBKeyValue(converter), key3.ToDynamoDBKeyValue(converter), key4.ToDynamoDBKeyValue(converter)));
-		}
-
-		internal static string CompositeValue(params DynamoDBKeyValue[] values)
-		{
-			return string.Join(separatorString, values.Select(v => v != null ? v.ToString() : null));
-		}
-		internal static string CompositeValue(IEnumerable<DynamoDBKeyValue> values)
-		{
-			return string.Join(separatorString, values.Select(v => v != null ? v.ToString() : null));
-		}
-
-		public static string CompositeName(params string[] names)
-		{
-			return string.Join(separatorString, names);
-		}
-		public static string CompositeName(IEnumerable<string> names)
-		{
-			return string.Join(separatorString, names);
-		}
-		#endregion
-
-		public static string[] Split(DynamoDBString value)
-		{
-			return value.ToString().Split(separatorArray);
-		}
-
 		public override bool Equals(object obj)
 		{
 			var itemKey = obj as ItemKey?;
@@ -157,6 +71,31 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(RangeKey != null)
 				hash ^= RangeKey.GetHashCode();
 			return hash;
+		}
+
+		public static ItemKey CreateStrict(DynamoDBKeyValue hashKey)
+		{
+			return new ItemKey(hashKey);
+		}
+		public static ItemKey CreateStrict(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new ItemKey(hashKey, rangeKey);
+		}
+		public static ItemKey Create<THash>(THash hashKey)
+		{
+			return new ItemKey(DynamoDBKeyValue.Convert(hashKey));
+		}
+		public static ItemKey Create<THash>(THash hashKey, IDynamoDBValueConverter converter)
+		{
+			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter));
+		}
+		public static ItemKey Create(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new ItemKey(DynamoDBKeyValue.Convert(hashKey), DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public static ItemKey Create(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IDynamoDBValueConverter converter)
+		{
+			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter), DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
 	}
 }

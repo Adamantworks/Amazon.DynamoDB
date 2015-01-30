@@ -29,6 +29,7 @@ namespace Adamantworks.Amazon.DynamoDB
 	public static class DynamoDBValueConverter
 	{
 		private static CompositeConverter @default;
+		private static CompositeConverter defaultComposite;
 
 		public static CompositeConverter Default
 		{
@@ -41,13 +42,25 @@ namespace Adamantworks.Amazon.DynamoDB
 				@default = value;
 			}
 		}
+		public static CompositeConverter DefaultComposite
+		{
+			get { return defaultComposite; }
+			set
+			{
+				if(value == null)
+					throw new ArgumentNullException("value");
+
+				defaultComposite = value;
+			}
+		}
 
 		static DynamoDBValueConverter()
 		{
-			@default = NewStandardConverter();
+			@default = CreateStandardConverter();
+			defaultComposite = CreateCompositeConverter(@default);
 		}
 
-		public static CompositeConverter NewBasicConverter()
+		public static CompositeConverter CreateBasicConverter()
 		{
 			var converter = new CompositeConverter();
 			// We use the lowest possible priorities so any user ones will be higher
@@ -64,11 +77,19 @@ namespace Adamantworks.Amazon.DynamoDB
 			return converter;
 		}
 
-		public static CompositeConverter NewStandardConverter()
+		public static CompositeConverter CreateStandardConverter()
 		{
-			var converter = NewBasicConverter();
+			var converter = CreateBasicConverter();
 			converter.Add(StandardConverters.GuidString, int.MinValue + 100);
 			// TODO register more standard conversions
+			return converter;
+		}
+
+		public static CompositeConverter CreateCompositeConverter(IDynamoDBValueConverter baseConverter)
+		{
+			var converter = new CompositeConverter();
+			converter.Add(baseConverter);
+			// TODO register more composite converters
 			return converter;
 		}
 	}

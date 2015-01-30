@@ -121,22 +121,22 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public Values Add<T>(string name, T value)
 		{
-			values.Add(name, value.ToDynamoDBValue());
+			values.Add(name, DynamoDBValue.Convert(value));
 			return this;
 		}
 		public Values Add<T>(string name, T value, IDynamoDBValueConverter converter)
 		{
-			values.Add(name, value.ToDynamoDBValue(converter));
+			values.Add(name, DynamoDBValue.Convert(value, converter));
 			return this;
 		}
 		public Values Add<T>(int position, T value)
 		{
-			values.Add(BuildName(position), value.ToDynamoDBValue());
+			values.Add(BuildName(position), DynamoDBValue.Convert(value));
 			return this;
 		}
 		public Values Add<T>(int position, T value, IDynamoDBValueConverter converter)
 		{
-			values.Add(BuildName(position), value.ToDynamoDBValue(converter));
+			values.Add(BuildName(position), DynamoDBValue.Convert(value, converter));
 			return this;
 		}
 

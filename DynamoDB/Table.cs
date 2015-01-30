@@ -58,9 +58,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITryPutSyntax If(PredicateExpression condition);
 		ITryPutSyntax If(PredicateExpression condition, Values values);
 
-		IIfSyntax On(DynamoDBKeyValue hashKey);
-		IIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		IIfSyntax On(ItemKey key);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		IIfSyntax ForKey(ItemKey key);
 
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		void Put(IBatchWrite batch, DynamoDBMap item);
@@ -286,15 +286,15 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new PutContext(this, condition, values);
 		}
 
-		public IIfSyntax On(DynamoDBKeyValue hashKey)
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey)
 		{
-			return new ModifyContext(this, new ItemKey(hashKey));
+			return new ModifyContext(this, ItemKey.CreateStrict(hashKey));
 		}
-		public IIfSyntax On(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return new ModifyContext(this, new ItemKey(hashKey, rangeKey));
+			return new ModifyContext(this, ItemKey.CreateStrict(hashKey, rangeKey));
 		}
-		public IIfSyntax On(ItemKey key)
+		public IIfSyntax ForKey(ItemKey key)
 		{
 			return new ModifyContext(this, key);
 		}

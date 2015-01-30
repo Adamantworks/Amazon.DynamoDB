@@ -41,13 +41,31 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public abstract override int GetHashCode();
 
+		public new static DynamoDBKeyValue Convert<T>(T value)
+		{
+			DynamoDBKeyValue toValue;
+			var converter = DynamoDBValueConverter.Default;
+			if(DynamoDBValueConverter.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBKeyValue Convert<T>(T value, IDynamoDBValueConverter converter)
+		{
+			DynamoDBKeyValue toValue;
+			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+
 		#region conversions
 		public static explicit operator ImmutableArray<byte>(DynamoDBKeyValue value)
 		{
 			if(value == null) return default(ImmutableArray<byte>);
 			var binaryValue = value as DynamoDBBinary;
 			if(binaryValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
 
 			return binaryValue;
 		}
@@ -60,7 +78,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(value == null) return null;
 			var binaryValue = value as DynamoDBBinary;
 			if(binaryValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
 
 			return binaryValue;
 		}
@@ -74,7 +92,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(value == null) return null;
 			var stringValue = value as DynamoDBString;
 			if(stringValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to string", value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to string", value.GetType().Name));
 
 			return stringValue;
 		}
@@ -91,7 +109,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Byte", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Byte", value == null ? "null" : value.GetType().Name));
 
 			return (byte)number;
 		}
@@ -106,7 +124,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to SByte", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to SByte", value == null ? "null" : value.GetType().Name));
 
 			return (sbyte)number;
 		}
@@ -120,7 +138,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Int16", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Int16", value == null ? "null" : value.GetType().Name));
 
 			return (short)number;
 		}
@@ -135,7 +153,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to UInt16", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to UInt16", value == null ? "null" : value.GetType().Name));
 
 			return (ushort)number;
 		}
@@ -148,7 +166,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Int32", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Int32", value == null ? "null" : value.GetType().Name));
 
 			return (int)number;
 		}
@@ -163,7 +181,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to UInt32", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to UInt32", value == null ? "null" : value.GetType().Name));
 
 			return (uint)number;
 		}
@@ -176,7 +194,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Int64", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Int64", value == null ? "null" : value.GetType().Name));
 
 			return (long)number;
 		}
@@ -191,7 +209,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to UInt64", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to UInt64", value == null ? "null" : value.GetType().Name));
 
 			return (ulong)number;
 		}
@@ -204,7 +222,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Float", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Float", value == null ? "null" : value.GetType().Name));
 
 			return (float)number;
 		}
@@ -217,7 +235,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Double", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Double", value == null ? "null" : value.GetType().Name));
 
 			return (double)number;
 		}
@@ -230,7 +248,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Decimal", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Decimal", value == null ? "null" : value.GetType().Name));
 
 			return (decimal)number;
 		}
@@ -240,7 +258,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		internal Dictionary<string, Aws.Condition> ToAws(AttributeSchema hashKeySchema)
 		{
 			if(Type != hashKeySchema.Type)
-				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", Type, hashKeySchema.Name, hashKeySchema.Type));
+				throw new InvalidOperationException(String.Format("Can't provide {0} value for key {1} of type {2}", Type, hashKeySchema.Name, hashKeySchema.Type));
 
 			return new Dictionary<string, Aws.Condition>() { { hashKeySchema.Name, new Aws.Condition() { ComparisonOperator = "EQ", AttributeValueList = new List<Aws.AttributeValue>() { ToAws() } } } };
 		}
@@ -251,7 +269,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(rangeKeySchema == null)
 				throw new NotSupportedException("Can't specify range key condition for table or index without a range key");
 			if(Type != rangeKeySchema.Type)
-				throw new InvalidOperationException(string.Format("Can't provide {0} value for key {1} of type {2}", Type, rangeKeySchema.Name, rangeKeySchema.Type));
+				throw new InvalidOperationException(String.Format("Can't provide {0} value for key {1} of type {2}", Type, rangeKeySchema.Name, rangeKeySchema.Type));
 
 			keyConditions.Add(rangeKeySchema.Name, new Aws.Condition() { ComparisonOperator = comparisonOperator, AttributeValueList = new List<Aws.AttributeValue>() { ToAws() } });
 		}

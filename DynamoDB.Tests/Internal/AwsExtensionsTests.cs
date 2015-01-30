@@ -66,7 +66,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.Internal
 				{"Hash", new Aws.AttributeValue(stringValue)},
 				{"Range", new Aws.AttributeValue() {N = numberValue.ToString(CultureInfo.InvariantCulture)}},
 			};
-			var expected = new ItemKey(stringValue, numberValue);
+			var expected = ItemKey.CreateStrict(stringValue, numberValue);
 			Assert.AreEqual(expected, key.ToItemKey(new KeySchema("Hash", DynamoDBValueType.String, "Range", DynamoDBValueType.Number)));
 
 			var binaryValue = (DynamoDBBinary)new byte[] { 1, 2, 3, 4 };
@@ -74,7 +74,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.Internal
 			{
 				{"Hash", new Aws.AttributeValue() {B = binaryValue.ToMemoryStream()}}
 			};
-			expected = new ItemKey(binaryValue);
+			expected = ItemKey.CreateStrict(binaryValue);
 			Assert.AreEqual(expected, key.ToItemKey(new KeySchema("Hash", DynamoDBValueType.Binary)));
 		}
 

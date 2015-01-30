@@ -50,9 +50,19 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		/// there are "Strict" versions of methods.
 		/// </summary>
 		[Test]
-		public void PrefersGenericToImplicitConversion()
+		public void PrefersGenericMethodToImplicitConversion()
 		{
 			Assert.AreEqual("Generic", Method("string value"));
+		}
+
+		/// <summary>
+		/// This is the reason it isn't even worth having DynamoDBValue overloads of non-"Strict" methods.
+		/// Even then sub classes like DynamoDBKeyValue wouldn't work.
+		/// </summary>
+		[Test]
+		public void PrefersGenericMethodToBaseTypes()
+		{
+			Assert.AreEqual("Base", Method(new TestValue()));
 		}
 
 		public string Method<T>(T value)
@@ -63,8 +73,16 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		{
 			return "Non-Generic";
 		}
+		public string Method(TestBase value)
+		{
+			return "Base";
+		}
 
-		public class TestValue
+		public class TestBase
+		{
+		}
+
+		public class TestValue : TestBase
 		{
 			public static implicit operator TestValue(string value)
 			{

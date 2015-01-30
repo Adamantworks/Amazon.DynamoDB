@@ -49,12 +49,30 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public abstract override int GetHashCode();
 
+		public new static DynamoDBScalar Convert<T>(T value)
+		{
+			DynamoDBScalar toValue;
+			var converter = DynamoDBValueConverter.Default;
+			if(DynamoDBValueConverter.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBScalar Convert<T>(T value, IDynamoDBValueConverter converter)
+		{
+			DynamoDBScalar toValue;
+			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+
 		#region conversions
 		public static explicit operator bool(DynamoDBScalar value)
 		{
 			var boolValue = value as DynamoDBBoolean;
 			if(boolValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Boolean", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Boolean", value == null ? "null" : value.GetType().Name));
 
 			return boolValue;
 		}
@@ -68,7 +86,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(value == null) return default(ImmutableArray<byte>);
 			var binaryValue = value as DynamoDBBinary;
 			if(binaryValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
 
 			return binaryValue;
 		}
@@ -81,7 +99,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(value == null) return null;
 			var binaryValue = value as DynamoDBBinary;
 			if(binaryValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to ImmutableArray<byte>", value.GetType().Name));
 
 			return binaryValue;
 		}
@@ -95,7 +113,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(value == null) return null;
 			var stringValue = value as DynamoDBString;
 			if(stringValue == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to string", value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to string", value.GetType().Name));
 
 			return stringValue;
 		}
@@ -112,7 +130,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Byte", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Byte", value == null ? "null" : value.GetType().Name));
 
 			return (byte)number;
 		}
@@ -127,7 +145,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to SByte", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to SByte", value == null ? "null" : value.GetType().Name));
 
 			return (sbyte)number;
 		}
@@ -141,7 +159,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Int16", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Int16", value == null ? "null" : value.GetType().Name));
 
 			return (short)number;
 		}
@@ -156,7 +174,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to UInt16", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to UInt16", value == null ? "null" : value.GetType().Name));
 
 			return (ushort)number;
 		}
@@ -169,7 +187,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Int32", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Int32", value == null ? "null" : value.GetType().Name));
 
 			return (int)number;
 		}
@@ -184,7 +202,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to UInt32", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to UInt32", value == null ? "null" : value.GetType().Name));
 
 			return (uint)number;
 		}
@@ -197,7 +215,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Int64", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Int64", value == null ? "null" : value.GetType().Name));
 
 			return (long)number;
 		}
@@ -212,7 +230,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to UInt64", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to UInt64", value == null ? "null" : value.GetType().Name));
 
 			return (ulong)number;
 		}
@@ -225,7 +243,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Float", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Float", value == null ? "null" : value.GetType().Name));
 
 			return (float)number;
 		}
@@ -238,7 +256,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Double", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Double", value == null ? "null" : value.GetType().Name));
 
 			return (double)number;
 		}
@@ -251,7 +269,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			var number = value as DynamoDBNumber;
 			if(number == null)
-				throw new InvalidCastException(string.Format("Can't cast {0} to Decimal", value == null ? "null" : value.GetType().Name));
+				throw new InvalidCastException(String.Format("Can't cast {0} to Decimal", value == null ? "null" : value.GetType().Name));
 
 			return (decimal)number;
 		}

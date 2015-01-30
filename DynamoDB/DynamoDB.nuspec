@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>Adamantworks.Amazon.DynamoDB</id>
-		<version>0.1.0-alpha009</version>
+		<version>0.1.0-alpha010</version>
 		<title>Adamantworks Amazon DynamoDB Alternate SDK</title>
 		<authors>Adamantworks LLC</authors>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
