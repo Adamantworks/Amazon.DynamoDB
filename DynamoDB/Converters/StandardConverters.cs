@@ -18,6 +18,6 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 {
 	public static class StandardConverters
 	{
-		public static readonly IDynamoDBValueConverter GuidString = new GuidStringConverter();
+		public static readonly IValueConverter GuidString = new GuidStringConverter();
 	}
 }

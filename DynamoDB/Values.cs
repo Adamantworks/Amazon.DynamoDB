@@ -42,7 +42,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Named(DynamoDBValueConverters.Default, namedValues, positionalValues);
 		}
-		public static Values Named(IDynamoDBValueConverter converter, object namedValues, params object[] positionalValues)
+		public static Values Named(IValueConverter converter, object namedValues, params object[] positionalValues)
 		{
 			var values = new DynamoDBMap();
 			Build(values, converter, namedValues);
@@ -54,7 +54,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Of(DynamoDBValueConverters.Default, positionalValues);
 		}
-		public static Values Of(IDynamoDBValueConverter converter, params object[] positionalValues)
+		public static Values Of(IValueConverter converter, params object[] positionalValues)
 		{
 			var values = new DynamoDBMap();
 			Build(values, converter, positionalValues);
@@ -68,19 +68,21 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new Values(values);
 		}
 
-		private static void Build(DynamoDBMap values, IDynamoDBValueConverter converter, object namedValues)
+		private static void Build(DynamoDBMap values, IValueConverter converter, object namedValues)
 		{
 			foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(namedValues))
 			{
 				var fromValue = descriptor.GetValue(namedValues);
 				DynamoDBValue toValue;
-				if(!converter.TryConvertFrom(descriptor.PropertyType, fromValue, out toValue, converter))
+				if(fromValue == null)
+					toValue = null;
+				else if(!converter.TryConvert(fromValue, out toValue))
 					throw new InvalidCastException(string.Format("Can't convert value named '{0}'", descriptor.Name));
 
 				values.Add(BuildName(descriptor.Name), toValue);
 			}
 		}
-		private static void Build(DynamoDBMap values, IDynamoDBValueConverter converter, IList<object> positionalValues)
+		private static void Build(DynamoDBMap values, IValueConverter converter, IList<object> positionalValues)
 		{
 			for(var i = 0; i < positionalValues.Count; i++)
 			{
@@ -88,7 +90,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				DynamoDBValue toValue;
 				if(fromValue == null)
 					toValue = null;
-				else if(!converter.TryConvertFrom(fromValue.GetType(), fromValue, out toValue, converter)) // TODO will this fail for subclasses of convertibles?
+				else if(!converter.TryConvert(fromValue, out toValue))
 					throw new InvalidCastException("Can't convert value at position " + i);
 
 				values.Add(BuildName(i), toValue);
@@ -125,7 +127,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			values.Add(name, DynamoDBValue.Convert(value));
 			return this;
 		}
-		public Values Add<T>(string name, T value, IDynamoDBValueConverter converter)
+		public Values Add<T>(string name, T value, IValueConverter converter)
 		{
 			values.Add(name, DynamoDBValue.Convert(value, converter));
 			return this;
@@ -135,7 +137,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			values.Add(BuildName(position), DynamoDBValue.Convert(value));
 			return this;
 		}
-		public Values Add<T>(int position, T value, IDynamoDBValueConverter converter)
+		public Values Add<T>(int position, T value, IValueConverter converter)
 		{
 			values.Add(BuildName(position), DynamoDBValue.Convert(value, converter));
 			return this;

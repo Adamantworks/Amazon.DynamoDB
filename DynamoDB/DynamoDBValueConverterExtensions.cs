@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax;
+using System;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -25,28 +24,18 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			object toValue;
 			var converter = DynamoDBValueConverters.Default;
-			if(converter.TryConvertTo(value, typeof(T), out toValue, converter))
+			if(converter.TryConvert(value, typeof(T), out toValue, converter))
 				return (T)toValue;
 
 			throw new InvalidCastException();
 		}
-		public static T To<T>(this DynamoDBValue value, IDynamoDBValueConverter converter)
+		public static T To<T>(this DynamoDBValue value, IValueConverter converter)
 		{
 			object toValue;
-			if(converter.TryConvertTo(value, typeof(T), out toValue, converter))
+			if(converter.TryConvert(value, typeof(T), out toValue, converter))
 				return (T)toValue;
 
 			throw new InvalidCastException();
-		}
-
-		// TODO Replace these with convert methods on each DynamoDB type
-		public static ConvertableSyntax<T> ToDynamoDB<T>(T value)
-		{
-			return new ConvertableSyntax<T>(value, DynamoDBValueConverters.Default);
-		}
-		public static ConvertableSyntax<T> ToDynamoDB<T>(T value, IDynamoDBValueConverter converter)
-		{
-			return new ConvertableSyntax<T>(value, converter);
 		}
 	}
 }

@@ -52,44 +52,41 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		}
 
 		/// <summary>
-		/// This comes up in cases like ItemKey and DynamoDBMap where we want to have generic overloads
-		/// for conversion, but there are also implicit conversions available. This is the reason why
-		/// there are "Strict" versions of methods.
+		/// This comes up in cases where we might want to have generic overloads
+		/// for conversion, but there are also implicit conversions available.
 		/// </summary>
 		[Test]
-		public void PrefersGenericMethodToImplicitConversion()
+		public void PrefersGenericMethodOverImplicitConversion()
 		{
-			Assert.AreEqual("Generic", Method("string value"));
+			Assert.AreEqual("Generic", MethodWithGenericOverload("string value"));
 		}
 
-		/// <summary>
-		/// This is the reason it isn't even worth having DynamoDBValue overloads of non-"Strict" methods.
-		/// Even then sub classes like DynamoDBKeyValue wouldn't work.
-		/// </summary>
-		[Test]
-		public void PrefersGenericMethodToBaseTypes()
-		{
-			Assert.AreEqual("Base", Method(new TestValue()));
-		}
-
-		public string Method<T>(T value)
+		public string MethodWithGenericOverload<T>(T value)
 		{
 			return "Generic";
 		}
-		public string Method(TestValue value)
+		public string MethodWithGenericOverload(TestValue value)
 		{
 			return "Non-Generic";
 		}
-		public string Method(TestBase value)
+
+		[Test]
+		public void PrefersImplicitConversionOverObjectParameter()
 		{
-			return "Base";
+			Assert.AreEqual("TestValue", MethodWithObjectOverload("string value"));
 		}
 
-		public class TestBase
+		public string MethodWithObjectOverload(TestValue value)
 		{
+			return "TestValue";
 		}
 
-		public class TestValue : TestBase
+		public string MethodWithObjectOverload(object value)
+		{
+			return "object";
+		}
+
+		public class TestValue
 		{
 			public static implicit operator TestValue(string value)
 			{

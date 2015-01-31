@@ -65,7 +65,9 @@ namespace Adamantworks.Amazon.DynamoDB
 			converter.Add(BasicConverters.MemoryStreamBinary, int.MinValue + 4);
 			converter.Add(BasicConverters.ByteArrayBinary, int.MinValue + 5);
 			converter.Add(BasicConverters.ImmutableArrayBinary, int.MinValue + 6);
-			converter.Add(BasicConverters.Set, int.MinValue + 7);
+			converter.Add(BasicConverters.SetOfString, int.MinValue + 7);
+			converter.Add(BasicConverters.SetOfNumber, int.MinValue + 8);
+			converter.Add(BasicConverters.SetOfBinary, int.MinValue + 9);
 
 			// Casting conversions are always first because no conversion is actually needed
 			converter.Add(BasicConverters.Cast, int.MaxValue);
@@ -81,7 +83,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			return converter;
 		}
 
-		public static CompositeConverter CreateCompositeConverter(IDynamoDBValueConverter baseConverter)
+		public static CompositeConverter CreateCompositeConverter(IValueConverter baseConverter)
 		{
 			var converter = new CompositeConverter();
 			converter.Add(baseConverter);

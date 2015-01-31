@@ -15,25 +15,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters
 {
-	public class CompositeConverter : IDynamoDBValueConverter
+	// TODO spin this off as a different library with IValueConverter?
+	public class CompositeConverter : IValueConverter
 	{
 		private static readonly Comparer<int> ReverseIntComparer = Comparer<int>.Create((x, y) => -x.CompareTo(y));
-		private readonly IDictionary<int, ISet<IDynamoDBValueConverter>> converters = new SortedList<int, ISet<IDynamoDBValueConverter>>(ReverseIntComparer);
+		private readonly IDictionary<int, ISet<IValueConverter>> converters = new SortedList<int, ISet<IValueConverter>>(ReverseIntComparer);
 
-		public CompositeConverter Add(IDynamoDBValueConverter converter, int priority = 0)
+		public CompositeConverter Add(IValueConverter converter, int priority = 0)
 		{
 			if(!converters.ContainsKey(priority))
-				converters[priority] = new HashSet<IDynamoDBValueConverter>();
+				converters[priority] = new HashSet<IValueConverter>();
 
 			converters[priority].Add(converter);
 			return this;
 		}
 
-		public bool Remove(IDynamoDBValueConverter converter)
+		public bool Remove(IValueConverter converter)
 		{
 			foreach(var priorityLevel in converters)
 				if(priorityLevel.Value.Remove(converter))
@@ -47,48 +47,25 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 			return false;
 		}
 
-		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public bool CanConvert(Type fromType, Type toType, IValueConverter context)
 		{
-			return converters.SelectMany(priorityLevel => priorityLevel.Value).Any(converter => converter.CanConvertFrom<T>(type, context));
+			return converters.SelectMany(priorityLevel => priorityLevel.Value).Any(converter => converter.CanConvert(fromType, toType, context));
 		}
 
-		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
-			return converters.SelectMany(priorityLevel => priorityLevel.Value).Any(converter => converter.CanConvertTo<T>(type, context));
-		}
-
-		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public bool TryConvert(object fromValue, Type toType, out object toValue, IValueConverter context)
 		{
 			toValue = null;
 			foreach(var priorityLevel in converters)
 			{
 				var matchingConverters = 0;
 				foreach(var converter in priorityLevel.Value)
-					if(converter.TryConvertFrom<T>(type, fromValue, out toValue, context))
+					if(converter.TryConvert(fromValue, toType, out toValue, context))
 						matchingConverters++;
 
 				if(matchingConverters == 1)
 					return true;
 				if(matchingConverters > 1)
-					throw new Exception(string.Format("Ambiguous conversion from {0} to DynamoDBValue, more than one coverter with the same priority matches", type.FullName));
-			}
-			return false;
-		}
-
-		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
-			toValue = null;
-			foreach(var priorityLevel in converters)
-			{
-				var matchingConverters = 0;
-				foreach(var converter in priorityLevel.Value)
-					if(converter.TryConvertTo<T>(fromValue, type, out toValue, context))
-						matchingConverters++;
-
-				if(matchingConverters == 1)
-					return true;
-				if(matchingConverters > 1)
-					throw new Exception(string.Format("Ambiguous conversion from DynamoDBValue to {0}, more than one coverter with the same priority matches", type.FullName));
+					throw new Exception(string.Format("Ambiguous conversion from {0} to {1}, more than one coverter with the same priority matches", fromValue == null ? "<null>" : fromValue.GetType().FullName, toType.FullName));
 			}
 			return false;
 		}

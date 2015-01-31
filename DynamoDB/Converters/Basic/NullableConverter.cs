@@ -13,42 +13,36 @@
 // limitations under the License.
 
 using System;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	public class NullableConverter : IDynamoDBValueConverter
+	// TODO spin this off as a different library with IValueConverter?
+	public class NullableConverter : IValueConverter
 	{
-		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public bool CanConvert(Type fromType, Type toType, IValueConverter context)
 		{
-			var underlyingType = Nullable.GetUnderlyingType(type);
-			if(underlyingType == null) return false;
-			return context.CanConvertFrom<T>(underlyingType, context);
+			var underlyingFromType = Nullable.GetUnderlyingType(fromType);
+			var underlyingToType = Nullable.GetUnderlyingType(toType);
+			return (underlyingFromType != null || underlyingToType != null)
+				&& context.CanConvert(underlyingFromType ?? fromType, underlyingToType ?? toType, context);
 		}
 
-		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public bool TryConvert(object fromValue, Type toType, out object toValue, IValueConverter context)
 		{
-			var underlyingType = Nullable.GetUnderlyingType(type);
-			if(underlyingType == null) return false;
-			return context.CanConvertTo<T>(underlyingType, context);
-		}
+			// Note there is no such thing as a boxed nullable so fromValue and toValue can't be of type Nullable<X>
+			var underlyingType = Nullable.GetUnderlyingType(toType);
+			if(underlyingType != null)
+			{
+				if(fromValue == null)
+				{
+					toValue = null;
+					return true;
+				}
+				return context.TryConvert(fromValue, underlyingType, out toValue, context);
+			}
 
-		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
 			toValue = null;
-			var underlyingType = Nullable.GetUnderlyingType(type);
-			if(underlyingType == null) return false;
-			if(fromValue == null) return context.CanConvertFrom<T>(underlyingType, context);
-			return context.TryConvertFrom(underlyingType, fromValue, out toValue, context);
-		}
-
-		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
-			toValue = null;
-			var underlyingType = Nullable.GetUnderlyingType(type);
-			if(underlyingType == null) return false;
-			if(fromValue == null) return context.CanConvertTo<T>(underlyingType, context);
-			return context.TryConvertTo(fromValue, underlyingType, out toValue, context);
+			return false;
 		}
 	}
 }

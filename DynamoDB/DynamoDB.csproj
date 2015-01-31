@@ -61,8 +61,8 @@
     <Compile Include="Converters\CompositeConverters.cs" />
     <Compile Include="Converters\Composite\ViaBinaryConverter.cs" />
     <Compile Include="Converters\Composite\ViaNumberConverter.cs" />
-    <Compile Include="Converters\IDynamoDBValueConverter.cs" />
-    <Compile Include="Converters\IValueConverter.cs" />
+    <Compile Include="Converters\ValueConverterExtensions.cs" />
+    <Compile Include="Internal\TypeExtensions.cs" />
     <Compile Include="ItemPage.cs" />
     <Compile Include="Syntax\IConsistentSyntax.cs" />
     <Compile Include="Syntax\IIfSyntax.cs" />
@@ -96,7 +96,6 @@
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Schema\IndexProjectionType.cs" />
     <Compile Include="Syntax\CompositeHashKeySyntax.cs" />
-    <Compile Include="Syntax\ConvertableSyntax.cs" />
     <Compile Include="Syntax\IQueryExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IQueryLimitToOrPagedSyntax.cs" />
     <Compile Include="Syntax\IQueryRangeSyntax.cs" />
@@ -117,7 +116,7 @@
     <Compile Include="Values.cs" />
     <Compile Include="PredicateExpression.cs" />
     <Compile Include="Converters\CompositeConverter.cs" />
-    <Compile Include="Converters\DynamoDBValueConverter.cs" />
+    <Compile Include="Converters\ValueConverter.cs" />
     <Compile Include="Converters\StandardConverters.cs" />
     <Compile Include="Converters\Basic\NullableConverter.cs" />
     <Compile Include="Converters\Basic\NumberConverter.cs" />

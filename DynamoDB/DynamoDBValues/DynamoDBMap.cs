@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,6 +67,23 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		internal Dictionary<string, Aws.AttributeValue> ToAwsDictionary()
 		{
 			return values.ToDictionary(e => e.Key, e => e.Value == null ? new Aws.AttributeValue() { NULL = true } : e.Value.ToAws());
+		}
+
+		public new static DynamoDBMap Convert(object value)
+		{
+			DynamoDBMap toValue;
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBMap Convert(object value, IValueConverter converter)
+		{
+			DynamoDBMap toValue;
+			if(converter.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
 		}
 
 		public IEnumerator<KeyValuePair<string, DynamoDBValue>> GetEnumerator()
@@ -123,7 +141,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			values.Add(key, Convert(value));
 		}
-		public void Add<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		public void Add<TValue>(string key, TValue value, IValueConverter converter)
 		{
 			values.Add(key, Convert(value));
 		}
@@ -139,7 +157,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			return AddStrictIfNotNull(key, Convert(value));
 		}
-		public bool AddIfNotNull<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		public bool AddIfNotNull<TValue>(string key, TValue value, IValueConverter converter)
 		{
 			return AddStrictIfNotNull(key, Convert(value, converter));
 		}
@@ -152,7 +170,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			values[key] = Convert(value);
 		}
-		public void Set<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		public void Set<TValue>(string key, TValue value, IValueConverter converter)
 		{
 			values[key] = Convert(value, converter);
 		}
@@ -168,7 +186,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			return SetStrictIfNotNull(key, Convert(value));
 		}
-		public bool SetIfNotNull<TValue>(string key, TValue value, IDynamoDBValueConverter converter)
+		public bool SetIfNotNull<TValue>(string key, TValue value, IValueConverter converter)
 		{
 			return SetStrictIfNotNull(key, Convert(value, converter));
 		}

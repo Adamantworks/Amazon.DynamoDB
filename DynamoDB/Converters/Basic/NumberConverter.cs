@@ -17,16 +17,16 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class NumberConverter : IDynamoDBValueConverter
+	internal class NumberConverter : ValueConverter<DynamoDBNumber>
 	{
-		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool CanConvertTo(Type toType, IValueConverter context)
 		{
-			return typeof(T).IsAssignableFrom(typeof(DynamoDBNumber)) && IsPrimitiveNumeric(type);
+			return IsPrimitiveNumeric(toType);
 		}
 
-		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool CanConvertFrom(Type fromType, IValueConverter context)
 		{
-			return typeof(T).IsAssignableFrom(typeof(DynamoDBNumber)) && IsPrimitiveNumeric(type);
+			return IsPrimitiveNumeric(fromType);
 		}
 
 		private static bool IsPrimitiveNumeric(Type type)
@@ -43,28 +43,35 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 				   || type == typeof(decimal);
 		}
 
-		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool TryConvert(object fromValue, out DynamoDBNumber toValue, IValueConverter context)
 		{
+			if(fromValue == null)
+			{
+				toValue = null;
+				return false;
+			}
+
+			var type = fromValue.GetType();
 			if(type == typeof(byte))
-				toValue = (T)(object)(DynamoDBNumber)(byte)fromValue;
+				toValue = (byte)fromValue;
 			else if(type == typeof(sbyte))
-				toValue = (T)(object)(DynamoDBNumber)(sbyte)fromValue;
+				toValue = (sbyte)fromValue;
 			else if(type == typeof(short))
-				toValue = (T)(object)(DynamoDBNumber)(short)fromValue;
+				toValue = (short)fromValue;
 			else if(type == typeof(ushort))
-				toValue = (T)(object)(DynamoDBNumber)(ushort)fromValue;
+				toValue = (ushort)fromValue;
 			else if(type == typeof(int))
-				toValue = (T)(object)(DynamoDBNumber)(int)fromValue;
+				toValue = (int)fromValue;
 			else if(type == typeof(uint))
-				toValue = (T)(object)(DynamoDBNumber)(uint)fromValue;
+				toValue = (uint)fromValue;
 			else if(type == typeof(long))
-				toValue = (T)(object)(DynamoDBNumber)(long)fromValue;
+				toValue = (long)fromValue;
 			else if(type == typeof(float))
-				toValue = (T)(object)(DynamoDBNumber)(float)fromValue;
+				toValue = (float)fromValue;
 			else if(type == typeof(double))
-				toValue = (T)(object)(DynamoDBNumber)(double)fromValue;
+				toValue = (double)fromValue;
 			else if(type == typeof(decimal))
-				toValue = (T)(object)(DynamoDBNumber)(decimal)fromValue;
+				toValue = (decimal)fromValue;
 			else
 			{
 				toValue = null;
@@ -73,35 +80,34 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 			return true;
 		}
 
-		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool TryConvert(DynamoDBNumber fromValue, Type toType, out object toValue, IValueConverter context)
 		{
-			var value = fromValue as DynamoDBNumber;
-			if(value == null)
+			if(fromValue == null)
 			{
 				toValue = null;
 				return false;
 			}
 
-			if(type == typeof(byte))
-				toValue = (byte)value;
-			else if(type == typeof(sbyte))
-				toValue = (sbyte)value;
-			else if(type == typeof(short))
-				toValue = (short)value;
-			else if(type == typeof(ushort))
-				toValue = (ushort)value;
-			else if(type == typeof(int))
-				toValue = (int)value;
-			else if(type == typeof(uint))
-				toValue = (uint)value;
-			else if(type == typeof(long))
-				toValue = (long)value;
-			else if(type == typeof(float))
-				toValue = (float)value;
-			else if(type == typeof(double))
-				toValue = (double)value;
-			else if(type == typeof(decimal))
-				toValue = (decimal)value;
+			if(toType == typeof(byte))
+				toValue = (byte)fromValue;
+			else if(toType == typeof(sbyte))
+				toValue = (sbyte)fromValue;
+			else if(toType == typeof(short))
+				toValue = (short)fromValue;
+			else if(toType == typeof(ushort))
+				toValue = (ushort)fromValue;
+			else if(toType == typeof(int))
+				toValue = (int)fromValue;
+			else if(toType == typeof(uint))
+				toValue = (uint)fromValue;
+			else if(toType == typeof(long))
+				toValue = (long)fromValue;
+			else if(toType == typeof(float))
+				toValue = (float)fromValue;
+			else if(toType == typeof(double))
+				toValue = (double)fromValue;
+			else if(toType == typeof(decimal))
+				toValue = (decimal)fromValue;
 			else
 			{
 				toValue = null;

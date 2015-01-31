@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Immutable;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using System.Collections.Immutable;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class ImmutableArrayBinaryConverter : DynamoDBValueConverter<ImmutableArray<byte>, DynamoDBBinary>
+	internal class ImmutableArrayBinaryConverter : ValueConverter<ImmutableArray<byte>, DynamoDBBinary>
 	{
-		public override bool TryConvert(ImmutableArray<byte> fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(ImmutableArray<byte> fromValue, out DynamoDBBinary toValue, IValueConverter context)
 		{
 			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvert(DynamoDBBinary fromValue, out ImmutableArray<byte> toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(DynamoDBBinary fromValue, out ImmutableArray<byte> toValue, IValueConverter context)
 		{
 			toValue = fromValue;
 			return true;

@@ -13,59 +13,28 @@
 // limitations under the License.
 
 using System;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class CastConverter : IDynamoDBValueConverter
+	// TODO spin this off as a different library with IValueConverter?
+	internal class CastConverter : IValueConverter
 	{
-		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public bool CanConvert(Type fromType, Type toType, IValueConverter context)
 		{
-			// Only work on DynamoDBValues
-			if(!typeof(DynamoDBValue).IsAssignableFrom(type)) return false;
-			var dynamoDBValueType = typeof(T);
-			return dynamoDBValueType.IsAssignableFrom(type) // up-cast
-				|| type.IsAssignableFrom(dynamoDBValueType); // down-cast
+			return (toType.IsAssignableFrom(fromType) // upcast
+				|| fromType.IsAssignableFrom(toType)); // downcast
 		}
 
-		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public bool TryConvert(object fromValue, Type toType, out object toValue, IValueConverter context)
 		{
-			// Only work on DynamoDBValues
-			if(!typeof(DynamoDBValue).IsAssignableFrom(type)) return false;
-			var dynamoDBValueType = typeof(T);
-			return type.IsAssignableFrom(dynamoDBValueType) // up-cast
-				|| dynamoDBValueType.IsAssignableFrom(type); // down-cast
-		}
-
-		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
-			toValue = null;
-
-			// Only work on DynamoDBValues
-			if(!typeof(DynamoDBValue).IsAssignableFrom(type)) return false;
-
-			// Handle null
-			if(fromValue == null) return CanConvertFrom<T>(type, context);
-
-			toValue = fromValue as T;
-			return toValue != null;
-		}
-
-		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
-			toValue = null;
-
-			// Only work on DynamoDBValues
-			if(!typeof(DynamoDBValue).IsAssignableFrom(type)) return false;
-
-			// Handle null
-			if(fromValue == null) return CanConvertTo<T>(type, context);
-
-			if(type.IsInstanceOfType(fromValue))
+			if(toType.IsAssignableFrom(fromValue))
 			{
 				toValue = fromValue;
 				return true;
 			}
+
+			toValue = null;
 			return false;
 		}
 	}

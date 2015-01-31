@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class ByteArrayBinaryConverter : DynamoDBValueConverter<byte[], DynamoDBBinary>
+	internal class ByteArrayBinaryConverter : ValueConverter<byte[], DynamoDBBinary>
 	{
-		public override bool TryConvert(byte[] fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(byte[] fromValue, out DynamoDBBinary toValue, IValueConverter context)
 		{
 			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvert(DynamoDBBinary fromValue, out byte[] toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(DynamoDBBinary fromValue, out byte[] toValue, IValueConverter context)
 		{
 			toValue = fromValue;
 			return true;

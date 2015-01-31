@@ -26,52 +26,52 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 			this.hashKey = hashKey;
 		}
 
-		public  ItemKey RangeKeyStrict(DynamoDBKeyValue key1)
+		public ItemKey RangeKeyStrict(DynamoDBKeyValue key1)
 		{
 			return ItemKey.CreateStrict(hashKey, key1);
 		}
-		public  ItemKey RangeKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2)
+		public ItemKey RangeKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.ValueStrict(key1, key2));
 		}
-		public  ItemKey RangeKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2, DynamoDBKeyValue key3)
+		public ItemKey RangeKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2, DynamoDBKeyValue key3)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.ValueStrict(key1, key2, key3));
 		}
-		public  ItemKey RangeKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2, DynamoDBKeyValue key3, DynamoDBKeyValue key4)
+		public ItemKey RangeKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2, DynamoDBKeyValue key3, DynamoDBKeyValue key4)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.ValueStrict(key1, key2, key3, key4));
 		}
 
-		public  ItemKey RangeKey<TKey1>(TKey1 key1)
+		public ItemKey RangeKey<TKey1>(TKey1 key1)
 		{
 			return ItemKey.CreateStrict(hashKey, DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite));
 		}
-		public  ItemKey RangeKey<TKey1>(TKey1 key1, IDynamoDBValueConverter converter)
+		public ItemKey RangeKey<TKey1>(TKey1 key1, IValueConverter converter)
 		{
 			return ItemKey.CreateStrict(hashKey, DynamoDBKeyValue.Convert(key1, converter));
 		}
-		public  ItemKey RangeKey<TKey1, TKey2>(TKey1 key1, TKey2 key2)
+		public ItemKey RangeKey<TKey1, TKey2>(TKey1 key1, TKey2 key2)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.Value(key1, key2));
 		}
-		public  ItemKey RangeKey<TKey1, TKey2>(TKey1 key1, TKey2 key2, IDynamoDBValueConverter converter)
+		public ItemKey RangeKey<TKey1, TKey2>(TKey1 key1, TKey2 key2, IValueConverter converter)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.Value(key1, key2, converter));
 		}
-		public  ItemKey RangeKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3)
+		public ItemKey RangeKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.Value(key1, key2, key3));
 		}
-		public  ItemKey RangeKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IDynamoDBValueConverter converter)
+		public ItemKey RangeKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IValueConverter converter)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.Value(key1, key2, key3, converter));
 		}
-		public  ItemKey RangeKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4)
+		public ItemKey RangeKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.Value(key1, key2, key3, key4));
 		}
-		public  ItemKey RangeKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IDynamoDBValueConverter converter)
+		public ItemKey RangeKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IValueConverter converter)
 		{
 			return ItemKey.CreateStrict(hashKey, Composite.Value(key1, key2, key3, key4, converter));
 		}

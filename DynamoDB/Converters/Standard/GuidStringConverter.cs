@@ -17,15 +17,15 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Standard
 {
-	internal class GuidStringConverter : DynamoDBValueConverter<Guid, DynamoDBString>
+	internal class GuidStringConverter : ValueConverter<Guid, DynamoDBString>
 	{
-		public override bool TryConvert(Guid fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(Guid fromValue, out DynamoDBString toValue, IValueConverter context)
 		{
 			toValue = fromValue.ToString("D");
 			return true;
 		}
 
-		public override bool TryConvert(DynamoDBString fromValue, out Guid toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(DynamoDBString fromValue, out Guid toValue, IValueConverter context)
 		{
 			if(fromValue != null)
 				return Guid.TryParse(fromValue.ToString(), out toValue);

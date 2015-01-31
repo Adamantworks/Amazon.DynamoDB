@@ -11,7 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -58,6 +60,23 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public override int GetHashCode()
 		{
 			return value.GetHashCode();
+		}
+
+		public new static DynamoDBBoolean Convert(object value)
+		{
+			DynamoDBBoolean toValue;
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBBoolean Convert(object value, IValueConverter converter)
+		{
+			DynamoDBBoolean toValue;
+			if(converter.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
 		}
 
 		public static bool operator ==(DynamoDBBoolean a, DynamoDBBoolean b)

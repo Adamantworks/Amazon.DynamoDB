@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class BooleanConverter : DynamoDBValueConverter<bool, DynamoDBBoolean>
+	internal class BooleanConverter : ValueConverter<bool, DynamoDBBoolean>
 	{
-		public override bool TryConvert(bool fromValue, out DynamoDBBoolean toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(bool fromValue, out DynamoDBBoolean toValue, IValueConverter context)
 		{
 			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvert(DynamoDBBoolean fromValue, out bool toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(DynamoDBBoolean fromValue, out bool toValue, IValueConverter context)
 		{
 			if(fromValue != null)
 			{

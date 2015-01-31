@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	public class StringConverter : DynamoDBValueConverter<string, DynamoDBString>
+	public class StringConverter : ValueConverter<string, DynamoDBString>
 	{
-		public override bool TryConvert(string fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(string fromValue, out DynamoDBString toValue, IValueConverter context)
 		{
 			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvert(DynamoDBString fromValue, out string toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(DynamoDBString fromValue, out string toValue, IValueConverter context)
 		{
 			toValue = fromValue;
 			return true;

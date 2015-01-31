@@ -18,37 +18,37 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Composite
 {
-	public class ViaNumberConverter : IDynamoDBValueConverter
+	public class ViaNumberConverter : ValueConverter<DynamoDBString>
 	{
 		private readonly Regex numberPattern = new Regex(@"^-?\d+(\.\d+)(E[+-]?\d+)?$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
 
-		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool CanConvertTo(Type toType, IValueConverter context)
+		{
+			return context.CanConvert(typeof(DynamoDBNumber), toType, context);
+		}
+
+		public override bool CanConvertFrom(Type fromType, IValueConverter context)
 		{
 			// via converter is only for going from DynamoDBString to something else
 			return false;
 		}
 
-		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
-			return typeof(T).IsAssignableFrom(typeof(DynamoDBString)) && context.CanConvertTo<DynamoDBNumber>(type, context);
-		}
-
-		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool TryConvert(object fromValue, out DynamoDBString toValue, IValueConverter context)
 		{
 			// via converter is only for going from DynamoDBString to something else
 			toValue = null;
 			return false;
 		}
 
-		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool TryConvert(DynamoDBString fromValue, Type toType, out object toValue, IValueConverter context)
 		{
-			toValue = null;
-			if (fromValue == null)
-				return CanConvertTo<T>(type, context) && context.TryConvertTo<DynamoDBNumber>(null, type, out toValue, context);
+			if(fromValue == null || !numberPattern.IsMatch(fromValue))
+			{
+				toValue = null;
+				return false;
+			}
 
-			var stringValue = fromValue as DynamoDBString;
-			if(stringValue == null || !numberPattern.IsMatch(stringValue)) return false;
-			return context.TryConvertTo(new DynamoDBNumber(stringValue), type, out toValue, context);
+			return context.TryConvert(new DynamoDBNumber(fromValue), toType, out toValue, context);
 		}
 	}
 }

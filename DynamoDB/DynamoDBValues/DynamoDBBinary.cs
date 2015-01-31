@@ -16,6 +16,7 @@ using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.Text;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -108,6 +109,23 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(hashCode == null)
 				hashCode = ComputeHash();
 			return hashCode.Value;
+		}
+
+		public new static DynamoDBBinary Convert(object value)
+		{
+			DynamoDBBinary toValue;
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBBinary Convert(object value, IValueConverter converter)
+		{
+			DynamoDBBinary toValue;
+			if(converter.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
 		}
 
 		public static bool operator ==(DynamoDBBinary a, DynamoDBBinary b)

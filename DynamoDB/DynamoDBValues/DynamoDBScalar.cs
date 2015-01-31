@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections.Immutable;
 using Adamantworks.Amazon.DynamoDB.Converters;
@@ -50,19 +51,18 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		public abstract override int GetHashCode();
 
-		public new static DynamoDBScalar Convert<T>(T value)
+		public new static DynamoDBScalar Convert(object value)
 		{
 			DynamoDBScalar toValue;
-			var converter = DynamoDBValueConverters.Default;
-			if(DynamoDBValueConverters.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();
 		}
-		public new static DynamoDBScalar Convert<T>(T value, IDynamoDBValueConverter converter)
+		public new static DynamoDBScalar Convert(object value, IValueConverter converter)
 		{
 			DynamoDBScalar toValue;
-			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
+			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();

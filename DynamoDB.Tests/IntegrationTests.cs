@@ -23,7 +23,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Tests
 {
-	[TestFixture, Explicit]
+	[TestFixture, Explicit("Integration Tests hit DynamoDB")]
 	public class IntegrationTests
 	{
 		private static readonly ProvisionedThroughput MinProvisionedThroughput = new ProvisionedThroughput(1, 1);

@@ -14,6 +14,7 @@
 
 using System;
 using System.Globalization;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -58,6 +59,23 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public override int GetHashCode()
 		{
 			return value.GetHashCode();
+		}
+
+		public new static DynamoDBNumber Convert(object value)
+		{
+			DynamoDBNumber toValue;
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBNumber Convert(object value, IValueConverter converter)
+		{
+			DynamoDBNumber toValue;
+			if(converter.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
 		}
 
 		public static bool operator ==(DynamoDBNumber a, DynamoDBNumber b)

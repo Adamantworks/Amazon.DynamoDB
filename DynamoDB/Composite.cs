@@ -64,7 +64,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite),
 				DynamoDBKeyValue.Convert(key2, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static DynamoDBString Value<TKey1, TKey2>(TKey1 key1, TKey2 key2, IDynamoDBValueConverter converter)
+		public static DynamoDBString Value<TKey1, TKey2>(TKey1 key1, TKey2 key2, IValueConverter converter)
 		{
 			return ValueStrict(
 				DynamoDBKeyValue.Convert(key1, converter),
@@ -77,7 +77,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				DynamoDBKeyValue.Convert(key2, DynamoDBValueConverters.DefaultComposite),
 				DynamoDBKeyValue.Convert(key3, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static DynamoDBString Value<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IDynamoDBValueConverter converter)
+		public static DynamoDBString Value<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IValueConverter converter)
 		{
 			return ValueStrict(
 				DynamoDBKeyValue.Convert(key1, converter),
@@ -92,7 +92,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				DynamoDBKeyValue.Convert(key3, DynamoDBValueConverters.DefaultComposite),
 				DynamoDBKeyValue.Convert(key4, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static DynamoDBString Value<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IDynamoDBValueConverter converter)
+		public static DynamoDBString Value<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IValueConverter converter)
 		{
 			return ValueStrict(
 				DynamoDBKeyValue.Convert(key1, converter),
@@ -122,7 +122,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new CompositeHashKeySyntax(DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1>(TKey1 key1, IDynamoDBValueConverter converter)
+		public static CompositeHashKeySyntax HashKey<TKey1>(TKey1 key1, IValueConverter converter)
 		{
 			return new CompositeHashKeySyntax(DynamoDBKeyValue.Convert(key1, converter));
 		}
@@ -130,7 +130,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new CompositeHashKeySyntax(Value(key1, key2, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2>(TKey1 key1, TKey2 key2, IDynamoDBValueConverter converter)
+		public static CompositeHashKeySyntax HashKey<TKey1, TKey2>(TKey1 key1, TKey2 key2, IValueConverter converter)
 		{
 			return new CompositeHashKeySyntax(Value(key1, key2, converter));
 		}
@@ -138,7 +138,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new CompositeHashKeySyntax(Value(key1, key2, key3, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IDynamoDBValueConverter converter)
+		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IValueConverter converter)
 		{
 			return new CompositeHashKeySyntax(Value(key1, key2, key3, converter));
 		}
@@ -146,7 +146,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new CompositeHashKeySyntax(Value(key1, key2, key3, key4, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IDynamoDBValueConverter converter)
+		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IValueConverter converter)
 		{
 			return new CompositeHashKeySyntax(Value(key1, key2, key3, key4, converter));
 		}
@@ -169,7 +169,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Split<T1, T2>(value, DynamoDBValueConverters.DefaultComposite);
 		}
-		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBString value, IDynamoDBValueConverter converter)
+		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBString value, IValueConverter converter)
 		{
 			var values = SplitString(value);
 			if(values.Length != 2)
@@ -183,7 +183,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Split<T1, T2, T3>(value, DynamoDBValueConverters.DefaultComposite);
 		}
-		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBString value, IDynamoDBValueConverter converter)
+		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBString value, IValueConverter converter)
 		{
 			var values = SplitString(value);
 			if(values.Length != 3)
@@ -198,7 +198,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Split<T1, T2, T3, T4>(value, DynamoDBValueConverters.DefaultComposite);
 		}
-		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBString value, IDynamoDBValueConverter converter)
+		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBString value, IValueConverter converter)
 		{
 			var values = SplitString(value);
 			if(values.Length != 4)
@@ -219,7 +219,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 			return Split<T1, T2>(stringValue, DynamoDBValueConverters.DefaultComposite);
 		}
-		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBValue value, IDynamoDBValueConverter converter)
+		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBValue value, IValueConverter converter)
 		{
 			var stringValue = value as DynamoDBString;
 			if(stringValue == null && value != null)
@@ -235,7 +235,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 			return Split<T1, T2, T3>(stringValue, DynamoDBValueConverters.DefaultComposite);
 		}
-		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBValue value, IDynamoDBValueConverter converter)
+		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBValue value, IValueConverter converter)
 		{
 			var stringValue = value as DynamoDBString;
 			if(stringValue == null && value != null)
@@ -251,7 +251,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 			return Split<T1, T2, T3, T4>(stringValue, DynamoDBValueConverters.DefaultComposite);
 		}
-		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBValue value, IDynamoDBValueConverter converter)
+		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBValue value, IValueConverter converter)
 		{
 			var stringValue = value as DynamoDBString;
 			if(stringValue == null && value != null)

@@ -12,115 +12,99 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class SetConverter : IDynamoDBValueConverter
+	internal class SetConverter<T> : ValueConverter<DynamoDBSet<T>> where T : DynamoDBKeyValue
 	{
-		public bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool CanConvertTo(Type toType, IValueConverter context)
 		{
-			Type setOfType;
-			return CanConvertFrom<T>(type, context, out setOfType);
-		}
-		private static bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context, out Type setOfType) where T : DynamoDBValue
-		{
-			setOfType = null;
-			Type setType;
-			return IsAssignableFromDynamoDBSet<T>()
-				   && (setType = type.GetInterfaces().Where(i => i.IsGenericType).FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(ISet<>))) != null
-				// DynamoDBKeyValue because only set of string, number or binary is allowed
-				   && context.CanConvertFrom<DynamoDBKeyValue>(setOfType = setType.GenericTypeArguments[0], context);
+			// Must be assignable from HashSet<X> from T converts to X
+			return PossibleSetOfTypes(toType, context).Any();
 		}
 
-		public bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue
+		private static IEnumerable<Type> PossibleSetOfTypes(Type toType, IValueConverter context)
 		{
-			Type setOfType;
-			return CanConvertTo<T>(type, context, out setOfType);
-		}
-		private static bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context, out Type setOfType) where T : DynamoDBValue
-		{
-			setOfType = null;
-			return IsAssignableFromDynamoDBSet<T>()
-				   && type.IsGenericType
-				// DynamoDBKeyValue because only set of string, number or binary is allowed
-				   && context.CanConvertTo<DynamoDBKeyValue>(setOfType = type.GetGenericArguments()[0], context);
-		}
-
-		private static bool IsAssignableFromDynamoDBSet<T>() where T : DynamoDBValue
-		{
-			return (typeof(T).IsAssignableFrom(typeof(DynamoDBSet<DynamoDBString>))
-					|| typeof(T).IsAssignableFrom(typeof(DynamoDBSet<DynamoDBNumber>))
-					|| typeof(T).IsAssignableFrom(typeof(DynamoDBSet<DynamoDBBinary>)));
+			return toType.GetInterfaces().Concat(new[] { toType }) // The to type might itself be ISet<X>
+				.Where(i =>
+				{
+					if(!i.IsGenericType) return false;
+					var openGeneric = i.GetGenericTypeDefinition();
+					return openGeneric == typeof(HashSet<>) || openGeneric == typeof(ISet<>) || openGeneric == typeof(ICollection<>) || openGeneric == typeof(IEnumerable<>);
+				})
+				.Select(i => i.GenericTypeArguments[0])
+				.Where(setOfType => context.CanConvert(typeof(T), setOfType, context));
 		}
 
-		public bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
+		public override bool CanConvertFrom(Type fromType, IValueConverter context)
+		{
+			// Must implement ISet<X> where X converts to T
+			return fromType.GetInterfaces().Concat(new[] { fromType }) // The from type might itself be ISet<X>
+				.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISet<>))
+				.Any(i => context.CanConvert(i.GenericTypeArguments[0], typeof(T), context));
+		}
+
+		public override bool TryConvert(object fromValue, out DynamoDBSet<T> toValue, IValueConverter context)
 		{
 			toValue = null;
+			if(fromValue == null) return true;
+			if(!CanConvertFrom(fromValue.GetType(), context)) return false; // Always need this to make sure we are coming from a set
 
-			Type setOfType;
-			if(!CanConvertFrom<T>(type, context, out setOfType)) return false;
-
-			var values = new List<DynamoDBKeyValue>();
+			var values = new List<T>();
 			foreach(var fromElementValue in (IEnumerable)fromValue)
 			{
-				DynamoDBKeyValue toElementValue;
-				if(!context.TryConvertFrom(setOfType, fromElementValue, out toElementValue, context) || toElementValue == null)
+				T toElementValue;
+				if(!context.TryConvert(fromElementValue, out toElementValue) || toElementValue == null)
 					return false;
 				values.Add(toElementValue);
 			}
 
-			if(values.Count == 0) return true; // Empty set becomes null
-			setOfType = values[0].GetType();
-			if(setOfType == typeof(DynamoDBString))
-				return NewSet<DynamoDBString, T>(ref toValue, values);
-			if(setOfType == typeof(DynamoDBNumber))
-				return NewSet<DynamoDBNumber, T>(ref toValue, values);
-			if(setOfType == typeof(DynamoDBBinary))
-				return NewSet<DynamoDBBinary, T>(ref toValue, values);
+			toValue = new DynamoDBSet<T>(values);
+			if(toValue.Count != values.Count)
+				throw new Exception("Converting values of set caused a collision (i.e. two values converted to the same value)");
+
+			return true;
+		}
+
+		public override bool TryConvert(DynamoDBSet<T> fromValue, Type toType, out object toValue, IValueConverter context)
+		{
+			toValue = null;
+
+			var possibleSetTypes = PossibleSetOfTypes(toType, context).Distinct().ToList();
+			if(possibleSetTypes.Count == 0) return false;
+			if(fromValue == null) return true;
+
+			foreach(var possibleSetType in possibleSetTypes)
+				if(TryConvertToHashSet(fromValue, possibleSetType, out toValue, context))
+					return true;
 
 			return false;
 		}
 
-		private static bool NewSet<TOf, T>(ref T toValue, ICollection<DynamoDBKeyValue> values)
-			where TOf : DynamoDBKeyValue
-			where T : DynamoDBValue
+		private static bool TryConvertToHashSet(DynamoDBSet<T> fromValue, Type possibleSetType, out object toValue, IValueConverter context)
 		{
-			var set = new DynamoDBSet<TOf>(values.OfType<TOf>());
-			var allOfType = set.Count == values.Count;
-			if(allOfType) toValue = (T)(object)set; // we know because of CanConvertFrom that this is safe
-			return allOfType;
-		}
-
-		public bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue
-		{
-			toValue = null;
-
-			Type setOfType;
-			if(!CanConvertTo<T>(type, context, out setOfType)) return false;
-
-			if(fromValue == null) return true;
-
-			var fromSetType = fromValue.GetType();
-			if(!fromSetType.IsGenericType
-				|| type.GetGenericTypeDefinition() == typeof(DynamoDBSet<>)) return false;
-
-			var hashSetType = typeof(HashSet<>).MakeGenericType(setOfType);
+			var hashSetType = typeof(HashSet<>).MakeGenericType(possibleSetType);
 			var hashSet = Activator.CreateInstance(hashSetType);
 			var dynamicSet = (dynamic)hashSet;
 
-			foreach(var fromElementValue in (IEnumerable<DynamoDBKeyValue>)fromValue)
+			foreach(var fromElementValue in fromValue)
 			{
 				object toElementValue;
-				if(!context.TryConvertTo(fromElementValue, setOfType, out toElementValue, context))
+				if(!context.TryConvert(fromElementValue, possibleSetType, out toElementValue, context))
+				{
+					toValue = null;
 					return false;
-				dynamicSet.Add((dynamic)toElementValue); // Cast to dynamic seems to be needed because otherwise it wants an Add(object) method
+				}
+				dynamicSet.Add((dynamic)toElementValue);
+				// Cast to dynamic seems to be needed because otherwise it wants an Add(object) method
 			}
-
+			if(fromValue.Count != dynamicSet.Count)
+				throw new Exception("Converting values of set caused a collision (i.e. two values converted to the same value)");
 			toValue = hashSet;
 			return true;
 		}

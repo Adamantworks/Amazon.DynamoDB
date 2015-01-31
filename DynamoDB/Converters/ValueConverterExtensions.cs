@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using System;
-
 namespace Adamantworks.Amazon.DynamoDB.Converters
 {
-	public interface IDynamoDBValueConverter
+	// TODO spin this off as a different library with IValueConverter?
+	public static class ValueConverterExtensions
 	{
-		bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
+		public static bool CanConvert<TFrom, TTo>(this IValueConverter converter, IValueConverter context = null)
+		{
+			return converter.CanConvert(typeof(TFrom), typeof(TTo), context ?? converter);
+		}
+
+		public static bool TryConvert<T>(this IValueConverter converter, object fromValue, out T toValue, IValueConverter context = null)
+		{
+			object value;
+			var converted = converter.TryConvert(fromValue, typeof(T), out value, context ?? converter);
+			toValue = converted ? (T)value : default(T);
+			return converted;
+		}
 	}
 }

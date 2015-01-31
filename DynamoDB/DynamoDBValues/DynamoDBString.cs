@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -57,6 +58,23 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public override int GetHashCode()
 		{
 			return value.GetHashCode();
+		}
+
+		public new static DynamoDBString Convert(object value)
+		{
+			DynamoDBString toValue;
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBString Convert(object value, IValueConverter converter)
+		{
+			DynamoDBString toValue;
+			if(converter.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
 		}
 
 		public int Length { get { return value.Length; } }

@@ -11,9 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -45,6 +48,23 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		internal override Aws.AttributeValue ToAws()
 		{
 			return new Aws.AttributeValue() { L = values.Select(v => v == null ? new Aws.AttributeValue() { NULL = true } : v.ToAws()).ToList() };
+		}
+
+		public new static DynamoDBList Convert(object value)
+		{
+			DynamoDBList toValue;
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBList Convert(object value, IValueConverter converter)
+		{
+			DynamoDBList toValue;
+			if(converter.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
 		}
 
 		public IEnumerator<DynamoDBValue> GetEnumerator()

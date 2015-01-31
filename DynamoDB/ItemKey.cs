@@ -86,7 +86,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey));
 		}
-		public static ItemKey Create<THash>(THash hashKey, IDynamoDBValueConverter converter)
+		public static ItemKey Create<THash>(THash hashKey, IValueConverter converter)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter));
 		}
@@ -94,7 +94,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey), DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public static ItemKey Create<THash, TRange>(THash hashKey, TRange rangeKey, IDynamoDBValueConverter converter)
+		public static ItemKey Create<THash, TRange>(THash hashKey, TRange rangeKey, IValueConverter converter)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter), DynamoDBKeyValue.Convert(rangeKey, converter));
 		}

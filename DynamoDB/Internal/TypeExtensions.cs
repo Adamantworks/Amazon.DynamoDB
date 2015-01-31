@@ -1,4 +1,4 @@
-// Copyright 2015 Adamantworks.  All Rights Reserved.
+﻿// Copyright 2015 Adamantworks.  All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,11 +14,16 @@
 
 using System;
 
-namespace Adamantworks.Amazon.DynamoDB.Converters
+namespace Adamantworks.Amazon.DynamoDB.Internal
 {
-	public interface IValueConverter
+	internal static class TypeExtensions
 	{
-		bool CanConvert(Type fromType, Type toType, IDynamoDBValueConverter context);
-		bool TryConvert(object fromValue, Type toType, out object toValue, IDynamoDBValueConverter context);
+		public static bool IsAssignableFrom(this Type type, object value)
+		{
+			if(value == null)
+				return !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
+
+			return type.IsInstanceOfType(value);
+		}
 	}
 }

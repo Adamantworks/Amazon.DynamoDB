@@ -21,7 +21,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {
 	// TODO implement IConvertable?
 	// TODO create TypeDescriptors?
-	public abstract class DynamoDBValue 
+	public abstract class DynamoDBValue
 	{
 		public abstract DynamoDBValueType Type { get; }
 
@@ -34,19 +34,18 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		internal abstract Aws.AttributeValue ToAws();
 
-		public static DynamoDBValue Convert<T>(T value)
+		public static DynamoDBValue Convert(object value)
 		{
 			DynamoDBValue toValue;
-			var converter = DynamoDBValueConverters.Default;
-			if(DynamoDBValueConverters.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();
 		}
-		public static DynamoDBValue Convert<T>(T value, IDynamoDBValueConverter converter)
+		public static DynamoDBValue Convert(object value, IValueConverter converter)
 		{
 			DynamoDBValue toValue;
-			if(converter.TryConvertFrom(typeof(T), value, out toValue, converter))
+			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();

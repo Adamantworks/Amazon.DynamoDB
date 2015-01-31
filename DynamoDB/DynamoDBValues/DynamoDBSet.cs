@@ -11,10 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -69,6 +71,23 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 				default:
 					throw new NotSupportedException("Set type not supported");
 			}
+		}
+
+		public new static DynamoDBSet<T> Convert(object value)
+		{
+			DynamoDBSet<T> toValue;
+			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
+		}
+		public new static DynamoDBSet<T> Convert(object value, IValueConverter converter)
+		{
+			DynamoDBSet<T> toValue;
+			if(converter.TryConvert(value, out toValue))
+				return toValue;
+
+			throw new InvalidCastException();
 		}
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
