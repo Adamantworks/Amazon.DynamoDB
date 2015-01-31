@@ -19,13 +19,13 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Standard
 {
 	internal class GuidStringConverter : DynamoDBValueConverter<Guid, DynamoDBString>
 	{
-		public override bool TryConvertFrom(Guid fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(Guid fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
 		{
 			toValue = fromValue.ToString("D");
 			return true;
 		}
 
-		public override bool TryConvertTo(DynamoDBString fromValue, Type type, out Guid toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(DynamoDBString fromValue, out Guid toValue, IDynamoDBValueConverter context)
 		{
 			if(fromValue != null)
 				return Guid.TryParse(fromValue.ToString(), out toValue);

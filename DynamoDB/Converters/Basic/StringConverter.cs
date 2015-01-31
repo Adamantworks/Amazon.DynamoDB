@@ -19,13 +19,13 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
 	public class StringConverter : DynamoDBValueConverter<string, DynamoDBString>
 	{
-		public override bool TryConvertFrom(string fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(string fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
 		{
 			toValue = fromValue;
 			return true;
 		}
 
-		public override bool TryConvertTo(DynamoDBString fromValue, Type type, out string toValue, IDynamoDBValueConverter context)
+		public override bool TryConvert(DynamoDBString fromValue, out string toValue, IDynamoDBValueConverter context)
 		{
 			toValue = fromValue;
 			return true;
