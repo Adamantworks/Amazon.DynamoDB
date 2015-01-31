@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Immutable;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues

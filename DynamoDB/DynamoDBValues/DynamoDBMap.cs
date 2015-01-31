@@ -15,6 +15,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Aws = Amazon.DynamoDBv2.Model;
 

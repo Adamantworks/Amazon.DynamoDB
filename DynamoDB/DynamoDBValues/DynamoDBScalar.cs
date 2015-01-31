@@ -13,6 +13,7 @@
 // limitations under the License.
 using System;
 using System.Collections.Immutable;
+using Adamantworks.Amazon.DynamoDB.Converters;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {

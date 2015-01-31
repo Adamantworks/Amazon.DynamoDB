@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
 

@@ -14,18 +14,9 @@
 
 using System;
 using Adamantworks.Amazon.DynamoDB.Converters;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IDynamoDBValueConverter
-	{
-		bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
-	}
-
 	public static class DynamoDBValueConverter
 	{
 		private static CompositeConverter @default;
