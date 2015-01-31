@@ -45,7 +45,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 		public  ItemKey RangeKey<TKey1>(TKey1 key1)
 		{
-			return ItemKey.CreateStrict(hashKey, DynamoDBKeyValue.Convert(key1, DynamoDBValueConverter.DefaultComposite));
+			return ItemKey.CreateStrict(hashKey, DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite));
 		}
 		public  ItemKey RangeKey<TKey1>(TKey1 key1, IDynamoDBValueConverter converter)
 		{

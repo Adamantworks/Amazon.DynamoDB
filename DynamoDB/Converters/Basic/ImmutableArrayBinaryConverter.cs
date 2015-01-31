@@ -20,7 +20,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
 	internal class ImmutableArrayBinaryConverter : DynamoDBValueConverter<ImmutableArray<byte>, DynamoDBBinary>
 	{
-		public override bool TryConvertFrom(Type type, ImmutableArray<byte> fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(ImmutableArray<byte> fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
 		{
 			toValue = fromValue;
 			return true;

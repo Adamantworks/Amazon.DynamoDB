@@ -17,7 +17,7 @@ using Adamantworks.Amazon.DynamoDB.Converters;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public static class DynamoDBValueConverter
+	public static class DynamoDBValueConverters
 	{
 		private static CompositeConverter @default;
 		private static CompositeConverter defaultComposite;
@@ -45,7 +45,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			}
 		}
 
-		static DynamoDBValueConverter()
+		static DynamoDBValueConverters()
 		{
 			@default = CreateStandardConverter();
 			defaultComposite = CreateCompositeConverter(@default);

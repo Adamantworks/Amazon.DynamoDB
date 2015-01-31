@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Adamantworks.  All Rights Reserved.
+// Copyright 2015 Adamantworks.  All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters
 {
-	public interface IDynamoDBValueConverter
+	public interface IValueConverter
 	{
-		bool CanConvertFrom<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool CanConvertTo<T>(Type type, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool TryConvertFrom<T>(Type type, object fromValue, out T toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
-		bool TryConvertTo<T>(T fromValue, Type type, out object toValue, IDynamoDBValueConverter context) where T : DynamoDBValue;
+		bool CanConvert(Type fromType, Type toType, IDynamoDBValueConverter context);
+		bool TryConvert(object fromValue, Type toType, out object toValue, IDynamoDBValueConverter context);
 	}
 }

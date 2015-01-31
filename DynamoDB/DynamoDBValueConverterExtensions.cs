@@ -24,7 +24,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static T To<T>(this DynamoDBValue value)
 		{
 			object toValue;
-			var converter = DynamoDBValueConverter.Default;
+			var converter = DynamoDBValueConverters.Default;
 			if(converter.TryConvertTo(value, typeof(T), out toValue, converter))
 				return (T)toValue;
 
@@ -42,7 +42,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		// TODO Replace these with convert methods on each DynamoDB type
 		public static ConvertableSyntax<T> ToDynamoDB<T>(T value)
 		{
-			return new ConvertableSyntax<T>(value, DynamoDBValueConverter.Default);
+			return new ConvertableSyntax<T>(value, DynamoDBValueConverters.Default);
 		}
 		public static ConvertableSyntax<T> ToDynamoDB<T>(T value, IDynamoDBValueConverter converter)
 		{

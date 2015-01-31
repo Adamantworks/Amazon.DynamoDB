@@ -53,8 +53,8 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public new static DynamoDBScalar Convert<T>(T value)
 		{
 			DynamoDBScalar toValue;
-			var converter = DynamoDBValueConverter.Default;
-			if(DynamoDBValueConverter.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
+			var converter = DynamoDBValueConverters.Default;
+			if(DynamoDBValueConverters.Default.TryConvertFrom(typeof(T), value, out toValue, converter))
 				return toValue;
 
 			throw new InvalidCastException();

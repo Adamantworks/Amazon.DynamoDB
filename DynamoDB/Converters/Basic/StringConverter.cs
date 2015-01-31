@@ -19,7 +19,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
 	public class StringConverter : DynamoDBValueConverter<string, DynamoDBString>
 	{
-		public override bool TryConvertFrom(Type type, string fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(string fromValue, out DynamoDBString toValue, IDynamoDBValueConverter context)
 		{
 			toValue = fromValue;
 			return true;

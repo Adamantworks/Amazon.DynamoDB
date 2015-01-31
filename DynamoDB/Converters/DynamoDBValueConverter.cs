@@ -13,10 +13,39 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.Eventing.Reader;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters
 {
+	public abstract class DynamoDBValueConverter<TDynamoDBValue> : IValueConverter where TDynamoDBValue : DynamoDBValue
+	{
+		public bool CanConvert(Type fromType, Type toType, IDynamoDBValueConverter context)
+		{
+			return typeof(TDynamoDBValue).IsAssignableFrom(fromType) || typeof(TDynamoDBValue).IsAssignableFrom(toType);
+		}
+
+		bool IValueConverter.TryConvert(object fromValue, Type toType, out object toValue, IDynamoDBValueConverter context)
+		{
+			TDynamoDBValue dynamoDBValue;
+			if(typeof(TDynamoDBValue).IsAssignableFrom(toType))
+			{
+				var result = TryConvert(fromValue, out dynamoDBValue, context);
+				toValue = dynamoDBValue;
+				return result;
+			}
+			dynamoDBValue = fromValue as TDynamoDBValue;
+			if(dynamoDBValue != null || fromValue == null)
+				return TryConvert(dynamoDBValue, toType, out toValue, context);
+
+			toValue = null;
+			return false;
+		}
+
+		public abstract bool TryConvert(object fromValue, out TDynamoDBValue toValue, IDynamoDBValueConverter context);
+		public abstract bool TryConvert(TDynamoDBValue fromValue, Type toType, out object toValue, IDynamoDBValueConverter context);
+	}
+
 	public abstract class DynamoDBValueConverter<TValue, TDynamoDBValue> : IDynamoDBValueConverter
 		where TDynamoDBValue : DynamoDBValue
 	{
@@ -37,7 +66,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 			if(CanConvertFrom<T>(type, context))
 			{
 				TDynamoDBValue typedToValue;
-				var result = TryConvertFrom(type, (TValue)fromValue, out typedToValue, context);
+				var result = TryConvertFrom((TValue)fromValue, out typedToValue, context);
 				toValue = (T)(object)typedToValue; // We know from CanConvertFrom that this assignment is safe
 				return result;
 			}
@@ -61,7 +90,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 			return false;
 		}
 
-		public abstract bool TryConvertFrom(Type type, TValue fromValue, out TDynamoDBValue toValue, IDynamoDBValueConverter context);
+		public abstract bool TryConvertFrom(TValue fromValue, out TDynamoDBValue toValue, IDynamoDBValueConverter context);
 		public abstract bool TryConvertTo(TDynamoDBValue fromValue, Type type, out TValue toValue, IDynamoDBValueConverter context);
 	}
 }

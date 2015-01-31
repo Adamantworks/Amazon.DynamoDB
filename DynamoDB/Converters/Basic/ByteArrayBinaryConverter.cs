@@ -19,7 +19,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
 	internal class ByteArrayBinaryConverter : DynamoDBValueConverter<byte[], DynamoDBBinary>
 	{
-		public override bool TryConvertFrom(Type type, byte[] fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(byte[] fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
 		{
 			toValue = fromValue;
 			return true;

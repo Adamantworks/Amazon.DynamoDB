@@ -40,7 +40,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Static Factory Methods
 		public static Values Named(object namedValues, params object[] positionalValues)
 		{
-			return Named(DynamoDBValueConverter.Default, namedValues, positionalValues);
+			return Named(DynamoDBValueConverters.Default, namedValues, positionalValues);
 		}
 		public static Values Named(IDynamoDBValueConverter converter, object namedValues, params object[] positionalValues)
 		{
@@ -52,7 +52,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public static Values Of(params object[] positionalValues)
 		{
-			return Of(DynamoDBValueConverter.Default, positionalValues);
+			return Of(DynamoDBValueConverters.Default, positionalValues);
 		}
 		public static Values Of(IDynamoDBValueConverter converter, params object[] positionalValues)
 		{

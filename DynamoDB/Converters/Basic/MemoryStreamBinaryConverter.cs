@@ -20,7 +20,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
 	internal class MemoryStreamBinaryConverter : DynamoDBValueConverter<MemoryStream, DynamoDBBinary>
 	{
-		public override bool TryConvertFrom(Type type, MemoryStream fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
+		public override bool TryConvertFrom(MemoryStream fromValue, out DynamoDBBinary toValue, IDynamoDBValueConverter context)
 		{
 			toValue = fromValue.ToArray();
 			return true;
