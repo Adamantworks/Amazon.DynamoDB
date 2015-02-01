@@ -23,7 +23,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static T To<T>(this DynamoDBValue value)
 		{
 			object toValue;
-			var converter = DynamoDBValueConverters.Default;
+			var converter = DynamoDBValueConverter.Default;
 			if(converter.TryConvert(value, typeof(T), out toValue, converter))
 				return (T)toValue;
 

@@ -64,7 +64,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public new static DynamoDBNumber Convert(object value)
 		{
 			DynamoDBNumber toValue;
-			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();

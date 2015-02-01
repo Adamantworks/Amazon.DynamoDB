@@ -114,7 +114,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public new static DynamoDBBinary Convert(object value)
 		{
 			DynamoDBBinary toValue;
-			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();

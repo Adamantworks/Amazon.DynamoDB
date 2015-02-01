@@ -41,20 +41,20 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static Values Named(object namedValues) // overload needed to avoid ambiguous call when no positional args supplied
 		{
 			var values = new DynamoDBMap();
-			AddValues(values, namedValues, DynamoDBValueConverters.Default);
+			AddValues(values, namedValues, DynamoDBValueConverter.Default);
 			return new Values(values);
 		}
 		public static Values Named(object namedValues, params object[] positionalValues)
 		{
 			var values = new DynamoDBMap();
-			AddValues(values, namedValues, DynamoDBValueConverters.Default);
-			AddValues(values, positionalValues, DynamoDBValueConverters.Default);
+			AddValues(values, namedValues, DynamoDBValueConverter.Default);
+			AddValues(values, positionalValues, DynamoDBValueConverter.Default);
 			return new Values(values);
 		}
 		public static Values Named(object namedValues, params DynamoDBValue[] positionalValues)
 		{
 			var values = new DynamoDBMap();
-			AddValues(values, namedValues, DynamoDBValueConverters.Default);
+			AddValues(values, namedValues, DynamoDBValueConverter.Default);
 			AddValues(values, positionalValues);
 			return new Values(values);
 		}
@@ -81,7 +81,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public static Values Of(params object[] positionalValues)
 		{
-			return Of(DynamoDBValueConverters.Default, positionalValues);
+			return Of(DynamoDBValueConverter.Default, positionalValues);
 		}
 		public static Values Of(IValueConverter converter, params object[] positionalValues)
 		{

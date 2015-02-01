@@ -142,7 +142,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region.cs" />
     <Compile Include="Table.cs" />
-    <Compile Include="DynamoDBValueConverters.cs" />
+    <Compile Include="DynamoDBValueConverter.cs" />
     <Compile Include="DynamoDBValueExtensions.cs" />
     <Compile Include="DynamoDBValues\DynamoDBValueType.cs" />
   </ItemGroup>

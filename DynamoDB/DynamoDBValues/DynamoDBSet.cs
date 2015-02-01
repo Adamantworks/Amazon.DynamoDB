@@ -76,7 +76,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public new static DynamoDBSet<T> Convert(object value)
 		{
 			DynamoDBSet<T> toValue;
-			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();

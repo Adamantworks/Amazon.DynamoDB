@@ -72,7 +72,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		public new static DynamoDBMap Convert(object value)
 		{
 			DynamoDBMap toValue;
-			if(DynamoDBValueConverters.Default.TryConvert(value, out toValue))
+			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
 			throw new InvalidCastException();
