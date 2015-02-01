@@ -129,66 +129,84 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return values.ContainsKey(key);
 		}
 
-		void IDictionary<string, DynamoDBValue>.Add(string key, DynamoDBValue value)
+		public void Add(string key, DynamoDBValue value)
 		{
 			values.Add(key, value);
 		}
-		public void AddStrict(string key, DynamoDBValue value)
+		public void Add(string key, DynamoDBValue value, IValueConverter converter)
 		{
 			values.Add(key, value);
 		}
-		public void Add<TValue>(string key, TValue value)
+		public void Add(string key, object value)
 		{
 			values.Add(key, Convert(value));
 		}
-		public void Add<TValue>(string key, TValue value, IValueConverter converter)
+		public void Add(string key, object value, IValueConverter converter)
 		{
-			values.Add(key, Convert(value));
+			values.Add(key, Convert(value, converter));
 		}
 
-		public bool AddStrictIfNotNull(string key, DynamoDBValue value)
+		public bool AddIfNotNull(string key, DynamoDBValue value)
 		{
 			var notNull = value != null;
 			if(notNull)
 				values.Add(key, value);
 			return notNull;
 		}
-		public bool AddIfNotNull<TValue>(string key, TValue value)
+		public bool AddIfNotNull(string key, DynamoDBValue value, IValueConverter converter)
 		{
-			return AddStrictIfNotNull(key, Convert(value));
+			var notNull = value != null;
+			if(notNull)
+				values.Add(key, value);
+			return notNull;
 		}
-		public bool AddIfNotNull<TValue>(string key, TValue value, IValueConverter converter)
+		public bool AddIfNotNull(string key, object value)
 		{
-			return AddStrictIfNotNull(key, Convert(value, converter));
+			return AddIfNotNull(key, Convert(value));
+		}
+		public bool AddIfNotNull(string key, object value, IValueConverter converter)
+		{
+			return AddIfNotNull(key, Convert(value, converter));
 		}
 
-		public void SetStrict(string key, DynamoDBValue value)
+		public void Set(string key, DynamoDBValue value)
 		{
 			values[key] = value;
 		}
-		public void Set<TValue>(string key, TValue value)
+		public void Set(string key, DynamoDBValue value, IValueConverter converter)
+		{
+			values[key] = value;
+		}
+		public void Set(string key, object value)
 		{
 			values[key] = Convert(value);
 		}
-		public void Set<TValue>(string key, TValue value, IValueConverter converter)
+		public void Set(string key, object value, IValueConverter converter)
 		{
 			values[key] = Convert(value, converter);
 		}
 
-		public bool SetStrictIfNotNull(string key, DynamoDBValue value)
+		public bool SetIfNotNull(string key, DynamoDBValue value)
 		{
 			var notNull = value != null;
 			if(notNull)
 				values[key] = value;
 			return notNull;
 		}
-		public bool SetIfNotNull<TValue>(string key, TValue value)
+		public bool SetIfNotNull(string key, DynamoDBValue value, IValueConverter converter)
 		{
-			return SetStrictIfNotNull(key, Convert(value));
+			var notNull = value != null;
+			if(notNull)
+				values[key] = value;
+			return notNull;
 		}
-		public bool SetIfNotNull<TValue>(string key, TValue value, IValueConverter converter)
+		public bool SetIfNotNull(string key, object value)
 		{
-			return SetStrictIfNotNull(key, Convert(value, converter));
+			return SetIfNotNull(key, Convert(value));
+		}
+		public bool SetIfNotNull(string key, object value, IValueConverter converter)
+		{
+			return SetIfNotNull(key, Convert(value, converter));
 		}
 
 		public bool Remove(string key)
