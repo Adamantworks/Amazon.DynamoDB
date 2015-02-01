@@ -29,6 +29,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		TableStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
+		ItemKey GetKey(DynamoDBMap item);
+
 		IConsistentSyntax With(ProjectionExpression projection);
 	}
 
@@ -65,6 +67,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IndexSchema Schema { get; private set; }
 		public TableStatus Status { get; private set; }
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
+
+		public ItemKey GetKey(DynamoDBMap item)
+		{
+			return Schema.Key.GetKey(item);
+		}
 
 		public IConsistentSyntax With(ProjectionExpression projection)
 		{

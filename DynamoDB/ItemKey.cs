@@ -74,27 +74,56 @@ namespace Adamantworks.Amazon.DynamoDB
 			return hash;
 		}
 
-		public static ItemKey CreateStrict(DynamoDBKeyValue hashKey)
+		public static ItemKey Create(DynamoDBKeyValue hashKey)
 		{
 			return new ItemKey(hashKey);
 		}
-		public static ItemKey CreateStrict(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		public static ItemKey Create(DynamoDBKeyValue hashKey, IValueConverter converter)
 		{
-			return new ItemKey(hashKey, rangeKey);
+			return new ItemKey(hashKey);
 		}
-		public static ItemKey Create<THash>(THash hashKey)
+
+		public static ItemKey Create(object hashKey)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey));
 		}
-		public static ItemKey Create<THash>(THash hashKey, IValueConverter converter)
+		public static ItemKey Create(object hashKey, IValueConverter converter)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter));
 		}
-		public static ItemKey Create<THash, TRange>(THash hashKey, TRange rangeKey)
+
+		public static ItemKey Create(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new ItemKey(hashKey, rangeKey);
+		}
+		public static ItemKey Create(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return new ItemKey(hashKey, rangeKey);
+		}
+
+		public static ItemKey Create(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new ItemKey(DynamoDBKeyValue.Convert(hashKey), rangeKey);
+		}
+		public static ItemKey Create(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter), rangeKey);
+		}
+
+		public static ItemKey Create(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return new ItemKey(hashKey, DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public static ItemKey Create(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return new ItemKey(hashKey, DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+
+		public static ItemKey Create(object hashKey, object rangeKey)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey), DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public static ItemKey Create<THash, TRange>(THash hashKey, TRange rangeKey, IValueConverter converter)
+		public static ItemKey Create(object hashKey, object rangeKey, IValueConverter converter)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter), DynamoDBKeyValue.Convert(rangeKey, converter));
 		}

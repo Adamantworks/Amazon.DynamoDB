@@ -171,7 +171,7 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 					throw new InvalidCastException("Range key types does not match schema");
 			}
 			else rangeKeyValue = null;
-			return ItemKey.CreateStrict((DynamoDBKeyValue)hashKeyValue, (DynamoDBKeyValue)rangeKeyValue);
+			return ItemKey.Create((DynamoDBKeyValue)hashKeyValue, (DynamoDBKeyValue)rangeKeyValue);
 		}
 	}
 }

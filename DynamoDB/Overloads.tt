@@ -30,9 +30,9 @@
 	var projection = Param("ProjectionExpression", "projection", "null");
 	var consistent = Param("bool","consistent","false");
 	var cancellationToken = Param("CancellationToken", "cancellationToken","CancellationToken.None");
-	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "ItemKey.CreateStrict(hashKey)");
+	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "ItemKey.Create(hashKey)");
 	var hashKeySkipped = ParamTransform("DynamoDBKeyValue", "hashKey", null);
-	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey", "ItemKey.CreateStrict(hashKey, rangeKey)");
+	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
 	var status = Param("TableStatus","status");
 	var timeout = Param("TimeSpan", "timeout");
 	var provisionedThroughput = ParamTransform("ProvisionedThroughput", "provisionedThroughput","(ProvisionedThroughput?)provisionedThroughput", "null");

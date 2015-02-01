@@ -174,19 +174,19 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region GetAsync
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey)
 		{
-			return eventuallyConsistentContext.GetAsync(ItemKey.CreateStrict(hashKey), CancellationToken.None);
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
 		{
-			return eventuallyConsistentContext.GetAsync(ItemKey.CreateStrict(hashKey), cancellationToken);
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey), cancellationToken);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return eventuallyConsistentContext.GetAsync(ItemKey.CreateStrict(hashKey, rangeKey), CancellationToken.None);
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
-			return eventuallyConsistentContext.GetAsync(ItemKey.CreateStrict(hashKey, rangeKey), cancellationToken);
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key)
 		{
@@ -201,11 +201,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Get
 		public DynamoDBMap Get(DynamoDBKeyValue hashKey)
 		{
-			return eventuallyConsistentContext.Get(ItemKey.CreateStrict(hashKey));
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey));
 		}
 		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return eventuallyConsistentContext.Get(ItemKey.CreateStrict(hashKey, rangeKey));
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey));
 		}
 		public DynamoDBMap Get(ItemKey key)
 		{
@@ -422,19 +422,19 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region GetAsync
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey)
 		{
-			return GetAsync(ItemKey.CreateStrict(hashKey), CancellationToken.None);
+			return GetAsync(ItemKey.Create(hashKey), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
 		{
-			return GetAsync(ItemKey.CreateStrict(hashKey), cancellationToken);
+			return GetAsync(ItemKey.Create(hashKey), cancellationToken);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return GetAsync(ItemKey.CreateStrict(hashKey, rangeKey), CancellationToken.None);
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
-			return GetAsync(ItemKey.CreateStrict(hashKey, rangeKey), cancellationToken);
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key)
 		{
@@ -445,11 +445,11 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region Get
 		public DynamoDBMap Get(DynamoDBKeyValue hashKey)
 		{
-			return Get(ItemKey.CreateStrict(hashKey));
+			return Get(ItemKey.Create(hashKey));
 		}
 		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return Get(ItemKey.CreateStrict(hashKey, rangeKey));
+			return Get(ItemKey.Create(hashKey, rangeKey));
 		}
 		#endregion
 

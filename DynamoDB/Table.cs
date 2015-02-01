@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Adamantworks.Amazon.DynamoDB.Contexts;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -59,7 +60,17 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITryPutSyntax If(PredicateExpression condition, Values values);
 
 		IIfSyntax ForKey(DynamoDBKeyValue hashKey);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(object hashKey);
+		IIfSyntax ForKey(object hashKey, IValueConverter valueConverter);
 		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey);
+		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(object hashKey, object rangeKey);
+		IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter valueConverter);
 		IIfSyntax ForKey(ItemKey key);
 
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
@@ -144,8 +155,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Reload
 		public async Task ReloadAsync(CancellationToken cancellationToken)
 		{
-			var response = await Region.DB.DescribeTableAsync(new Aws.DescribeTableRequest(Name), cancellationToken).ConfigureAwait(false);
-			UpdateTableDescription(response.Table);
+			try
+			{
+				var response = await Region.DB.DescribeTableAsync(new Aws.DescribeTableRequest(Name), cancellationToken).ConfigureAwait(false);
+				UpdateTableDescription(response.Table);
+			}
+			catch(Aws.ResourceNotFoundException)
+			{
+				Status = TableStatus.Deleted;
+			}
 		}
 
 		public void Reload()
@@ -286,18 +304,66 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new PutContext(this, condition, values);
 		}
 
+		#region ForKey
 		public IIfSyntax ForKey(DynamoDBKeyValue hashKey)
 		{
-			return new ModifyContext(this, ItemKey.CreateStrict(hashKey));
+			return new ModifyContext(this, ItemKey.Create(hashKey));
 		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, valueConverter));
+		}
+
+		public IIfSyntax ForKey(object hashKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey));
+		}
+		public IIfSyntax ForKey(object hashKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, valueConverter));
+		}
+
 		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			return new ModifyContext(this, ItemKey.CreateStrict(hashKey, rangeKey));
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
 		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+
+		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
+		}
+		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
+		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+
+		public IIfSyntax ForKey(object hashKey, object rangeKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
+		}
+		public IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+
 		public IIfSyntax ForKey(ItemKey key)
 		{
 			return new ModifyContext(this, key);
 		}
+		#endregion
 
 		#region Put
 		public void PutAsync(IBatchWriteAsync batch, DynamoDBMap item)
