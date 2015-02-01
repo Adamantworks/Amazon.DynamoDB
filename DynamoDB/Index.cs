@@ -34,6 +34,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		IConsistentSyntax With(ProjectionExpression projection);
 	}
 
+	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class Index : IIndex
 	{
 		internal readonly Table Table;

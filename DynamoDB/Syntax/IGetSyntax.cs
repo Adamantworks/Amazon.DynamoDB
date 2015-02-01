@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
+	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface IGetSyntax : IQuerySyntax
 	{
 		Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken);

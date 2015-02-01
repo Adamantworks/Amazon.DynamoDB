@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Adamantworks.Amazon.DynamoDB.Contexts;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
@@ -107,6 +108,20 @@ namespace Adamantworks.Amazon.DynamoDB
 		void UpdateTable(ProvisionedThroughput provisionedThroughput);
 		void UpdateTable(IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		void UpdateTable(ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
+
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(object hashKey);
+		IIfSyntax ForKey(object hashKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey);
+		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey);
+		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(object hashKey, object rangeKey);
+		IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter valueConverter);
+		IIfSyntax ForKey(ItemKey key);
 	}
 
 	internal partial class Table
@@ -176,21 +191,101 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey), CancellationToken.None);
 		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter valueConverter)
 		{
-			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey), cancellationToken);
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, valueConverter), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
 			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
 		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
 		{
-			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key)
 		{
 			return eventuallyConsistentContext.GetAsync(key, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return eventuallyConsistentContext.GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken)
 		{
@@ -203,9 +298,49 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey));
 		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, valueConverter));
+		}
+		public DynamoDBMap Get(object hashKey)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey));
+		}
+		public DynamoDBMap Get(object hashKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, valueConverter));
+		}
 		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
 			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public DynamoDBMap Get(object hashKey, object rangeKey)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(object hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return eventuallyConsistentContext.Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
 		}
 		public DynamoDBMap Get(ItemKey key)
 		{
@@ -262,6 +397,61 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector)
 		{
 			return eventuallyConsistentContext.BatchGetJoin(outerItems, keySelector, resultSelector);
+		}
+		#endregion
+
+		#region ForKey
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey));
+		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, valueConverter));
+		}
+		public IIfSyntax ForKey(object hashKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey));
+		}
+		public IIfSyntax ForKey(object hashKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, valueConverter));
+		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
+		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
+		}
+		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
+		}
+		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public IIfSyntax ForKey(object hashKey, object rangeKey)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
+		}
+		public IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public IIfSyntax ForKey(ItemKey key)
+		{
+			return new ModifyContext(this, key);
 		}
 		#endregion
 
@@ -357,12 +547,42 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public partial interface IGetSyntax
 	{
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter valueConverter);
+		Task<DynamoDBMap> GetAsync(object hashKey);
+		Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter valueConverter);
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey);
+		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter);
+		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey);
+		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter valueConverter);
 		Task<DynamoDBMap> GetAsync(ItemKey key);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter valueConverter, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(object hashKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter valueConverter, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, CancellationToken cancellationToken);
+		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken);
 		DynamoDBMap Get(DynamoDBKeyValue hashKey);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, IValueConverter valueConverter);
+		DynamoDBMap Get(object hashKey);
+		DynamoDBMap Get(object hashKey, IValueConverter valueConverter);
 		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey);
+		DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey);
+		DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter);
+		DynamoDBMap Get(object hashKey, object rangeKey);
+		DynamoDBMap Get(object hashKey, object rangeKey, IValueConverter valueConverter);
 
 		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys);
 		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead);
@@ -424,21 +644,101 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			return GetAsync(ItemKey.Create(hashKey), CancellationToken.None);
 		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter valueConverter)
 		{
-			return GetAsync(ItemKey.Create(hashKey), cancellationToken);
+			return GetAsync(ItemKey.Create(hashKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey)
+		{
+			return GetAsync(ItemKey.Create(hashKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter valueConverter)
+		{
+			return GetAsync(ItemKey.Create(hashKey, valueConverter), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
 			return GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
 		}
-		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
 		{
-			return GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), CancellationToken.None);
 		}
 		public Task<DynamoDBMap> GetAsync(ItemKey key)
 		{
 			return GetAsync(key, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey), cancellationToken);
+		}
+		public Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter valueConverter, CancellationToken cancellationToken)
+		{
+			return GetAsync(ItemKey.Create(hashKey, rangeKey, valueConverter), cancellationToken);
 		}
 		#endregion
 
@@ -447,9 +747,49 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			return Get(ItemKey.Create(hashKey));
 		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, IValueConverter valueConverter)
+		{
+			return Get(ItemKey.Create(hashKey, valueConverter));
+		}
+		public DynamoDBMap Get(object hashKey)
+		{
+			return Get(ItemKey.Create(hashKey));
+		}
+		public DynamoDBMap Get(object hashKey, IValueConverter valueConverter)
+		{
+			return Get(ItemKey.Create(hashKey, valueConverter));
+		}
 		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
 			return Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
+		{
+			return Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
+		}
+		public DynamoDBMap Get(object hashKey, object rangeKey)
+		{
+			return Get(ItemKey.Create(hashKey, rangeKey));
+		}
+		public DynamoDBMap Get(object hashKey, object rangeKey, IValueConverter valueConverter)
+		{
+			return Get(ItemKey.Create(hashKey, rangeKey, valueConverter));
 		}
 		#endregion
 

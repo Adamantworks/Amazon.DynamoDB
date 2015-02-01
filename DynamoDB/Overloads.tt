@@ -31,9 +31,16 @@
 	var consistent = Param("bool","consistent","false");
 	var cancellationToken = Param("CancellationToken", "cancellationToken","CancellationToken.None");
 	var hashKeyOnly = ParamTransform("DynamoDBKeyValue", "hashKey", "ItemKey.Create(hashKey)");
+	var hashKeyObjectOnly = ParamTransform("object", "hashKey", "ItemKey.Create(hashKey)");
 	var hashKeySkipped = ParamTransform("DynamoDBKeyValue", "hashKey", null);
+	var hashKeyObjectSkipped = ParamTransform("object", "hashKey", null);
 	var rangeKey = ParamTransform("DynamoDBKeyValue", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
-	var status = Param("TableStatus","status");
+	var rangeKeyObject = ParamTransform("object", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
+	var rangeKeySkipped = ParamTransform("DynamoDBKeyValue", "rangeKey", null);
+	var rangeKeyObjectSkipped = ParamTransform("object", "rangeKey", null);
+	var valueConverterHash = ParamTransform("IValueConverter", "valueConverter", "ItemKey.Create(hashKey, valueConverter)");
+	var valueConverterHashAndRange = ParamTransform("IValueConverter", "valueConverter", "ItemKey.Create(hashKey, rangeKey, valueConverter)");
+	var status = Param("CollectionStatus","status");
 	var timeout = Param("TimeSpan", "timeout");
 	var provisionedThroughput = ParamTransform("ProvisionedThroughput", "provisionedThroughput","(ProvisionedThroughput?)provisionedThroughput", "null");
 	var indexProvisionedThroughputs = Param("IReadOnlyDictionary<string, ProvisionedThroughput>", "indexProvisionedThroughputs", "null");
@@ -72,9 +79,25 @@
 	var tableName = Param("string", "tableName");
 	var schema = Param("TableSchema", "schema");
 	var indexNameArg = Argument("index.Name");
+	var thisArg = Argument("this");
 
 	Func<IReadOnlyList<Parameter>, bool> noIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(indexProvisionedThroughputs) && ! overload.Contains(provisionedThroughput));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
+
+	var keyOverloads = GenOverloads(true, hashKeyOnly)
+		.Concat(GenOverloads(true, hashKeySkipped, valueConverterHash))
+		.Concat(GenOverloads(true, hashKeyObjectOnly))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, valueConverterHash))
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKeySkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKey))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeySkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKeyObject))
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKeyObjectSkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeyObject))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeyObjectSkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, itemKey))
+		.ToList();
 
 	// Region
 	var listTablesAsync = new Method("IAsyncEnumerable<string>", "ListTablesAsync", GenOverloads(readAhead));
@@ -99,13 +122,8 @@
 		// must pass either provisionedThroughput or indexProvisionedThroughputs
 		.Where(overload => overload.Contains(provisionedThroughput) || overload.Contains(indexProvisionedThroughputs)));
 	var getAsyncForwards = new Method("Task<DynamoDBMap>", "GetAsync", "eventuallyConsistentContext.GetAsync",
-		GenOverloads(true, hashKeyOnly, cancellationToken)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, cancellationToken))
-		.Concat(GenOverloads(true, itemKey, cancellationToken)));
-	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentContext.Get",
-		GenOverloads(true, hashKeyOnly)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
-		.Concat(GenOverloads(true, itemKey)));
+		GenOverloads(true, keyOverloads, cancellationToken));
+	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentContext.Get", keyOverloads);
 	var batchGetAsyncForwards = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync", "eventuallyConsistentContext.BatchGetAsync",
 		GenOverloads(true, keysSyncToAsync, readAhead)
 		.Concat(GenOverloads(true, keysAsync, readAhead)));
@@ -116,6 +134,12 @@
 		.Concat(GenOverloads(true, outerItemsAsync, keySelector, resultSelector, readAhead)));
 	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
 		GenOverloads(true, outerItemsSync, keySelector, resultSelector));
+	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext",  keyOverloads.Select(overload =>
+		{
+			var newOverload = overload.ToList();
+			newOverload.Insert(0, thisArg);
+			return newOverload;
+		}).ToList());
 	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
 		GenOverloads(true, item, returnOldItem, cancellationToken));
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
@@ -132,13 +156,9 @@
 
 	// Syntax
 	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
-		GenOverloads(true, hashKeyOnly, cancellationToken)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey, cancellationToken))
-		.Concat(GenOverloads(itemKey, cancellationToken)));
+		GenOverloads(false, keyOverloads, cancellationToken));
 	var get = new Method("DynamoDBMap", "Get",
-		GenOverloads(true, hashKeyOnly)
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
-		.Concat(GenOverloads(itemKey)));
+		GenOverloads(false, keyOverloads));
 	var batchGetAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync",
 		GenOverloads(true, keysSyncToAsync, readAhead)
 		.Concat(GenOverloads(keysAsync, readAhead)));
@@ -176,6 +196,7 @@
 		.Where(noValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
@@ -212,6 +233,8 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenInterface(updateTableAsync); #>
 <#		GenInterface(updateTable); #>
+
+<#		GenInterface(forKey); #>
 	}
 
 	internal partial class Table
@@ -235,6 +258,8 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(batchGetJoinAsyncForwards); #>
 
 <#		GenMethods(batchGetJoinForwards); #>
+
+<#		GenMethods(forKey); #>
 
 <#		GenMethods(putAsyncForwards); #>
 
@@ -368,14 +393,20 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(params Parameter[] parameters)
 	{
-		return GenOverloads(false, parameters);
+		return GenOverloads(false, Enumerable.Empty<IReadOnlyList<Parameter>>(), parameters);
 	}
 
 	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(bool includeAll, params Parameter[] parameters)
 	{
+		return GenOverloads(includeAll, Enumerable.Empty<IReadOnlyList<Parameter>>(), parameters);
+	}
+
+	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(bool includeAll, IEnumerable<IReadOnlyList<Parameter>> baseOverloads, params Parameter[] parameters)
+	{
 		var paramsList = parameters.ToList();
-		var overloads = new List<List<Parameter>>();
-		overloads.Add(new List<Parameter>());
+		var overloads = baseOverloads.Select(overload => overload.ToList()).ToList();
+		if(overloads.Count == 0) // Empty base to start from
+			overloads.Add(new List<Parameter>());
 		foreach(var param in parameters)
 		{
 			// params that exist only to pass values, or aren't optional, we tack onto all overloads

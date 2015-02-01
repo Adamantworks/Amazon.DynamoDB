@@ -28,7 +28,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	// See Overloads.tt and Overloads.cs for more method overloads of this interface
+	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface ITable : IConsistentOrScanSyntax, IPutSyntax
 	{
 		string Name { get; }
@@ -59,20 +59,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITryPutSyntax If(PredicateExpression condition);
 		ITryPutSyntax If(PredicateExpression condition, Values values);
 
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter valueConverter);
-		IIfSyntax ForKey(object hashKey);
-		IIfSyntax ForKey(object hashKey, IValueConverter valueConverter);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
-		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey);
-		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter);
-		IIfSyntax ForKey(object hashKey, object rangeKey);
-		IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter valueConverter);
-		IIfSyntax ForKey(ItemKey key);
-
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		void Put(IBatchWrite batch, DynamoDBMap item);
 
@@ -88,7 +74,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		void Delete(IBatchWrite batch, ItemKey key);
 	}
 
-	// See Overloads.tt and Overloads.cs for more method overloads of this class
+	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class Table : ITable
 	{
 		internal readonly Region Region;
@@ -303,67 +289,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new PutContext(this, condition, values);
 		}
-
-		#region ForKey
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter valueConverter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, valueConverter));
-		}
-
-		public IIfSyntax ForKey(object hashKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey));
-		}
-		public IIfSyntax ForKey(object hashKey, IValueConverter valueConverter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, valueConverter));
-		}
-
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
-		}
-
-		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter valueConverter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
-		}
-
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter valueConverter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
-		}
-
-		public IIfSyntax ForKey(object hashKey, object rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter valueConverter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, valueConverter));
-		}
-
-		public IIfSyntax ForKey(ItemKey key)
-		{
-			return new ModifyContext(this, key);
-		}
-		#endregion
 
 		#region Put
 		public void PutAsync(IBatchWriteAsync batch, DynamoDBMap item)
