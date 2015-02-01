@@ -24,7 +24,7 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public class Values : IAwsAttributeValuesProvider
 	{
-		public static Values Empty = new Values();
+		public static readonly Values Empty = new Values();
 
 		private readonly DynamoDBMap values;
 
@@ -32,21 +32,50 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			values = new DynamoDBMap();
 		}
-		internal Values(DynamoDBMap values)
+		private Values(DynamoDBMap values)
 		{
 			this.values = values;
 		}
 
 		#region Static Factory Methods
+		public static Values Named(object namedValues) // overload needed to avoid ambiguous call when no positional args supplied
+		{
+			var values = new DynamoDBMap();
+			AddValues(values, namedValues, DynamoDBValueConverters.Default);
+			return new Values(values);
+		}
 		public static Values Named(object namedValues, params object[] positionalValues)
 		{
-			return Named(DynamoDBValueConverters.Default, namedValues, positionalValues);
+			var values = new DynamoDBMap();
+			AddValues(values, namedValues, DynamoDBValueConverters.Default);
+			AddValues(values, positionalValues, DynamoDBValueConverters.Default);
+			return new Values(values);
+		}
+		public static Values Named(object namedValues, params DynamoDBValue[] positionalValues)
+		{
+			var values = new DynamoDBMap();
+			AddValues(values, namedValues, DynamoDBValueConverters.Default);
+			AddValues(values, positionalValues);
+			return new Values(values);
+		}
+		public static Values Named(IValueConverter converter, object namedValues) // overload needed to avoid ambiguous call when no positional args supplied
+		{
+			var values = new DynamoDBMap();
+			AddValues(values, namedValues, converter);
+			return new Values(values);
 		}
 		public static Values Named(IValueConverter converter, object namedValues, params object[] positionalValues)
 		{
 			var values = new DynamoDBMap();
-			Build(values, converter, namedValues);
-			Build(values, converter, positionalValues);
+			AddValues(values, namedValues, converter);
+			AddValues(values, positionalValues, converter);
+			return new Values(values);
+		}
+		public static Values Named(IValueConverter converter, object namedValues, params DynamoDBValue[] positionalValues)
+		{
+			var values = new DynamoDBMap();
+			AddValues(values, namedValues, converter);
+			AddValues(values, positionalValues);
 			return new Values(values);
 		}
 
@@ -57,18 +86,17 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static Values Of(IValueConverter converter, params object[] positionalValues)
 		{
 			var values = new DynamoDBMap();
-			Build(values, converter, positionalValues);
+			AddValues(values, positionalValues, converter);
 			return new Values(values);
 		}
 		public static Values Of(params DynamoDBValue[] positionalValues)
 		{
 			var values = new DynamoDBMap();
-			for(var i = 0; i < positionalValues.Length; i++)
-				values.Add(BuildName(i), positionalValues[i]);
+			AddValues(values, positionalValues);
 			return new Values(values);
 		}
 
-		private static void Build(DynamoDBMap values, IValueConverter converter, object namedValues)
+		private static void AddValues(DynamoDBMap values, object namedValues, IValueConverter converter)
 		{
 			foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(namedValues))
 			{
@@ -82,7 +110,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				values.Add(BuildName(descriptor.Name), toValue);
 			}
 		}
-		private static void Build(DynamoDBMap values, IValueConverter converter, IList<object> positionalValues)
+		private static void AddValues(DynamoDBMap values, IList<object> positionalValues, IValueConverter converter)
 		{
 			for(var i = 0; i < positionalValues.Count; i++)
 			{
@@ -95,6 +123,11 @@ namespace Adamantworks.Amazon.DynamoDB
 
 				values.Add(BuildName(i), toValue);
 			}
+		}
+		private static void AddValues(DynamoDBMap values, DynamoDBValue[] positionalValues)
+		{
+			for(var i = 0; i < positionalValues.Length; i++)
+				values.Add(BuildName(i), positionalValues[i]);
 		}
 
 		private static string BuildName(string name)
@@ -122,22 +155,22 @@ namespace Adamantworks.Amazon.DynamoDB
 			values.Add(BuildName(position), value);
 			return this;
 		}
-		public Values Add<T>(string name, T value)
+		public Values Add(string name, object value)
 		{
 			values.Add(name, DynamoDBValue.Convert(value));
 			return this;
 		}
-		public Values Add<T>(string name, T value, IValueConverter converter)
+		public Values Add(string name, object value, IValueConverter converter)
 		{
 			values.Add(name, DynamoDBValue.Convert(value, converter));
 			return this;
 		}
-		public Values Add<T>(int position, T value)
+		public Values Add(int position, object value)
 		{
 			values.Add(BuildName(position), DynamoDBValue.Convert(value));
 			return this;
 		}
-		public Values Add<T>(int position, T value, IValueConverter converter)
+		public Values Add(int position, object value, IValueConverter converter)
 		{
 			values.Add(BuildName(position), DynamoDBValue.Convert(value, converter));
 			return this;
