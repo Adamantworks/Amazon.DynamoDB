@@ -41,7 +41,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var request = BuildPutItemRequest(item, returnOldItem);
 			var response = await table.Region.DB.PutItemAsync(request, cancellationToken).ConfigureAwait(false);
 			if(!returnOldItem) return null;
-			return response.Attributes.ToGetValue();
+			return response.Attributes.ToNonEmptyMap();
 		}
 
 		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
@@ -49,7 +49,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var request = BuildPutItemRequest(item, returnOldItem);
 			var response = table.Region.DB.PutItem(request);
 			if(!returnOldItem) return null;
-			return response.Attributes.ToGetValue();
+			return response.Attributes.ToNonEmptyMap();
 		}
 
 		private Aws.PutItemRequest BuildPutItemRequest(DynamoDBMap item, bool returnOldItem)

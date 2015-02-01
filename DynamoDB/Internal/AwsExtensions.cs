@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
 using AwsEnums = Amazon.DynamoDBv2;
 
@@ -28,12 +27,12 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 	{
 		private static readonly object[] NoArgs = new object[0];
 
-		public static DynamoDBMap ToValue(this Dictionary<string, Aws.AttributeValue> values)
+		public static DynamoDBMap ToMap(this Dictionary<string, Aws.AttributeValue> values)
 		{
 			return new DynamoDBMap(values);
 		}
 
-		public static DynamoDBMap ToGetValue(this Dictionary<string, Aws.AttributeValue> values)
+		public static DynamoDBMap ToNonEmptyMap(this Dictionary<string, Aws.AttributeValue> values)
 		{
 			if(values == null || values.Count == 0) return null;
 			return new DynamoDBMap(values);
@@ -67,7 +66,7 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			// Now we have to start using reflection because the rest are indistinguishable through the public API
 			if(IsBool(value))
 				return (DynamoDBBoolean)value.BOOL;
-			if(value.L != null)
+			if(value.L != null) // This is still picking up the case of an empty map due to the limitations of the AWS SDK
 				return new DynamoDBList(value.L.Select(ToValue));
 			if(value.M != null)
 				return new DynamoDBMap(value.M);

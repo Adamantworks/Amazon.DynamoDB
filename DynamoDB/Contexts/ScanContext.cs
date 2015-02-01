@@ -81,7 +81,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 							request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 						return region.DB.ScanAsync(request, cancellationToken);
 					},
-					lastResponse => lastResponse.Items.Select(item => item.ToValue()),
+					lastResponse => lastResponse.Items.Select(item => item.ToMap()),
 					IsComplete,
 					readAhead);
 			});
@@ -96,7 +96,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 				lastResponse = region.DB.Scan(request);
 				foreach(var item in lastResponse.Items)
-					yield return item.ToValue();
+					yield return item.ToMap();
 			} while(!IsComplete(lastResponse));
 		}
 		#endregion

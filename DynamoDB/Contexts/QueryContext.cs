@@ -340,7 +340,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 							request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 						return region.DB.QueryAsync(request, cancellationToken);
 					},
-					lastResponse => lastResponse.Items.Select(item => item.ToValue()),
+					lastResponse => lastResponse.Items.Select(item => item.ToMap()),
 					IsComplete,
 					readAhead);
 			});
@@ -355,7 +355,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				if(lastResponse != null)
 					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 				lastResponse = await region.DB.QueryAsync(request, cancellationToken).ConfigureAwait(false);
-				items.AddRange(lastResponse.Items.Select(item => item.ToValue()));
+				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
 			} while(!IsComplete(lastResponse));
 			var lastEvaluatedKey = lastResponse.LastEvaluatedKey;
 			return new ItemPage(items, lastEvaluatedKey != null ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));
@@ -370,7 +370,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 				lastResponse = region.DB.Query(request);
 				foreach(var item in lastResponse.Items)
-					yield return item.ToValue();
+					yield return item.ToMap();
 			} while(!IsComplete(lastResponse));
 		}
 		private ItemPage QueryPaged(Dictionary<string, Aws.Condition> keyConditions)
@@ -383,7 +383,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				if(lastResponse != null)
 					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 				lastResponse = region.DB.Query(request);
-				items.AddRange(lastResponse.Items.Select(item => item.ToValue()));
+				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
 			} while(!IsComplete(lastResponse));
 			var lastEvaluatedKey = lastResponse.LastEvaluatedKey;
 			return new ItemPage(items, lastEvaluatedKey != null ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));

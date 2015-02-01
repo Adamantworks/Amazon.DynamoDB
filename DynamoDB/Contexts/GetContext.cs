@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Syntax;
-using Amazon.DynamoDBv2.Model;
+using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -56,19 +56,19 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			var request = BuildGetRequest(key);
 			var result = await table.Region.DB.GetItemAsync(request, cancellationToken).ConfigureAwait(false);
-			return result.Item.ToGetValue();
+			return result.Item.ToNonEmptyMap();
 		}
 
 		public DynamoDBMap Get(ItemKey key)
 		{
 			var request = BuildGetRequest(key);
 			var result = table.Region.DB.GetItem(request);
-			return result.Item.ToGetValue();
+			return result.Item.ToNonEmptyMap();
 		}
 
-		private global::Amazon.DynamoDBv2.Model.GetItemRequest BuildGetRequest(ItemKey key)
+		private Aws.GetItemRequest BuildGetRequest(ItemKey key)
 		{
-			var request = new global::Amazon.DynamoDBv2.Model.GetItemRequest()
+			var request = new Aws.GetItemRequest()
 			{
 				TableName = table.Name,
 				Key = key.ToAws(table.Schema.Key),
@@ -91,10 +91,10 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return AsyncEnumerable.Using(awsKeys.GetEnumerator, enumerator =>
 			{
 				// These must be in the using so they are deferred until GetEnumerator() is called on us (need one per enumerator)
-				var batchKeys = new List<Dictionary<string, AttributeValue>>(Limits.BatchGetSize);
+				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 				var request = BuildBatchGetItemRequest(batchKeys);
 
-				return AsyncEnumerableEx.GenerateChunked<global::Amazon.DynamoDBv2.Model.BatchGetItemResponse, DynamoDBMap>(null,
+				return AsyncEnumerableEx.GenerateChunked<Aws.BatchGetItemResponse, DynamoDBMap>(null,
 					async (lastResponse, cancellationToken) =>
 					{
 						while(batchKeys.Count < Limits.BatchGetSize && await enumerator.MoveNext().ConfigureAwait(false))
@@ -109,7 +109,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 						return response;
 					},
-					lastResponse => lastResponse != null ? lastResponse.Responses[table.Name].Select(item => item.ToGetValue()) : Enumerable.Empty<DynamoDBMap>(),
+					lastResponse => lastResponse != null ? lastResponse.Responses[table.Name].Select(item => item.ToNonEmptyMap()) : Enumerable.Empty<DynamoDBMap>(),
 					lastResponse => lastResponse == null,
 					readAhead);
 			});
@@ -119,7 +119,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			var awsKeys = keys.Select(k => k.ToAws(table.Schema.Key));
 
-			var batchKeys = new List<Dictionary<string, AttributeValue>>(Limits.BatchGetSize);
+			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 			var request = BuildBatchGetItemRequest(batchKeys);
 
 			using(var enumerator = awsKeys.GetEnumerator())
@@ -137,14 +137,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					ReBatchUnprocessedKeys(response, batchKeys);
 
 					foreach(var item in response.Responses[table.Name])
-						yield return item.ToGetValue();
+						yield return item.ToNonEmptyMap();
 				}
 			}
 		}
 
-		private global::Amazon.DynamoDBv2.Model.BatchGetItemRequest BuildBatchGetItemRequest(List<Dictionary<string, AttributeValue>> batchKeys)
+		private Aws.BatchGetItemRequest BuildBatchGetItemRequest(List<Dictionary<string, Aws.AttributeValue>> batchKeys)
 		{
-			var keysAndAttributes = new global::Amazon.DynamoDBv2.Model.KeysAndAttributes()
+			var keysAndAttributes = new Aws.KeysAndAttributes()
 			{
 				Keys = batchKeys,
 				ConsistentRead = consistentRead ?? false,
@@ -154,16 +154,16 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				keysAndAttributes.ProjectionExpression = projection.Expression;
 				keysAndAttributes.ExpressionAttributeNames = AwsAttributeNames.Get(projection);
 			}
-			var request = new global::Amazon.DynamoDBv2.Model.BatchGetItemRequest()
+			var request = new Aws.BatchGetItemRequest()
 			{
-				RequestItems = new Dictionary<string, KeysAndAttributes>()
+				RequestItems = new Dictionary<string, Aws.KeysAndAttributes>()
 				{
 					{table.Name, keysAndAttributes}
 				},
 			};
 			return request;
 		}
-		private void ReBatchUnprocessedKeys(global::Amazon.DynamoDBv2.Model.BatchGetItemResponse response, List<Dictionary<string, AttributeValue>> batchKeys)
+		private void ReBatchUnprocessedKeys(Aws.BatchGetItemResponse response, List<Dictionary<string, Aws.AttributeValue>> batchKeys)
 		{
 			batchKeys.Clear();
 			if(response.UnprocessedKeys.Count > 0)
@@ -179,7 +179,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				// These must be in the using so they are deferred until GetEnumerator() is called on us (need one per enumerator)
 				var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
 				var batchItems = new Dictionary<ItemKey, T>(Limits.BatchGetSize);
-				var batchKeys = new List<Dictionary<string, AttributeValue>>(Limits.BatchGetSize);
+				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 				var request = BuildBatchGetItemRequest(batchKeys);
 
 				return AsyncEnumerableEx.GenerateChunked<Tuple<List<TResult>, bool>, TResult>(null,
@@ -227,7 +227,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
 			var batchItems = new Dictionary<ItemKey, T>(Limits.BatchGetSize);
-			var batchKeys = new List<Dictionary<string, AttributeValue>>(Limits.BatchGetSize);
+			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 			var request = BuildBatchGetItemRequest(batchKeys);
 
 			using(var enumerator = outerItems.GetEnumerator())
@@ -265,11 +265,11 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			}
 		}
 
-		private IDictionary<ItemKey, T> ProcessResponse<T>(global::Amazon.DynamoDBv2.Model.BatchGetItemResponse response, IDictionary<ItemKey, DynamoDBMap> innerItems, IDictionary<ItemKey, T> batchItems)
+		private IDictionary<ItemKey, T> ProcessResponse<T>(Aws.BatchGetItemResponse response, IDictionary<ItemKey, DynamoDBMap> innerItems, IDictionary<ItemKey, T> batchItems)
 		{
 			foreach(var item in response.Responses[table.Name])
 			{
-				var innerItem = item.ToGetValue();
+				var innerItem = item.ToNonEmptyMap();
 				if(innerItem != null)
 					innerItems.Add(table.GetKey(innerItem), innerItem);
 			}
@@ -292,7 +292,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				innerItems.Add(key, null); // Add that the key was not found, for future lookups
 			return innerItem; // innerItem == null if TryGetValue returned false
 		}
-		private static void ReBatchUnprocessedKeys<T>(IDictionary<ItemKey, T> batchItems, IList<Dictionary<string, AttributeValue>> batchKeys, IDictionary<ItemKey, T> unprocessedItems)
+		private static void ReBatchUnprocessedKeys<T>(IDictionary<ItemKey, T> batchItems, IList<Dictionary<string, Aws.AttributeValue>> batchKeys, IDictionary<ItemKey, T> unprocessedItems)
 		{
 			batchItems.Clear();
 			batchKeys.Clear();
