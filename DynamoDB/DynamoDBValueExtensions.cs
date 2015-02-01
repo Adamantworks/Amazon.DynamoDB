@@ -18,7 +18,7 @@ using System;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public static class DynamoDBValueConverterExtensions
+	public static class DynamoDBValueExtensions
 	{
 		public static T To<T>(this DynamoDBValue value)
 		{
