@@ -14,14 +14,18 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
+	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface ITryModifySyntax : IModifySyntax
 	{
 		Task<bool> TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
 		bool TryUpdate(UpdateExpression update, Values values);
 
-		// TODO add TryDelete here
+		Task<bool> TryDeleteAsync();
+		Task<bool> TryDeleteAsync(CancellationToken cancellationToken);
+		bool TryDelete();
 	}
 }

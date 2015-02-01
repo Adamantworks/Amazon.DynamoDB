@@ -17,9 +17,11 @@ using System.Collections.Generic;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
+	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public interface IQueryRangeSyntax
 	{
 		// TODO change default values to overloads
+		// TODO add overloads with object and value converter
 
 		IAsyncEnumerable<DynamoDBMap> AllKeysAsync(ReadAhead readAhead = ReadAhead.Some);
 		IEnumerable<DynamoDBMap> AllKeys();

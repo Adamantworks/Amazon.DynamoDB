@@ -141,5 +141,45 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return request;
 		}
 		#endregion
+
+		#region TryDelete
+		public async Task<bool> TryDeleteAsync()
+		{
+			try
+			{
+				await DeleteAsync(false, CancellationToken.None).ConfigureAwait(false);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
+		}
+		public async Task<bool> TryDeleteAsync(CancellationToken cancellationToken)
+		{
+			try
+			{
+				await DeleteAsync(false, cancellationToken).ConfigureAwait(false);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
+		}
+
+		public bool TryDelete()
+		{
+			try
+			{
+				Delete(false);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
+		}
+		#endregion
 	}
 }

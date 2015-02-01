@@ -18,9 +18,11 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
+	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public interface IPagedQueryRangeSyntax
 	{
 		// TODO change default values to overloads
+		// TODO add overloads with object and value converter
 
 		Task<ItemPage> AllKeysAsync(CancellationToken cancellationToken = default(CancellationToken));
 		ItemPage AllKeys();
