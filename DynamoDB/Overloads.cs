@@ -95,8 +95,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	{
 		Task ReloadAsync();
 
-		Task WaitUntilNotAsync(TableStatus status);
-		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout);
+		Task WaitUntilNotAsync(CollectionStatus status);
+		Task WaitUntilNotAsync(CollectionStatus status, TimeSpan timeout);
 
 		Task UpdateTableAsync(ProvisionedThroughput provisionedThroughput);
 		Task UpdateTableAsync(IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
@@ -119,11 +119,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region WaitUntilNotAsync
-		public Task WaitUntilNotAsync(TableStatus status)
+		public Task WaitUntilNotAsync(CollectionStatus status)
 		{
 			return WaitUntilNotAsync(status, CancellationToken.None);
 		}
-		public Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout)
+		public Task WaitUntilNotAsync(CollectionStatus status, TimeSpan timeout)
 		{
 			return WaitUntilNotAsync(status, timeout, CancellationToken.None);
 		}

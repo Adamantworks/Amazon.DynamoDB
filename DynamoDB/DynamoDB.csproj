@@ -125,7 +125,7 @@
     <Compile Include="Schema\AttributeSchema.cs" />
     <Compile Include="Schema\KeySchema.cs" />
     <Compile Include="Schema\TableSchema.cs" />
-    <Compile Include="TableStatus.cs" />
+    <Compile Include="CollectionStatus.cs" />
     <Compile Include="UpdateExpression.cs" />
     <Compile Include="DynamoDBValues\DynamoDBBinary.cs" />
     <Compile Include="DynamoDBValues\DynamoDBBoolean.cs" />

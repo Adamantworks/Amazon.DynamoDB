@@ -26,7 +26,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITable Table { get; }
 		string Name { get; }
 		IndexSchema Schema { get; }
-		TableStatus Status { get; }
+		CollectionStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
 		ItemKey GetKey(DynamoDBMap item);
@@ -53,7 +53,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			//TODO in debug check that index names match
 			Schema = schema;
 			ProvisionedThroughput = description.ProvisionedThroughput.ToInfo();
-			Status = description.IndexStatus.ToTableStatus();
+			Status = description.IndexStatus.ToCollectionStatus();
 		}
 		internal void UpdateDescription(Aws.LocalSecondaryIndexDescription description, IndexSchema schema)
 		{
@@ -65,7 +65,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITable IIndex.Table { get { return Table; } }
 		public string Name { get; private set; }
 		public IndexSchema Schema { get; private set; }
-		public TableStatus Status { get; private set; }
+		public CollectionStatus Status { get; private set; }
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		public ItemKey GetKey(DynamoDBMap item)

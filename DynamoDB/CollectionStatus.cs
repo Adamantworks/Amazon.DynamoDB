@@ -14,7 +14,7 @@
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public enum TableStatus
+	public enum CollectionStatus
 	{
 		Active,
 		Creating,

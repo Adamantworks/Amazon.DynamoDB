@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -23,7 +24,10 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public ProvisionedThroughput(long readCapacityUnits, long writeCapacityUnits)
 		{
-			// TODO add validation here
+			if(readCapacityUnits < 1)
+				throw new ArgumentOutOfRangeException("readCapacityUnits", "Must be >= 1");
+			if(writeCapacityUnits < 1)
+				throw new ArgumentOutOfRangeException("writeCapacityUnits", "Must be >= 1");
 			this.readCapacityUnits = readCapacityUnits;
 			this.writeCapacityUnits = writeCapacityUnits;
 		}

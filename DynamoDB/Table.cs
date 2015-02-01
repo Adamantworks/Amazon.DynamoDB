@@ -37,16 +37,16 @@ namespace Adamantworks.Amazon.DynamoDB
 		DateTime CreationDateTime { get; }
 		long ItemCount { get; }
 		long SizeInBytes { get; }
-		TableStatus Status { get; }
+		CollectionStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
 		Task ReloadAsync(CancellationToken cancellationToken);
 		void Reload();
 
-		Task WaitUntilNotAsync(TableStatus status, CancellationToken cancellationToken);
-		Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout, CancellationToken cancellationToken);
-		void WaitUntilNot(TableStatus status);
-		void WaitUntilNot(TableStatus status, TimeSpan timeout);
+		Task WaitUntilNotAsync(CollectionStatus status, CancellationToken cancellationToken);
+		Task WaitUntilNotAsync(CollectionStatus status, TimeSpan timeout, CancellationToken cancellationToken);
+		void WaitUntilNot(CollectionStatus status);
+		void WaitUntilNot(CollectionStatus status, TimeSpan timeout);
 
 		// The overloads of these methods are in Overloads.tt and call the private implementations
 		// Task UpdateTableAsync(...);
@@ -110,9 +110,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
 		{
 			Name = tableDescription.TableName;
-			Status = tableDescription.TableStatus.ToTableStatus();
+			Status = tableDescription.TableStatus.ToCollectionStatus();
 			// Handle state where all schema info is gone
-			if(Status == TableStatus.Deleting && tableDescription.AttributeDefinitions.Count == 0) return;
+			if(Status == CollectionStatus.Deleting && tableDescription.AttributeDefinitions.Count == 0) return;
 			Schema = tableDescription.ToSchema();
 			CreationDateTime = tableDescription.CreationDateTime;
 			ItemCount = tableDescription.ItemCount;
@@ -149,7 +149,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public DateTime CreationDateTime { get; private set; }
 		public long ItemCount { get; private set; }
 		public long SizeInBytes { get; private set; }
-		public TableStatus Status { get; private set; }
+		public CollectionStatus Status { get; private set; }
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 
 		#region Reload
@@ -162,7 +162,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			}
 			catch(Aws.ResourceNotFoundException)
 			{
-				Status = TableStatus.Deleted;
+				Status = CollectionStatus.Deleted;
 			}
 		}
 
@@ -175,13 +175,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			}
 			catch(Aws.ResourceNotFoundException)
 			{
-				Status = TableStatus.Deleted;
+				Status = CollectionStatus.Deleted;
 			}
 		}
 		#endregion
 
 		#region WaitUntilNot
-		public async Task WaitUntilNotAsync(TableStatus status, CancellationToken cancellationToken)
+		public async Task WaitUntilNotAsync(CollectionStatus status, CancellationToken cancellationToken)
 		{
 			CheckCanWaitUntilNot(status);
 			await ReloadAsync(cancellationToken).ConfigureAwait(false);
@@ -191,7 +191,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				await ReloadAsync(cancellationToken).ConfigureAwait(false);
 			}
 		}
-		public async Task WaitUntilNotAsync(TableStatus status, TimeSpan timeout, CancellationToken cancellationToken)
+		public async Task WaitUntilNotAsync(CollectionStatus status, TimeSpan timeout, CancellationToken cancellationToken)
 		{
 			CheckCanWaitUntilNot(status);
 			await ReloadAsync(cancellationToken).ConfigureAwait(false);
@@ -204,7 +204,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			}
 		}
 
-		public void WaitUntilNot(TableStatus status)
+		public void WaitUntilNot(CollectionStatus status)
 		{
 			CheckCanWaitUntilNot(status);
 			Reload();
@@ -214,7 +214,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				Reload();
 			}
 		}
-		public void WaitUntilNot(TableStatus status, TimeSpan timeout)
+		public void WaitUntilNot(CollectionStatus status, TimeSpan timeout)
 		{
 			CheckCanWaitUntilNot(status);
 			Reload();
@@ -227,13 +227,13 @@ namespace Adamantworks.Amazon.DynamoDB
 			}
 		}
 
-		private static void CheckCanWaitUntilNot(TableStatus status)
+		private static void CheckCanWaitUntilNot(CollectionStatus status)
 		{
 			switch(status)
 			{
-				case TableStatus.Creating:
-				case TableStatus.Updating:
-				case TableStatus.Deleting:
+				case CollectionStatus.Creating:
+				case CollectionStatus.Updating:
+				case CollectionStatus.Deleting:
 					return;
 				default:
 					throw new ArgumentException("Can only wait on transient status (Creating, Updating, Deleting)", "status");

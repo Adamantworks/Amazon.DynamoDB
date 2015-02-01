@@ -124,30 +124,30 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			throw new NotSupportedException(string.Format("ScalarAttributeType '{0}' not supported", attributeType.Value));
 		}
 
-		public static TableStatus ToTableStatus(this AwsEnums.TableStatus tableStatus)
+		public static CollectionStatus ToCollectionStatus(this AwsEnums.TableStatus tableStatus)
 		{
 			if(tableStatus == AwsEnums.TableStatus.ACTIVE)
-				return TableStatus.Active;
+				return CollectionStatus.Active;
 			if(tableStatus == AwsEnums.TableStatus.UPDATING)
-				return TableStatus.Updating;
+				return CollectionStatus.Updating;
 			if(tableStatus == AwsEnums.TableStatus.CREATING)
-				return TableStatus.Creating;
+				return CollectionStatus.Creating;
 			if(tableStatus == AwsEnums.TableStatus.DELETING)
-				return TableStatus.Deleting;
+				return CollectionStatus.Deleting;
 
 			throw new NotSupportedException(string.Format("TableStatus '{0}' not supported", tableStatus.Value));
 		}
 
-		public static TableStatus ToTableStatus(this AwsEnums.IndexStatus indexStatus)
+		public static CollectionStatus ToCollectionStatus(this AwsEnums.IndexStatus indexStatus)
 		{
 			if(indexStatus == AwsEnums.IndexStatus.ACTIVE)
-				return TableStatus.Active;
+				return CollectionStatus.Active;
 			if(indexStatus == AwsEnums.IndexStatus.UPDATING)
-				return TableStatus.Updating;
+				return CollectionStatus.Updating;
 			if(indexStatus == AwsEnums.IndexStatus.CREATING)
-				return TableStatus.Creating;
+				return CollectionStatus.Creating;
 			if(indexStatus == AwsEnums.IndexStatus.DELETING)
-				return TableStatus.Deleting;
+				return CollectionStatus.Deleting;
 
 			throw new NotSupportedException(string.Format("IndexStatus '{0}' not supported", indexStatus.Value));
 		}
