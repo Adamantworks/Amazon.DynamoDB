@@ -75,7 +75,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
 				key2);
 		}
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, IValueConverter converter)
@@ -89,7 +89,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Join(
 				key1,
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, object key2, IValueConverter converter)
 		{
@@ -101,8 +101,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, object key2)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(object key1, object key2, IValueConverter converter)
 		{
@@ -131,7 +131,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
 				key2,
 				key3);
 		}
@@ -147,7 +147,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Join(
 				key1,
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
 				key3);
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, IValueConverter converter)
@@ -163,7 +163,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Join(
 				key1,
 				key2,
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, IValueConverter converter)
 		{
@@ -176,8 +176,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
 				key3);
 		}
 		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, IValueConverter converter)
@@ -191,9 +191,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
 				key2,
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, IValueConverter converter)
 		{
@@ -207,8 +207,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Join(
 				key1,
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, IValueConverter converter)
 		{
@@ -221,9 +221,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, object key2, object key3)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(object key1, object key2, object key3, IValueConverter converter)
 		{
@@ -255,7 +255,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
 				key2,
 				key3,
 				key4);
@@ -273,7 +273,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Join(
 				key1,
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
 				key3,
 				key4);
 		}
@@ -291,7 +291,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Join(
 				key1,
 				key2,
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
 				key4);
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, IValueConverter converter)
@@ -309,7 +309,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				key1,
 				key2,
 				key3,
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, IValueConverter converter)
 		{
@@ -323,8 +323,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
 				key3,
 				key4);
 		}
@@ -340,9 +340,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
 				key2,
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
 				key4);
 		}
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, IValueConverter converter)
@@ -357,10 +357,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
 				key2,
 				key3,
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, IValueConverter converter)
 		{
@@ -375,8 +375,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Join(
 				key1,
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
 				key4);
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, DynamoDBScalar key4, IValueConverter converter)
@@ -392,9 +392,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Join(
 				key1,
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
 				key3,
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, object key4, IValueConverter converter)
 		{
@@ -410,8 +410,8 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Join(
 				key1,
 				key2,
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, object key4, IValueConverter converter)
 		{
@@ -425,9 +425,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
 				key4);
 		}
 		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4, IValueConverter converter)
@@ -442,10 +442,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
 				key3,
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4, IValueConverter converter)
 		{
@@ -459,10 +459,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
 				key2,
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4, IValueConverter converter)
 		{
@@ -477,9 +477,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return Join(
 				key1,
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, object key4, IValueConverter converter)
 		{
@@ -493,10 +493,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static DynamoDBString Value(object key1, object key2, object key3, object key4)
 		{
 			return Join(
-				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.CompositeValueDefault));
 		}
 		public static DynamoDBString Value(object key1, object key2, object key3, object key4, IValueConverter converter)
 		{
@@ -524,7 +524,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBString value)
 		{
-			return Split<T1, T2>(value, DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2>(value, DynamoDBValueConverters.CompositeValueDefault);
 		}
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBString value, IValueConverter converter)
 		{
@@ -538,7 +538,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBString value)
 		{
-			return Split<T1, T2, T3>(value, DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2, T3>(value, DynamoDBValueConverters.CompositeValueDefault);
 		}
 		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBString value, IValueConverter converter)
 		{
@@ -553,7 +553,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBString value)
 		{
-			return Split<T1, T2, T3, T4>(value, DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2, T3, T4>(value, DynamoDBValueConverters.CompositeValueDefault);
 		}
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBString value, IValueConverter converter)
 		{
@@ -570,7 +570,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBValue value)
 		{
-			return Split<T1, T2>(AsString(value), DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2>(AsString(value), DynamoDBValueConverters.CompositeValueDefault);
 		}
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBValue value, IValueConverter converter)
 		{
@@ -578,7 +578,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBValue value)
 		{
-			return Split<T1, T2, T3>(AsString(value), DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2, T3>(AsString(value), DynamoDBValueConverters.CompositeValueDefault);
 		}
 		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBValue value, IValueConverter converter)
 		{
@@ -586,7 +586,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBValue value)
 		{
-			return Split<T1, T2, T3, T4>(AsString(value), DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2, T3, T4>(AsString(value), DynamoDBValueConverters.CompositeValueDefault);
 		}
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBValue value, IValueConverter converter)
 		{

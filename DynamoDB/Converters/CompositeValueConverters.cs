@@ -16,7 +16,7 @@ using Adamantworks.Amazon.DynamoDB.Converters.Composite;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters
 {
-	public static class CompositeConverters
+	public static class CompositeValueConverters
 	{
 		public static readonly IValueConverter ViaNumber = new ViaNumberConverter();
 		public static readonly IValueConverter ViaBinary = new ViaBinaryConverter();

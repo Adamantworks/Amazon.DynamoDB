@@ -58,7 +58,7 @@
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
     <Compile Include="Converters\Basic\SetConverter.cs" />
-    <Compile Include="Converters\CompositeConverters.cs" />
+    <Compile Include="Converters\CompositeValueConverters.cs" />
     <Compile Include="Converters\Composite\ViaBinaryConverter.cs" />
     <Compile Include="Converters\Composite\ViaNumberConverter.cs" />
     <Compile Include="Converters\ValueConverterExtensions.cs" />
