@@ -62,6 +62,7 @@
     <Compile Include="Converters\Composite\ViaBinaryConverter.cs" />
     <Compile Include="Converters\Composite\ViaNumberConverter.cs" />
     <Compile Include="Converters\ValueConverterExtensions.cs" />
+    <Compile Include="Internal\IDynamoDBSet.cs" />
     <Compile Include="Internal\TypeExtensions.cs" />
     <Compile Include="ItemPage.cs" />
     <Compile Include="Syntax\IConsistentSyntax.cs" />

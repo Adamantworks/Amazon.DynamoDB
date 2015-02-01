@@ -146,27 +146,26 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			values.Add(key, Convert(value, converter));
 		}
 
-		public bool AddIfNotNull(string key, DynamoDBValue value)
+		public bool AddIfHasValue(string key, DynamoDBValue value)
 		{
-			var notNull = value != null;
-			if(notNull)
-				values.Add(key, value);
-			return notNull;
+			var hasValue = value.HasValue();
+			if(hasValue) values.Add(key, value);
+			return hasValue;
 		}
-		public bool AddIfNotNull(string key, DynamoDBValue value, IValueConverter converter)
+
+		public bool AddIfHasValue(string key, DynamoDBValue value, IValueConverter converter)
 		{
-			var notNull = value != null;
-			if(notNull)
-				values.Add(key, value);
-			return notNull;
+			var hasValue = value.HasValue();
+			if(hasValue) values.Add(key, value);
+			return hasValue;
 		}
-		public bool AddIfNotNull(string key, object value)
+		public bool AddIfHasValue(string key, object value)
 		{
-			return AddIfNotNull(key, Convert(value));
+			return AddIfHasValue(key, Convert(value));
 		}
-		public bool AddIfNotNull(string key, object value, IValueConverter converter)
+		public bool AddIfHasValue(string key, object value, IValueConverter converter)
 		{
-			return AddIfNotNull(key, Convert(value, converter));
+			return AddIfHasValue(key, Convert(value, converter));
 		}
 
 		public void Set(string key, DynamoDBValue value)
@@ -186,27 +185,25 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			values[key] = Convert(value, converter);
 		}
 
-		public bool SetIfNotNull(string key, DynamoDBValue value)
+		public bool SetIfHasValue(string key, DynamoDBValue value)
 		{
-			var notNull = value != null;
-			if(notNull)
-				values[key] = value;
-			return notNull;
+			var hasValue = value.HasValue();
+			if(hasValue) values[key] = value;
+			return hasValue;
 		}
-		public bool SetIfNotNull(string key, DynamoDBValue value, IValueConverter converter)
+		public bool SetIfHasValue(string key, DynamoDBValue value, IValueConverter converter)
 		{
-			var notNull = value != null;
-			if(notNull)
-				values[key] = value;
-			return notNull;
+			var hasValue = value.HasValue();
+			if(hasValue) values[key] = value;
+			return hasValue;
 		}
-		public bool SetIfNotNull(string key, object value)
+		public bool SetIfHasValue(string key, object value)
 		{
-			return SetIfNotNull(key, Convert(value));
+			return SetIfHasValue(key, Convert(value));
 		}
-		public bool SetIfNotNull(string key, object value, IValueConverter converter)
+		public bool SetIfHasValue(string key, object value, IValueConverter converter)
 		{
-			return SetIfNotNull(key, Convert(value, converter));
+			return SetIfHasValue(key, Convert(value, converter));
 		}
 
 		public bool Remove(string key)

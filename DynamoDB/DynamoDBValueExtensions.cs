@@ -15,6 +15,7 @@
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
+using Adamantworks.Amazon.DynamoDB.Internal;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -36,6 +37,12 @@ namespace Adamantworks.Amazon.DynamoDB
 				return (T)toValue;
 
 			throw new InvalidCastException();
+		}
+
+		internal static bool HasValue(this DynamoDBValue value)
+		{
+			IDynamoDBSet set;
+			return value != null && ((set = value as IDynamoDBSet) == null || set.Count > 0);
 		}
 	}
 }

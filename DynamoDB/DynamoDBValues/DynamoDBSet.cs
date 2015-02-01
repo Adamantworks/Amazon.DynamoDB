@@ -17,11 +17,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.Internal;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {
-	public sealed class DynamoDBSet<T> : DynamoDBValue, ISet<T>
+	public sealed class DynamoDBSet<T> : DynamoDBValue, ISet<T>, IDynamoDBSet
 		where T : DynamoDBKeyValue
 	{
 		private readonly ISet<T> values;
