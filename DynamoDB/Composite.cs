@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Adamantworks.Amazon.DynamoDB.Converters;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -43,113 +42,471 @@ namespace Adamantworks.Amazon.DynamoDB
 			ValueSeparator = ';';
 		}
 
-		public static DynamoDBString ValueStrict(params DynamoDBKeyValue[] values)
+		private static DynamoDBString Join(params DynamoDBScalar[] values)
 		{
 			if(values == null || values.Length == 0)
 				throw new ArgumentException("Must provide a value", "values");
 
-			return String.Join(separatorString, values.Select(v => v != null ? v.ToString() : null));
+			return String.Join(separatorString, values.Select(v => v != null ? v.ToString() : ""));
 		}
-		public static DynamoDBString ValueStrict(IEnumerable<DynamoDBKeyValue> values)
+
+		public static DynamoDBString Value(IEnumerable<DynamoDBScalar> values)
 		{
 			if(values == null)
 				throw new ArgumentNullException("values");
 
-			return String.Join(separatorString, values.Select(v => v != null ? v.ToString() : null));
+			return String.Join(separatorString, values.Select(v => v != null ? v.ToString() : ""));
 		}
 
-		public static DynamoDBString Value<TKey1, TKey2>(TKey1 key1, TKey2 key2)
+		#region 2 values
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2)
 		{
-			return ValueStrict(
-				DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBKeyValue.Convert(key2, DynamoDBValueConverters.DefaultComposite));
+			return Join(
+				key1,
+				key2);
 		}
-		public static DynamoDBString Value<TKey1, TKey2>(TKey1 key1, TKey2 key2, IValueConverter converter)
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, IValueConverter converter)
 		{
-			return ValueStrict(
-				DynamoDBKeyValue.Convert(key1, converter),
-				DynamoDBKeyValue.Convert(key2, converter));
-		}
-		public static DynamoDBString Value<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3)
-		{
-			return ValueStrict(
-				DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBKeyValue.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBKeyValue.Convert(key3, DynamoDBValueConverters.DefaultComposite));
-		}
-		public static DynamoDBString Value<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IValueConverter converter)
-		{
-			return ValueStrict(
-				DynamoDBKeyValue.Convert(key1, converter),
-				DynamoDBKeyValue.Convert(key2, converter),
-				DynamoDBKeyValue.Convert(key3, converter));
-		}
-		public static DynamoDBString Value<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4)
-		{
-			return ValueStrict(
-				DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBKeyValue.Convert(key2, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBKeyValue.Convert(key3, DynamoDBValueConverters.DefaultComposite),
-				DynamoDBKeyValue.Convert(key4, DynamoDBValueConverters.DefaultComposite));
-		}
-		public static DynamoDBString Value<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IValueConverter converter)
-		{
-			return ValueStrict(
-				DynamoDBKeyValue.Convert(key1, converter),
-				DynamoDBKeyValue.Convert(key2, converter),
-				DynamoDBKeyValue.Convert(key3, converter),
-				DynamoDBKeyValue.Convert(key4, converter));
+			return Join(
+				key1,
+				key2);
 		}
 
-		public static CompositeHashKeySyntax HashKeyStrict(DynamoDBKeyValue key1)
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2)
 		{
-			return new CompositeHashKeySyntax(key1);
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				key2);
 		}
-		public static CompositeHashKeySyntax HashKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2)
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, IValueConverter converter)
 		{
-			return new CompositeHashKeySyntax(ValueStrict(key1, key2));
-		}
-		public static CompositeHashKeySyntax HashKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2, DynamoDBKeyValue key3)
-		{
-			return new CompositeHashKeySyntax(ValueStrict(key1, key2, key3));
-		}
-		public static CompositeHashKeySyntax HashKeyStrict(DynamoDBKeyValue key1, DynamoDBKeyValue key2, DynamoDBKeyValue key3, DynamoDBKeyValue key4)
-		{
-			return new CompositeHashKeySyntax(ValueStrict(key1, key2, key3, key4));
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2);
 		}
 
-		public static CompositeHashKeySyntax HashKey<TKey1>(TKey1 key1)
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2)
 		{
-			return new CompositeHashKeySyntax(DynamoDBKeyValue.Convert(key1, DynamoDBValueConverters.DefaultComposite));
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1>(TKey1 key1, IValueConverter converter)
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, IValueConverter converter)
 		{
-			return new CompositeHashKeySyntax(DynamoDBKeyValue.Convert(key1, converter));
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2>(TKey1 key1, TKey2 key2)
+
+		public static DynamoDBString Value(object key1, object key2)
 		{
-			return new CompositeHashKeySyntax(Value(key1, key2, DynamoDBValueConverters.DefaultComposite));
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2>(TKey1 key1, TKey2 key2, IValueConverter converter)
+		public static DynamoDBString Value(object key1, object key2, IValueConverter converter)
 		{
-			return new CompositeHashKeySyntax(Value(key1, key2, converter));
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter));
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3)
+		#endregion
+
+		#region 3 values
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3)
 		{
-			return new CompositeHashKeySyntax(Value(key1, key2, key3, DynamoDBValueConverters.DefaultComposite));
+			return Join(
+				key1,
+				key2,
+				key3);
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3>(TKey1 key1, TKey2 key2, TKey3 key3, IValueConverter converter)
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, IValueConverter converter)
 		{
-			return new CompositeHashKeySyntax(Value(key1, key2, key3, converter));
+			return Join(
+				key1,
+				key2,
+				key3);
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4)
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3)
 		{
-			return new CompositeHashKeySyntax(Value(key1, key2, key3, key4, DynamoDBValueConverters.DefaultComposite));
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				key2,
+				key3);
 		}
-		public static CompositeHashKeySyntax HashKey<TKey1, TKey2, TKey3, TKey4>(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, IValueConverter converter)
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, IValueConverter converter)
 		{
-			return new CompositeHashKeySyntax(Value(key1, key2, key3, key4, converter));
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				key3);
 		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				key3);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				key3);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				key3);
+		}
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				key3);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				DynamoDBScalar.Convert(key3, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, object key3)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(object key1, object key2, object key3, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter));
+		}
+		#endregion
+
+		#region 4 values
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				key4);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				key4);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				key2,
+				key3,
+				key4);
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				key3,
+				key4);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				key3,
+				key4);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				key4);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				key4);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				key4);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				key3,
+				key4);
+		}
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				key4);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				key4);
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				key4);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, DynamoDBScalar key4)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				key4);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				key4);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, object key4)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				DynamoDBScalar.Convert(key4, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, object key4)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				key4);
+		}
+		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				key4);
+		}
+
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				DynamoDBScalar.Convert(key4, converter));
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, object key4)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, object key3, object key4)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverters.DefaultComposite),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverters.DefaultComposite));
+		}
+		public static DynamoDBString Value(object key1, object key2, object key3, object key4, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter));
+		}
+		#endregion
 
 		public static string Name(params string[] names)
 		{
@@ -160,7 +517,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			return String.Join(separatorString, names);
 		}
 
-		private static string[] SplitString(DynamoDBString value)
+		private static string[] Split(DynamoDBString value)
 		{
 			return value.ToString().Split(separatorArray);
 		}
@@ -171,7 +528,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBString value, IValueConverter converter)
 		{
-			var values = SplitString(value);
+			var values = Split(value);
 			if(values.Length != 2)
 				throw new ArgumentException("Must be a composite of 2 values", "value");
 
@@ -185,7 +542,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBString value, IValueConverter converter)
 		{
-			var values = SplitString(value);
+			var values = Split(value);
 			if(values.Length != 3)
 				throw new ArgumentException("Must be a composite of 2 values", "value");
 
@@ -200,7 +557,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBString value, IValueConverter converter)
 		{
-			var values = SplitString(value);
+			var values = Split(value);
 			if(values.Length != 4)
 				throw new ArgumentException("Must be a composite of 2 values", "value");
 
@@ -213,51 +570,35 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBValue value)
 		{
-			var stringValue = value as DynamoDBString;
-			if(stringValue == null && value != null)
-				throw new ArgumentException("Argument must be a DynamoDBString, was");
-
-			return Split<T1, T2>(stringValue, DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2>(AsString(value), DynamoDBValueConverters.DefaultComposite);
 		}
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBValue value, IValueConverter converter)
 		{
-			var stringValue = value as DynamoDBString;
-			if(stringValue == null && value != null)
-				throw new ArgumentException("Argument must be a DynamoDBString, was");
-
-			return Split<T1, T2>(stringValue, converter);
+			return Split<T1, T2>(AsString(value), converter);
 		}
 		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBValue value)
 		{
-			var stringValue = value as DynamoDBString;
-			if(stringValue == null && value != null)
-				throw new ArgumentException("Argument must be a DynamoDBString, was");
-
-			return Split<T1, T2, T3>(stringValue, DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2, T3>(AsString(value), DynamoDBValueConverters.DefaultComposite);
 		}
 		public static Tuple<T1, T2, T3> Split<T1, T2, T3>(DynamoDBValue value, IValueConverter converter)
 		{
-			var stringValue = value as DynamoDBString;
-			if(stringValue == null && value != null)
-				throw new ArgumentException("Argument must be a DynamoDBString, was");
-
-			return Split<T1, T2, T3>(stringValue, converter);
+			return Split<T1, T2, T3>(AsString(value), converter);
 		}
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBValue value)
 		{
-			var stringValue = value as DynamoDBString;
-			if(stringValue == null && value != null)
-				throw new ArgumentException("Argument must be a DynamoDBString, was");
-
-			return Split<T1, T2, T3, T4>(stringValue, DynamoDBValueConverters.DefaultComposite);
+			return Split<T1, T2, T3, T4>(AsString(value), DynamoDBValueConverters.DefaultComposite);
 		}
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBValue value, IValueConverter converter)
 		{
-			var stringValue = value as DynamoDBString;
-			if(stringValue == null && value != null)
-				throw new ArgumentException("Argument must be a DynamoDBString, was");
+			return Split<T1, T2, T3, T4>(AsString(value), converter);
+		}
 
-			return Split<T1, T2, T3, T4>(stringValue, converter);
+		private static DynamoDBString AsString(DynamoDBValue value)
+		{
+			var stringValue = value as DynamoDBString;
+			if(stringValue == null)
+				throw new ArgumentException(string.Format("Argument must be a DynamoDBString, was {0}", value != null ? value.GetType().Name : "<null>"));
+			return stringValue;
 		}
 	}
 }

@@ -95,7 +95,6 @@
     <Compile Include="ProvisionedThroughput.cs" />
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Schema\IndexProjectionType.cs" />
-    <Compile Include="Syntax\CompositeHashKeySyntax.cs" />
     <Compile Include="Syntax\IQueryExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IQueryLimitToOrPagedSyntax.cs" />
     <Compile Include="Syntax\IQueryRangeSyntax.cs" />
