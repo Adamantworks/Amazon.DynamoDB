@@ -684,6 +684,100 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		DynamoDBMap Delete();
 	}
 
+	public partial interface IPagedQueryRangeSyntax
+	{
+		Task<ItemPage> AllKeysAsync();
+
+		Task<ItemPage> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyBeginsWithAsync(object rangeKey);
+		Task<ItemPage> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey);
+		Task<ItemPage> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBeginsWithAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		ItemPage RangeKeyBeginsWith(object rangeKey, IValueConverter converter);
+		ItemPage RangeKeyBeginsWith(object rangeKey);
+		ItemPage RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		Task<ItemPage> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyEqualsAsync(object rangeKey);
+		Task<ItemPage> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey);
+		Task<ItemPage> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyEqualsAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		ItemPage RangeKeyEquals(object rangeKey, IValueConverter converter);
+		ItemPage RangeKeyEquals(object rangeKey);
+		ItemPage RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		Task<ItemPage> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyLessThanAsync(object rangeKey);
+		Task<ItemPage> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey);
+		Task<ItemPage> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyLessThanAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		ItemPage RangeKeyLessThan(object rangeKey, IValueConverter converter);
+		ItemPage RangeKeyLessThan(object rangeKey);
+		ItemPage RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(object rangeKey);
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		ItemPage RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter);
+		ItemPage RangeKeyLessThanOrEqualTo(object rangeKey);
+		ItemPage RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		Task<ItemPage> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyGreaterThanAsync(object rangeKey);
+		Task<ItemPage> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey);
+		Task<ItemPage> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyGreaterThanAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		ItemPage RangeKeyGreaterThan(object rangeKey, IValueConverter converter);
+		ItemPage RangeKeyGreaterThan(object rangeKey);
+		ItemPage RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(object rangeKey);
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		ItemPage RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter);
+		ItemPage RangeKeyGreaterThanOrEqualTo(object rangeKey);
+		ItemPage RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter);
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, object endExclusive);
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive);
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive);
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, object endExclusive, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, CancellationToken cancellationToken);
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		ItemPage RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter);
+		ItemPage RangeKeyBetween(object startInclusive, object endExclusive);
+		ItemPage RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		ItemPage RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive);
+		ItemPage RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
+		ItemPage RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive);
+		ItemPage RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+	}
+
 	public partial interface IPutSyntax
 	{
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item);
@@ -1619,6 +1713,383 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetween(startInclusive, endExclusive);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.AllKeysAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.AllKeysAsync()
+		{
+			return ((IPagedQueryRangeSyntax)this).AllKeysAsync(CancellationToken.None);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWithAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWithAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(object rangeKey, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWithAsync(rangeKey, cancellationToken);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyBeginsWith
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBeginsWith(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWith(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBeginsWith(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWith(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBeginsWith(rangeKey);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyEqualsAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEqualsAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEqualsAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(object rangeKey, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEqualsAsync(rangeKey, cancellationToken);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyEquals
+		ItemPage IPagedQueryRangeSyntax.RangeKeyEquals(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEquals(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyEquals(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEquals(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyEquals(rangeKey);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyLessThanAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(object rangeKey, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanAsync(rangeKey, cancellationToken);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyLessThan
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThan(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThan(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThan(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThan(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThan(rangeKey);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualToAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualToAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualToAsync(rangeKey, cancellationToken);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualTo
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualTo(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyLessThanOrEqualTo(rangeKey);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(object rangeKey, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanAsync(rangeKey, cancellationToken);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyGreaterThan
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThan(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThan(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThan(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThan(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThan(rangeKey);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualToAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualToAsync(rangeKey, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualToAsync(rangeKey, cancellationToken);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualTo
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualTo(object rangeKey)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyGreaterThanOrEqualTo(rangeKey);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyBetweenAsync
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, object endExclusive)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), endExclusive, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive), CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(startInclusive, endExclusive, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(startInclusive, endExclusive, CancellationToken.None);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, object endExclusive, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive, cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), endExclusive, cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive), cancellationToken);
+		}
+		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetweenAsync(startInclusive, endExclusive, cancellationToken);
+		}
+		#endregion
+
+		#region IPagedQueryRangeSyntax.RangeKeyBetween
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(object startInclusive, object endExclusive)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive), endExclusive);
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(startInclusive, DynamoDBKeyValue.Convert(endExclusive));
+		}
+		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(startInclusive, endExclusive);
 		}
 		#endregion
 	}

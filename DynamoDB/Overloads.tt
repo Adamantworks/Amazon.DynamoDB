@@ -236,6 +236,7 @@
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
+	// Query Range
 	var allKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", GenOverloads(readAhead));
 	var rangeKeyBeginsWithAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBeginsWithAsync",
 		GenOverloads(false, rangeKeyOverloads, readAhead));
@@ -264,6 +265,37 @@
 	var rangeKeyBetweenAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBetweenAsync",
 		GenOverloads(false, rangeKeyBetweenOverloads, readAhead));
 	var rangeKeyBetween = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBetween",
+		GenOverloads(false, rangeKeyBetweenOverloads));
+
+	// Query Range Paged
+	var allKeysAsyncPaged = new Method("Task<ItemPage>", "AllKeysAsync", GenOverloads(cancellationToken));
+	var rangeKeyBeginsWithAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBeginsWithAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var rangeKeyBeginsWithPaged = new Method("ItemPage", "RangeKeyBeginsWith",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyEqualsAsyncPaged = new Method("Task<ItemPage>", "RangeKeyEqualsAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var rangeKeyEqualsPaged = new Method("ItemPage", "RangeKeyEquals",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyLessThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var rangeKeyLessThanPaged = new Method("ItemPage", "RangeKeyLessThan",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyLessThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanOrEqualToAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var rangeKeyLessThanOrEqualToPaged = new Method("ItemPage", "RangeKeyLessThanOrEqualTo",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyGreaterThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var rangeKeyGreaterThanPaged = new Method("ItemPage", "RangeKeyGreaterThan",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyGreaterThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanOrEqualToAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var rangeKeyGreaterThanOrEqualToPaged = new Method("ItemPage", "RangeKeyGreaterThanOrEqualTo",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyBetweenAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBetweenAsync",
+		GenOverloads(false, rangeKeyBetweenOverloads, cancellationToken));
+	var rangeKeyBetweenPaged = new Method("ItemPage", "RangeKeyBetween",
 		GenOverloads(false, rangeKeyBetweenOverloads));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
@@ -373,6 +405,32 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 <#		GenInterface(deleteAsync); #>
 <#		GenInterface(delete); #>
+	}
+
+	public partial interface IPagedQueryRangeSyntax
+	{
+<#		GenInterface(allKeysAsyncPaged); #>
+
+<#		GenInterface(rangeKeyBeginsWithAsyncPaged); #>
+<#		GenInterface(rangeKeyBeginsWithPaged); #>
+
+<#		GenInterface(rangeKeyEqualsAsyncPaged); #>
+<#		GenInterface(rangeKeyEqualsPaged); #>
+
+<#		GenInterface(rangeKeyLessThanAsyncPaged); #>
+<#		GenInterface(rangeKeyLessThanPaged); #>
+
+<#		GenInterface(rangeKeyLessThanOrEqualToAsyncPaged); #>
+<#		GenInterface(rangeKeyLessThanOrEqualToPaged); #>
+
+<#		GenInterface(rangeKeyGreaterThanAsyncPaged); #>
+<#		GenInterface(rangeKeyGreaterThanPaged); #>
+
+<#		GenInterface(rangeKeyGreaterThanOrEqualToAsyncPaged); #>
+<#		GenInterface(rangeKeyGreaterThanOrEqualToPaged); #>
+
+<#		GenInterface(rangeKeyBetweenAsyncPaged); #>
+<#		GenInterface(rangeKeyBetweenPaged); #>
 	}
 
 	public partial interface IPutSyntax
@@ -497,6 +555,36 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(rangeKeyBetweenAsync); #>
 
 <#		GenMethods(rangeKeyBetween); #>
+
+<#		GenExplicitImplementations(allKeysAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyBeginsWithAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyBeginsWithPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyEqualsAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyEqualsPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyLessThanAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyLessThanPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyLessThanOrEqualToAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyLessThanOrEqualToPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyGreaterThanAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyGreaterThanPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyGreaterThanOrEqualToAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyGreaterThanOrEqualToPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyBetweenAsyncPaged, "IPagedQueryRangeSyntax"); #>
+
+<#		GenExplicitImplementations(rangeKeyBetweenPaged, "IPagedQueryRangeSyntax"); #>
 	}
 }
 <#+
@@ -570,9 +658,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 	{
 		foreach(var overload in method.ParameterOverloads)
 		{
-			#>		<#+
-			GenDeclaration(method, overload);
-			#>;
+#>		<#+ GenDeclaration(method, overload); #>;
 <#+
 		}
 	}
@@ -585,20 +671,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 #>		public <#+ GenDeclaration(method, overload); #>
 
 		{
-			<#+if(method.ReturnType != "void")
-				#>return <#+
-			#><#= method.Call #>(<#+
-			var firstParam = true;
-			foreach(var param in overload)
-				if(param.Value != null)
-				{
-					if(firstParam)
-						firstParam = false;
-					else
-						#>, <#+
-					#><#= param.Value #><#+
-				}
-			#>);
+<#+ GenMethodCall(method, overload);#>
 		}
 <#+
 		}
@@ -606,9 +679,25 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#+
 	}
 
-	public void GenDeclaration(Method method, IReadOnlyList<Parameter> overload)
+	public void GenExplicitImplementations(Method method, string @interface)
 	{
-		#><#= method.ReturnType #> <#= method.Name #>(<#+
+#>		#region <#= @interface#>.<#= method.Name #>
+<#+		foreach(var overload in method.ParameterOverloads)
+		{
+#>		<#+ GenDeclaration(method, overload, @interface); #>
+
+		{
+<#+ GenMethodCall(method, overload, @interface);#>
+		}
+<#+
+		}
+#>		#endregion
+<#+
+	}
+
+	public void GenDeclaration(Method method, IReadOnlyList<Parameter> overload, string @interface = null)
+	{
+		#><#= method.ReturnType #> <#= @interface != null ? @interface + "." : "" #><#= method.Name #>(<#+
 		var firstParam = true;
 		foreach(var param in overload)
 			if(param.Name != null)
@@ -620,6 +709,25 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				#><#= param.Type #> <#= param.Name #><#+
 			}
 		#>)<#+
+	}
+
+	public void GenMethodCall(Method method, IReadOnlyList<Parameter> overload, string @interface = null)
+	{
+#>			<#+if(method.ReturnType != "void")
+				#>return <#+
+			#><#= @interface != null ? "(("+@interface + ")this)." : "" #><#= method.Call #>(<#+
+			var firstParam = true;
+			foreach(var param in overload)
+				if(param.Value != null)
+				{
+					if(firstParam)
+						firstParam = false;
+					else
+						#>, <#+
+					#><#= param.Value #><#+
+				}
+			#>);
+<#+
 	}
 
 	public class Method

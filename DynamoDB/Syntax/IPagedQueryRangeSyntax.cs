@@ -19,31 +19,28 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
 	// See Overloads.tt and Overloads.cs for more methods of this interface
-	public interface IPagedQueryRangeSyntax
+	public partial interface IPagedQueryRangeSyntax
 	{
-		// TODO change default values to overloads
-		// TODO add overloads with object and value converter
-
-		Task<ItemPage> AllKeysAsync(CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> AllKeysAsync(CancellationToken cancellationToken);
 		ItemPage AllKeys();
 
-		Task<ItemPage> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
 		ItemPage RangeKeyBeginsWith(DynamoDBKeyValue rangeKey);
 
-		Task<ItemPage> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
 		ItemPage RangeKeyEquals(DynamoDBKeyValue rangeKey);
 
-		Task<ItemPage> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
 		ItemPage RangeKeyLessThan(DynamoDBKeyValue rangeKey);
-		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
 		ItemPage RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey);
 
-		Task<ItemPage> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken );
 		ItemPage RangeKeyGreaterThan(DynamoDBKeyValue rangeKey);
-		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
 		ItemPage RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey);
 
-		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken = default(CancellationToken));
+		Task<ItemPage> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken);
 		ItemPage RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
 	}
 }
