@@ -38,8 +38,8 @@
 	var rangeKeyObject = ParamTransform("object", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
 	var rangeKeySkipped = ParamTransform("DynamoDBKeyValue", "rangeKey", null);
 	var rangeKeyObjectSkipped = ParamTransform("object", "rangeKey", null);
-	var valueConverterHash = ParamTransform("IValueConverter", "valueConverter", "ItemKey.Create(hashKey, valueConverter)");
-	var valueConverterHashAndRange = ParamTransform("IValueConverter", "valueConverter", "ItemKey.Create(hashKey, rangeKey, valueConverter)");
+	var converterHash = ParamTransform("IValueConverter", "converter", "ItemKey.Create(hashKey, converter)");
+	var converterHashAndRange = ParamTransform("IValueConverter", "converter", "ItemKey.Create(hashKey, rangeKey, converter)");
 	var status = Param("CollectionStatus","status");
 	var timeout = Param("TimeSpan", "timeout");
 	var provisionedThroughput = ParamTransform("ProvisionedThroughput", "provisionedThroughput","(ProvisionedThroughput?)provisionedThroughput", "null");
@@ -75,6 +75,9 @@
 	var consistentNoneArg = Argument("false");
 	var consistentArg = Argument("consistentRead ?? false");
 	var hashKey = Param("DynamoDBKeyValue", "hashKey");
+	var hashKeyObject = ParamTransform("object", "hashKey", "DynamoDBKeyValue.Convert(hashKey)");
+	var hashKeyObjectConverter = ParamTransform("object", "hashKey", "DynamoDBKeyValue.Convert(hashKey, converter)");
+	var converterSkipped = ParamTransform("IValueConverter", "converter", null);
 	var filter = Param("PredicateExpression", "filter", "null");
 	var tableName = Param("string", "tableName");
 	var schema = Param("TableSchema", "schema");
@@ -85,17 +88,17 @@
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
 
 	var keyOverloads = GenOverloads(true, hashKeyOnly)
-		.Concat(GenOverloads(true, hashKeySkipped, valueConverterHash))
+		.Concat(GenOverloads(true, hashKeySkipped, converterHash))
 		.Concat(GenOverloads(true, hashKeyObjectOnly))
-		.Concat(GenOverloads(true, hashKeyObjectSkipped, valueConverterHash))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, converterHash))
 		.Concat(GenOverloads(true, hashKeySkipped, rangeKey))
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKeySkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKeySkipped, converterHashAndRange))
 		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKey))
-		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeySkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeySkipped, converterHashAndRange))
 		.Concat(GenOverloads(true, hashKeySkipped, rangeKeyObject))
-		.Concat(GenOverloads(true, hashKeySkipped, rangeKeyObjectSkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, hashKeySkipped, rangeKeyObjectSkipped, converterHashAndRange))
 		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeyObject))
-		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeyObjectSkipped, valueConverterHashAndRange))
+		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeyObjectSkipped, converterHashAndRange))
 		.Concat(GenOverloads(true, itemKey))
 		.ToList();
 
@@ -146,12 +149,18 @@
 		GenOverloads(true, item, returnOldItem));
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, regionArg, nameArg, keySchemaArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 
 	// Syntax
@@ -187,12 +196,18 @@
 		GenOverloads( returnOldItem));
 	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, tableDotKeySchemaArg, projectionArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQuery = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
