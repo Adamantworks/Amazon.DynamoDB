@@ -66,7 +66,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBString));
 		}
 		public new static DynamoDBString Convert(object value, IValueConverter converter)
 		{
@@ -74,7 +74,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBString));
 		}
 
 		public int Length { get { return value.Length; } }

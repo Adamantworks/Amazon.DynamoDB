@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using System;
 using Adamantworks.Amazon.DynamoDB.Internal;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -28,7 +28,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(converter.TryConvert(value, typeof(T), out toValue, converter))
 				return (T)toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(T));
 		}
 		public static T To<T>(this DynamoDBValue value, IValueConverter converter)
 		{
@@ -36,7 +36,14 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(converter.TryConvert(value, typeof(T), out toValue, converter))
 				return (T)toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(T));
+		}
+
+		private static InvalidCastException ConvertFailed(DynamoDBValue value, Type toType)
+		{
+			if(value == null)
+				return new InvalidCastException(string.Format(ExceptionMessages.InvalidCastOfNull, toType.FullName));
+			return new InvalidCastException(string.Format(ExceptionMessages.InvalidCast, value.GetType().Name, toType.FullName));
 		}
 
 		internal static bool HasValue(this DynamoDBValue value)

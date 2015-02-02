@@ -49,7 +49,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBKeyValue));
 		}
 		public new static DynamoDBKeyValue Convert(object value, IValueConverter converter)
 		{
@@ -57,7 +57,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBKeyValue));
 		}
 
 		#region conversions

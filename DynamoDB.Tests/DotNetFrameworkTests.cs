@@ -93,5 +93,17 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				return null;
 			}
 		}
+
+		[Test]
+		public void CastExceptionMessage()
+		{
+			var ex = Assert.Throws<InvalidCastException>(() => { var foo = (string)(object)43; });
+			Assert.AreEqual("Unable to cast object of type 'System.Int32' to type 'System.String'.", ex.Message);
+
+			Assert.Throws<NullReferenceException>(() => { var foo = (int)(object)null; });
+
+			ex = Assert.Throws<InvalidCastException>(() => { var foo = Convert.ChangeType(43, typeof(TestValue)); });
+			Assert.AreEqual("Invalid cast from 'System.Int32' to 'Adamantworks.Amazon.DynamoDB.Tests.DotNetFrameworkTests+TestValue'.", ex.Message);
+		}
 	}
 }

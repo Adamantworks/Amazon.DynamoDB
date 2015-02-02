@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Immutable;
 using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.Internal;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
@@ -40,7 +41,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBValue));
 		}
 		public static DynamoDBValue Convert(object value, IValueConverter converter)
 		{
@@ -48,7 +49,14 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBValue));
+		}
+
+		protected static InvalidCastException ConvertFailed(object value, Type toType)
+		{
+			if(value == null)
+				return new InvalidCastException(string.Format(ExceptionMessages.InvalidCastOfNull, toType.Name));
+			return new InvalidCastException(string.Format(ExceptionMessages.InvalidCast, value.GetType().FullName, toType.Name));
 		}
 
 		#region Conversions

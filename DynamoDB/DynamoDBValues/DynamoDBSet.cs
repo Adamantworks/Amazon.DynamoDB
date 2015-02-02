@@ -80,7 +80,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBSet<T>));
 		}
 		public new static DynamoDBSet<T> Convert(object value, IValueConverter converter)
 		{
@@ -88,7 +88,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBSet<T>));
 		}
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()

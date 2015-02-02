@@ -75,7 +75,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBMap));
 		}
 		public new static DynamoDBMap Convert(object value, IValueConverter converter)
 		{
@@ -83,7 +83,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBMap));
 		}
 
 		public IEnumerator<KeyValuePair<string, DynamoDBValue>> GetEnumerator()

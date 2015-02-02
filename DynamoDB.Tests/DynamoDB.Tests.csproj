@@ -56,8 +56,10 @@
   <ItemGroup>
     <Compile Include="CompositeTests.cs" />
     <Compile Include="Converters\Basic\CastConverterTests.cs" />
+    <Compile Include="Converters\NullConverter.cs" />
     <Compile Include="DotNetFrameworkTests.cs" />
     <Compile Include="DynamoDBValueConverterTests.cs" />
+    <Compile Include="DynamoDBValueExtensions.cs" />
     <Compile Include="DynamoDBValues\DynamoDBBinaryTests.cs" />
     <Compile Include="DynamoDBValues\DynamoDBBooleanTests.cs" />
     <Compile Include="DynamoDBValues\DynamoDBNumberTests.cs" />

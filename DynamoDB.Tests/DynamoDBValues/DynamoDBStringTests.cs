@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Tests.Converters;
 using NUnit.Framework;
 
 namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
@@ -30,6 +32,13 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 
 			var emptyString = ""; // Not constant because we need the cast to be evaluated at run time
 			Assert.IsNull((DynamoDBString)emptyString, "empty string -> dynamo string");
+		}
+
+		[Test]
+		public void ConvertExceptionMessage()
+		{
+			var ex = Assert.Throws<InvalidCastException>(() => DynamoDBString.Convert(45, NullConverter.Instance));
+			Assert.AreEqual("Unable to convert object of type 'System.Int32' to type 'DynamoDBString'.", ex.Message);
 		}
 	}
 }

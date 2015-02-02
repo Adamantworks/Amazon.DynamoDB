@@ -67,7 +67,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(DynamoDBValueConverter.Default.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBNumber));
 		}
 		public new static DynamoDBNumber Convert(object value, IValueConverter converter)
 		{
@@ -75,7 +75,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(converter.TryConvert(value, out toValue))
 				return toValue;
 
-			throw new InvalidCastException();
+			throw ConvertFailed(value, typeof(DynamoDBNumber));
 		}
 
 		public static bool operator ==(DynamoDBNumber a, DynamoDBNumber b)
