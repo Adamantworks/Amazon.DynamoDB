@@ -83,6 +83,9 @@
 	var schema = Param("TableSchema", "schema");
 	var indexNameArg = Argument("index.Name");
 	var thisArg = Argument("this");
+	var rangeKeyOnly = Param("DynamoDBKeyValue", "rangeKey");
+	var rangeKeyOnlyObject = ParamTransform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey)");
+	var rangeKeyOnlyObjectConverter = ParamTransform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey, converter)");
 
 	Func<IReadOnlyList<Parameter>, bool> noIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(indexProvisionedThroughputs) && ! overload.Contains(provisionedThroughput));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
@@ -100,6 +103,30 @@
 		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeyObject))
 		.Concat(GenOverloads(true, hashKeyObjectSkipped, rangeKeyObjectSkipped, converterHashAndRange))
 		.Concat(GenOverloads(true, itemKey))
+		.ToList();
+
+	var rangeKeyOverloads =
+		GenOverloads(true, rangeKeyOnlyObjectConverter, converterSkipped)
+		.Concat(GenOverloads(true, rangeKeyOnlyObject))
+		.Concat(GenOverloads(true, rangeKeyOnly, converterSkipped))
+		.Concat(GenOverloads(true, rangeKeyOnly))
+		.ToList();
+
+	var startInclusive = Param("DynamoDBKeyValue", "startInclusive");
+	var startInclusiveObject = ParamTransform("object", "startInclusive", "DynamoDBKeyValue.Convert(startInclusive)");
+	var startInclusiveObjectConverter = ParamTransform("object", "startInclusive", "DynamoDBKeyValue.Convert(startInclusive, converter)");
+	var endExclusive = Param("DynamoDBKeyValue", "endExclusive");
+	var endExclusiveObject = ParamTransform("object", "endExclusive", "DynamoDBKeyValue.Convert(endExclusive)");
+	var endExclusiveObjectConverter = ParamTransform("object", "endExclusive", "DynamoDBKeyValue.Convert(endExclusive, converter)");
+	var rangeKeyBetweenOverloads =
+		GenOverloads(true, startInclusiveObjectConverter, endExclusiveObjectConverter, converterSkipped)
+		.Concat(GenOverloads(true, startInclusiveObject, endExclusiveObject))
+		.Concat(GenOverloads(true, startInclusiveObjectConverter, endExclusive, converterSkipped))
+		.Concat(GenOverloads(true, startInclusiveObject, endExclusive))
+		.Concat(GenOverloads(true, startInclusive, endExclusiveObjectConverter, converterSkipped))
+		.Concat(GenOverloads(true, startInclusive, endExclusiveObject))
+		.Concat(GenOverloads(true, startInclusive, endExclusive, converterSkipped))
+		.Concat(GenOverloads(true, startInclusive, endExclusive))
 		.ToList();
 
 	// Region
@@ -209,6 +236,35 @@
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
+	var allKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", GenOverloads(readAhead));
+	var rangeKeyBeginsWithAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBeginsWithAsync",
+		GenOverloads(false, rangeKeyOverloads, readAhead));
+	var rangeKeyBeginsWith = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBeginsWith",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyEqualsAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyEqualsAsync",
+		GenOverloads(false, rangeKeyOverloads, readAhead));
+	var rangeKeyEquals = new Method("IEnumerable<DynamoDBMap>", "RangeKeyEquals",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyLessThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanAsync",
+		GenOverloads(false, rangeKeyOverloads, readAhead));
+	var rangeKeyLessThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThan",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyLessThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualToAsync",
+		GenOverloads(false, rangeKeyOverloads, readAhead));
+	var rangeKeyLessThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualTo",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyGreaterThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanAsync",
+		GenOverloads(false, rangeKeyOverloads, readAhead));
+	var rangeKeyGreaterThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThan",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyGreaterThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualToAsync",
+		GenOverloads(false, rangeKeyOverloads, readAhead));
+	var rangeKeyGreaterThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualTo",
+		GenOverloads(false, rangeKeyOverloads));
+	var rangeKeyBetweenAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBetweenAsync",
+		GenOverloads(false, rangeKeyBetweenOverloads, readAhead));
+	var rangeKeyBetween = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBetween",
+		GenOverloads(false, rangeKeyBetweenOverloads));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
@@ -325,6 +381,32 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#		GenInterface(put); #>
 	}
 
+	public partial interface IQueryRangeSyntax
+	{
+<#		GenInterface(allKeysAsync); #>
+
+<#		GenInterface(rangeKeyBeginsWithAsync); #>
+<#		GenInterface(rangeKeyBeginsWith); #>
+
+<#		GenInterface(rangeKeyEqualsAsync); #>
+<#		GenInterface(rangeKeyEquals); #>
+
+<#		GenInterface(rangeKeyLessThanAsync); #>
+<#		GenInterface(rangeKeyLessThan); #>
+
+<#		GenInterface(rangeKeyLessThanOrEqualToAsync); #>
+<#		GenInterface(rangeKeyLessThanOrEqualTo); #>
+
+<#		GenInterface(rangeKeyGreaterThanAsync); #>
+<#		GenInterface(rangeKeyGreaterThan); #>
+
+<#		GenInterface(rangeKeyGreaterThanOrEqualToAsync); #>
+<#		GenInterface(rangeKeyGreaterThanOrEqualTo); #>
+
+<#		GenInterface(rangeKeyBetweenAsync); #>
+<#		GenInterface(rangeKeyBetween); #>
+	}
+
 	public partial interface IQuerySyntax
 	{
 <#		GenInterface(query); #>
@@ -382,6 +464,39 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenMethods(putAsync); #>
 
 <#		GenMethods(put); #>
+	}
+
+	internal partial class QueryContext
+	{
+<#		GenMethods(allKeysAsync); #>
+
+<#		GenMethods(rangeKeyBeginsWithAsync); #>
+
+<#		GenMethods(rangeKeyBeginsWith); #>
+
+<#		GenMethods(rangeKeyEqualsAsync); #>
+
+<#		GenMethods(rangeKeyEquals); #>
+
+<#		GenMethods(rangeKeyLessThanAsync); #>
+
+<#		GenMethods(rangeKeyLessThan); #>
+
+<#		GenMethods(rangeKeyLessThanOrEqualToAsync); #>
+
+<#		GenMethods(rangeKeyLessThanOrEqualTo); #>
+
+<#		GenMethods(rangeKeyGreaterThanAsync); #>
+
+<#		GenMethods(rangeKeyGreaterThan); #>
+
+<#		GenMethods(rangeKeyGreaterThanOrEqualToAsync); #>
+
+<#		GenMethods(rangeKeyGreaterThanOrEqualTo); #>
+
+<#		GenMethods(rangeKeyBetweenAsync); #>
+
+<#		GenMethods(rangeKeyBetween); #>
 	}
 }
 <#+

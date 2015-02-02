@@ -25,7 +25,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal class QueryContext : IReverseSyntax, IPagedQueryRangeSyntax
+	internal partial class QueryContext : IReverseSyntax, IPagedQueryRangeSyntax
 	{
 		private readonly Region region;
 		private readonly string tableName;

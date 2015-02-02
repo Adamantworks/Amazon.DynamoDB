@@ -692,6 +692,100 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		DynamoDBMap Put(DynamoDBMap item);
 	}
 
+	public partial interface IQueryRangeSyntax
+	{
+		IAsyncEnumerable<DynamoDBMap> AllKeysAsync();
+
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> RangeKeyBeginsWith(object rangeKey, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyBeginsWith(object rangeKey);
+		IEnumerable<DynamoDBMap> RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> RangeKeyEquals(object rangeKey, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyEquals(object rangeKey);
+		IEnumerable<DynamoDBMap> RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> RangeKeyLessThan(object rangeKey, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyLessThan(object rangeKey);
+		IEnumerable<DynamoDBMap> RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(object rangeKey);
+		IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> RangeKeyGreaterThan(object rangeKey, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyGreaterThan(object rangeKey);
+		IEnumerable<DynamoDBMap> RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(object rangeKey);
+		IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
+
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, ReadAhead readAhead);
+		IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, object endExclusive);
+		IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive);
+		IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
+		IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive);
+		IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+	}
+
 	public partial interface IQuerySyntax
 	{
 		IReverseSyntax Query(DynamoDBKeyValue hashKey);
@@ -1145,6 +1239,386 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public DynamoDBMap Put(DynamoDBMap item)
 		{
 			return Put(item, false);
+		}
+		#endregion
+	}
+
+	internal partial class QueryContext
+	{
+		#region AllKeysAsync
+		public IAsyncEnumerable<DynamoDBMap> AllKeysAsync()
+		{
+			return AllKeysAsync(ReadAhead.Some);
+		}
+		#endregion
+
+		#region RangeKeyBeginsWithAsync
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey)
+		{
+			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyBeginsWithAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey)
+		{
+			return RangeKeyBeginsWithAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(object rangeKey, ReadAhead readAhead)
+		{
+			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyBeginsWithAsync(rangeKey, readAhead);
+		}
+		#endregion
+
+		#region RangeKeyBeginsWith
+		public IEnumerable<DynamoDBMap> RangeKeyBeginsWith(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyBeginsWith(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBeginsWith(object rangeKey)
+		{
+			return RangeKeyBeginsWith(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyBeginsWith(rangeKey);
+		}
+		#endregion
+
+		#region RangeKeyEqualsAsync
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey)
+		{
+			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyEqualsAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey)
+		{
+			return RangeKeyEqualsAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(object rangeKey, ReadAhead readAhead)
+		{
+			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyEqualsAsync(rangeKey, readAhead);
+		}
+		#endregion
+
+		#region RangeKeyEquals
+		public IEnumerable<DynamoDBMap> RangeKeyEquals(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyEquals(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyEquals(object rangeKey)
+		{
+			return RangeKeyEquals(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyEquals(rangeKey);
+		}
+		#endregion
+
+		#region RangeKeyLessThanAsync
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey)
+		{
+			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThanAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey)
+		{
+			return RangeKeyLessThanAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(object rangeKey, ReadAhead readAhead)
+		{
+			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyLessThanAsync(rangeKey, readAhead);
+		}
+		#endregion
+
+		#region RangeKeyLessThan
+		public IEnumerable<DynamoDBMap> RangeKeyLessThan(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThan(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyLessThan(object rangeKey)
+		{
+			return RangeKeyLessThan(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThan(rangeKey);
+		}
+		#endregion
+
+		#region RangeKeyLessThanOrEqualToAsync
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey)
+		{
+			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThanOrEqualToAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
+		{
+			return RangeKeyLessThanOrEqualToAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(object rangeKey, ReadAhead readAhead)
+		{
+			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyLessThanOrEqualToAsync(rangeKey, readAhead);
+		}
+		#endregion
+
+		#region RangeKeyLessThanOrEqualTo
+		public IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(object rangeKey)
+		{
+			return RangeKeyLessThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyLessThanOrEqualTo(rangeKey);
+		}
+		#endregion
+
+		#region RangeKeyGreaterThanAsync
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey)
+		{
+			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThanAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey)
+		{
+			return RangeKeyGreaterThanAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(object rangeKey, ReadAhead readAhead)
+		{
+			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyGreaterThanAsync(rangeKey, readAhead);
+		}
+		#endregion
+
+		#region RangeKeyGreaterThan
+		public IEnumerable<DynamoDBMap> RangeKeyGreaterThan(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThan(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyGreaterThan(object rangeKey)
+		{
+			return RangeKeyGreaterThan(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThan(rangeKey);
+		}
+		#endregion
+
+		#region RangeKeyGreaterThanOrEqualToAsync
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey)
+		{
+			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThanOrEqualToAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
+		{
+			return RangeKeyGreaterThanOrEqualToAsync(rangeKey, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, ReadAhead readAhead)
+		{
+			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyGreaterThanOrEqualToAsync(rangeKey, readAhead);
+		}
+		#endregion
+
+		#region RangeKeyGreaterThanOrEqualTo
+		public IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(object rangeKey)
+		{
+			return RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return RangeKeyGreaterThanOrEqualTo(rangeKey);
+		}
+		#endregion
+
+		#region RangeKeyBetweenAsync
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), endExclusive, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive)
+		{
+			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive), ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetweenAsync(startInclusive, endExclusive, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
+		{
+			return RangeKeyBetweenAsync(startInclusive, endExclusive, ReadAhead.Some);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, object endExclusive, ReadAhead readAhead)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, ReadAhead readAhead)
+		{
+			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), endExclusive, readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, ReadAhead readAhead)
+		{
+			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive), readAhead);
+		}
+		public IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, ReadAhead readAhead)
+		{
+			return RangeKeyBetweenAsync(startInclusive, endExclusive, readAhead);
+		}
+		#endregion
+
+		#region RangeKeyBetween
+		public IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, object endExclusive)
+		{
+			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive);
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive)
+		{
+			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive), endExclusive);
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetween(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive)
+		{
+			return RangeKeyBetween(startInclusive, DynamoDBKeyValue.Convert(endExclusive));
+		}
+		public IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		{
+			return RangeKeyBetween(startInclusive, endExclusive);
 		}
 		#endregion
 	}

@@ -18,31 +18,28 @@ using System.Collections.Generic;
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
 	// See Overloads.tt and Overloads.cs for more methods of this interface
-	public interface IQueryRangeSyntax
+	public partial interface IQueryRangeSyntax
 	{
-		// TODO change default values to overloads
-		// TODO add overloads with object and value converter
-
-		IAsyncEnumerable<DynamoDBMap> AllKeysAsync(ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> AllKeysAsync(ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> AllKeys();
 
-		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> RangeKeyBeginsWith(DynamoDBKeyValue rangeKey);
 
-		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> RangeKeyEquals(DynamoDBKeyValue rangeKey);
 
-		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> RangeKeyLessThan(DynamoDBKeyValue rangeKey);
-		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey);
 
-		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> RangeKeyGreaterThan(DynamoDBKeyValue rangeKey);
-		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey);
 
-		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
 	}
 }
