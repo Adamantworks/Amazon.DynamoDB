@@ -139,11 +139,11 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		}
 		public void Add(string key, object value)
 		{
-			values.Add(key, Convert(value));
+			values.Add(key, DynamoDBValue.Convert(value));
 		}
 		public void Add(string key, object value, IValueConverter converter)
 		{
-			values.Add(key, Convert(value, converter));
+			values.Add(key, DynamoDBValue.Convert(value, converter));
 		}
 
 		public bool AddIfHasValue(string key, DynamoDBValue value)
@@ -152,7 +152,6 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			if(hasValue) values.Add(key, value);
 			return hasValue;
 		}
-
 		public bool AddIfHasValue(string key, DynamoDBValue value, IValueConverter converter)
 		{
 			var hasValue = value.HasValue();
@@ -161,11 +160,11 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		}
 		public bool AddIfHasValue(string key, object value)
 		{
-			return AddIfHasValue(key, Convert(value));
+			return AddIfHasValue(key, DynamoDBValue.Convert(value));
 		}
 		public bool AddIfHasValue(string key, object value, IValueConverter converter)
 		{
-			return AddIfHasValue(key, Convert(value, converter));
+			return AddIfHasValue(key, DynamoDBValue.Convert(value, converter));
 		}
 
 		public void Set(string key, DynamoDBValue value)
@@ -178,11 +177,11 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		}
 		public void Set(string key, object value)
 		{
-			values[key] = Convert(value);
+			values[key] = DynamoDBValue.Convert(value);
 		}
 		public void Set(string key, object value, IValueConverter converter)
 		{
-			values[key] = Convert(value, converter);
+			values[key] = DynamoDBValue.Convert(value, converter);
 		}
 
 		public bool SetIfHasValue(string key, DynamoDBValue value)
@@ -199,11 +198,11 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		}
 		public bool SetIfHasValue(string key, object value)
 		{
-			return SetIfHasValue(key, Convert(value));
+			return SetIfHasValue(key, DynamoDBValue.Convert(value));
 		}
 		public bool SetIfHasValue(string key, object value, IValueConverter converter)
 		{
-			return SetIfHasValue(key, Convert(value, converter));
+			return SetIfHasValue(key, DynamoDBValue.Convert(value, converter));
 		}
 
 		public bool Remove(string key)
