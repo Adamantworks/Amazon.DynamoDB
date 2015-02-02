@@ -14,7 +14,6 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {

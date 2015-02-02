@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IScanCompletionSyntax
+	public interface IScanOptionsSyntax
 	{
 		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some);
 		IEnumerable<DynamoDBMap> All();

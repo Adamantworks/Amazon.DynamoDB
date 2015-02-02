@@ -61,7 +61,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return this;
 		}
 
-		public IScanCompletionSyntax ExclusiveStartKey(ItemKey key)
+		public IScanOptionsSyntax ExclusiveStartKey(ItemKey key)
 		{
 			exclusiveStartKey = key;
 			return this;

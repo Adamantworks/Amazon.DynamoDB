@@ -105,7 +105,7 @@
     <Compile Include="Contexts\QueryContext.cs" />
     <Compile Include="Syntax\IConsistentOrScanSyntax.cs" />
     <Compile Include="Syntax\IGetSyntax.cs" />
-    <Compile Include="Syntax\IScanCompletionSyntax.cs" />
+    <Compile Include="Syntax\IScanOptionsSyntax.cs" />
     <Compile Include="Contexts\ModifyContext.cs" />
     <Compile Include="Contexts\PutContext.cs" />
     <Compile Include="Syntax\IScanExclusiveStartKeySyntax.cs" />
