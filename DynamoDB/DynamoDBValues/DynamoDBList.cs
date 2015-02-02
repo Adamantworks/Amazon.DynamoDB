@@ -77,9 +77,21 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return GetEnumerator();
 		}
 
-		public void Add(DynamoDBValue item)
+		public void Add(DynamoDBValue value)
 		{
-			values.Add(item);
+			values.Add(value);
+		}
+		public void Add(DynamoDBValue value, IValueConverter converter)
+		{
+			values.Add(value);
+		}
+		public void Add(object value)
+		{
+			values.Add(DynamoDBValue.Convert(value));
+		}
+		public void Add(object value, IValueConverter converter)
+		{
+			values.Add(DynamoDBValue.Convert(value, converter));
 		}
 
 		public void Clear()
@@ -109,9 +121,21 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 			return values.IndexOf(item);
 		}
 
-		public void Insert(int index, DynamoDBValue item)
+		public void Insert(int index, DynamoDBValue value)
 		{
-			values.Insert(index, item);
+			values.Insert(index, value);
+		}
+		public void Insert(int index, DynamoDBValue value, IValueConverter converter)
+		{
+			values.Insert(index, value);
+		}
+		public void Insert(int index, object value)
+		{
+			values.Insert(index, DynamoDBValue.Convert(value));
+		}
+		public void Insert(int index, object value, IValueConverter converter)
+		{
+			values.Insert(index, DynamoDBValue.Convert(value, converter));
 		}
 
 		public void RemoveAt(int index)
