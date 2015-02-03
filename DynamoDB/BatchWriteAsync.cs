@@ -16,6 +16,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
@@ -31,14 +32,16 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal class BatchWriteAsync : IBatchWriteAsync, IBatchWriteOperations
 	{
 		private readonly Region region;
+		private readonly CancellationToken cancellationToken;
 		private readonly ConcurrentQueue<BatchWriteRequest> requests = new ConcurrentQueue<BatchWriteRequest>();
 		private readonly ConcurrentQueue<Task<Aws.BatchWriteItemResponse>> responses = new ConcurrentQueue<Task<Aws.BatchWriteItemResponse>>();
 		private readonly object syncRoot = new object();
 		private bool complete;
 
-		public BatchWriteAsync(Region region)
+		public BatchWriteAsync(Region region, CancellationToken cancellationToken)
 		{
 			this.region = region;
+			this.cancellationToken = cancellationToken;
 		}
 
 		public void Put(ITable table, DynamoDBMap item)
@@ -62,7 +65,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			var batchRequests = DequeueBatch(allowPartial);
 			if(batchRequests == null) return; // Someone must have beat us to it
 			var request = new Aws.BatchWriteItemRequest(batchRequests.GroupBy(r => r.TableName).ToDictionary(g => g.Key, g => g.Select(r => r.Request).ToList()));
-			var response = region.DB.BatchWriteItemAsync(request);
+			var response = region.DB.BatchWriteItemAsync(request, cancellationToken);
 			responses.Enqueue(response);
 		}
 
@@ -98,6 +101,8 @@ namespace Adamantworks.Amazon.DynamoDB
 				complete = true; // really there is a risk some other method is still completing, but the caller should prevent that
 			}
 
+			cancellationToken.ThrowIfCancellationRequested();
+
 			// queue up any items not done because we don't have a full batch (most likely won't get more items)
 			if(!requests.IsEmpty)
 				DoBatchWrite(true);
@@ -118,7 +123,7 @@ namespace Adamantworks.Amazon.DynamoDB
 						foreach(var unprocessedItem in unprocessedTable.Value)
 							requests.Enqueue(new BatchWriteRequest(unprocessedTable.Key, unprocessedItem));
 				}
-			} while(!responses.IsEmpty || !requests.IsEmpty);
+			} while(!cancellationToken.IsCancellationRequested && (!responses.IsEmpty || !requests.IsEmpty));
 		}
 	}
 }

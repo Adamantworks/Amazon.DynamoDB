@@ -33,6 +33,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		IBatchGet BeginBatchGet();
 
 		IBatchWriteAsync BeginBatchWriteAsync();
+		IBatchWriteAsync BeginBatchWriteAsync(CancellationToken cancellationToken);
 		IBatchWrite BeginBatchWrite();
 
 		IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead);
@@ -42,6 +43,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		// Task<ITable> CreateTableAsync(...);
 		// ITable CreateTable();
 
+		// TODO replace with overload
 		Task<ITable> LoadTableAsync(string tableName, CancellationToken cancellationToken = default(CancellationToken));
 		ITable LoadTable(string tableName);
 
@@ -80,7 +82,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region BeginBatchWrite
 		public IBatchWriteAsync BeginBatchWriteAsync()
 		{
-			return new BatchWriteAsync(this);
+			return new BatchWriteAsync(this, CancellationToken.None);
+		}
+		public IBatchWriteAsync BeginBatchWriteAsync(CancellationToken cancellationToken)
+		{
+			return new BatchWriteAsync(this, cancellationToken);
 		}
 
 		public IBatchWrite BeginBatchWrite()
