@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -29,8 +29,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal class BatchWrite : IBatchWrite, IBatchWriteOperations
 	{
 		private readonly Region region;
-		private readonly IDictionary<ITable, IList<DynamoDBMap>> puts = new Dictionary<ITable, IList<DynamoDBMap>>();
-		private readonly IDictionary<ITable, IList<ItemKey>> deletes = new Dictionary<ITable, IList<ItemKey>>();
+		private readonly Queue<BatchWriteRequest> requests = new Queue<BatchWriteRequest>();
+		private bool complete;
 
 		public BatchWrite(Region region)
 		{
@@ -39,52 +39,51 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public void Put(ITable table, DynamoDBMap item)
 		{
-			IList<DynamoDBMap> items;
-			if(!puts.TryGetValue(table, out items))
-				puts.Add(table, items = new List<DynamoDBMap>());
-
-			items.Add(item);
-			Flush(false);
+			if(complete) throw new InvalidOperationException(ExceptionMessages.BatchComplete);
+			requests.Enqueue(BatchWriteRequest.Put(table, item));
+			if(requests.Count >= Limits.BatchWriteSize)
+				DoBatchWrite();
 		}
 
 		public void Delete(ITable table, ItemKey key)
 		{
-			throw new NotImplementedException();
+			if(complete) throw new InvalidOperationException(ExceptionMessages.BatchComplete);
+			requests.Enqueue(BatchWriteRequest.Delete(table, key));
+			if(requests.Count >= Limits.BatchWriteSize)
+				DoBatchWrite();
+		}
+
+		private void DoBatchWrite(bool allowPartial = false)
+		{
+			var batchRequests = DequeueBatch(allowPartial);
+			if(batchRequests == null) return; // Someone must have beat us to it
+			var request = new Aws.BatchWriteItemRequest(batchRequests.GroupBy(r => r.TableName).ToDictionary(g => g.Key, g => g.Select(r => r.Request).ToList()));
+			var response = region.DB.BatchWriteItem(request);
+			foreach(var unprocessedTable in response.UnprocessedItems)
+				foreach(var unprocessedItem in unprocessedTable.Value)
+					requests.Enqueue(new BatchWriteRequest(unprocessedTable.Key, unprocessedItem));
+		}
+
+		private IList<BatchWriteRequest> DequeueBatch(bool allowPartial)
+		{
+			// Pull out items for a batch (must be in lock so two people don't try to grab the same set
+			var currentRequests = new List<BatchWriteRequest>(Limits.BatchWriteSize);
+
+			if(!allowPartial && requests.Count < Limits.BatchWriteSize) return null;
+
+			for(var i = 0; i < Limits.BatchWriteSize && requests.Count > 0; i++)
+				currentRequests.Add(requests.Dequeue());
+
+			return currentRequests;
 		}
 
 		public void Complete()
 		{
-			throw new NotImplementedException();
-		}
+			if(complete) throw new InvalidOperationException(ExceptionMessages.BatchComplete);
+			complete = true; // really there is a risk some other method is still completing, but the caller should prevent that
 
-		private void Flush(bool force)
-		{
-			if(!force && (puts.Count + deletes.Count) < Limits.BatchWriteSize) return;
-			var requestItems = new Dictionary<string, List<Aws.WriteRequest>>();
-			foreach(var putGroup in puts)
-			{
-				List<Aws.WriteRequest> writeRequests;
-				if(!requestItems.TryGetValue(putGroup.Key.Name, out writeRequests))
-					requestItems.Add(putGroup.Key.Name, writeRequests = new List<Aws.WriteRequest>());
-
-				writeRequests.AddRange(putGroup.Value.Select(put => new Aws.WriteRequest(new Aws.PutRequest(put.ToAwsDictionary()))));
-			}
-			puts.Clear();
-			foreach(var deleteGroup in deletes)
-			{
-				List<Aws.WriteRequest> writeRequests;
-				if(!requestItems.TryGetValue(deleteGroup.Key.Name, out writeRequests))
-					requestItems.Add(deleteGroup.Key.Name, writeRequests = new List<Aws.WriteRequest>());
-
-				var keySchema = deleteGroup.Key.Schema.Key;
-				writeRequests.AddRange(deleteGroup.Value.Select(delete => new Aws.WriteRequest(new Aws.DeleteRequest(delete.ToAws(keySchema)))));
-			}
-			deletes.Clear();
-
-			var request = new Aws.BatchWriteItemRequest(requestItems);
-			var response = region.DB.BatchWriteItem(request);
-			// TODO deal with unprocessed items
-			throw new NotImplementedException();
+			if(requests.Count > 0)
+				DoBatchWrite(true);
 		}
 	}
 }

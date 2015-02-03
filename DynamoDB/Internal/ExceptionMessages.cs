@@ -18,5 +18,6 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 	{
 		public const string InvalidCast = "Unable to convert object of type '{0}' to type '{1}'.";
 		public const string InvalidCastOfNull = "Unable to convert value null to type '{0}'.";
+		public const string BatchComplete = "Batch is complete, no operations can be performed on it";
 	}
 }

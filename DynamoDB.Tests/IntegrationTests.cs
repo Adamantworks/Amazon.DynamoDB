@@ -58,9 +58,19 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				});
 				await table.WaitUntilNotAsync(CollectionStatus.Updating);
 
-				var hashKey = DynamoDBKeyValue.Convert(Guid.NewGuid());
+				var writeBatch = region.BeginBatchWriteAsync();
+				for(var i = 0; i < 113; i++)
+				{
+					var item = new DynamoDBMap()
+					{
+						{"ID", Guid.NewGuid()},
+						{"Order", 0},
+						{"CreatedOn", DateTime.UtcNow.ToString("u")},
+					};
+					table.PutAsync(writeBatch, item);
+				}
+				await writeBatch.Complete().ConfigureAwait(false);
 
-				var items = await table.Indexes["global"].Query(hashKey).AllKeysAsync().ToList();
 				// TODO test query limits
 			}
 			finally
@@ -86,9 +96,18 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				});
 				table.WaitUntilNot(CollectionStatus.Updating);
 
-				var hashKey = DynamoDBKeyValue.Convert(Guid.NewGuid());
-
-				var items = table.Indexes["global"].Query(hashKey).AllKeys().ToList();
+				var writeBatch = region.BeginBatchWrite();
+				for(var i = 0; i < 113; i++)
+				{
+					var item = new DynamoDBMap()
+					{
+						{"ID", Guid.NewGuid()},
+						{"Order", 0},
+						{"CreatedOn", DateTime.UtcNow.ToString("u")},
+					};
+					table.Put(writeBatch, item);
+				}
+				writeBatch.Complete();
 				// TODO test query limits
 			}
 			finally
