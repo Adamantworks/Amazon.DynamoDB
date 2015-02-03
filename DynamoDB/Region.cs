@@ -165,7 +165,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				GlobalSecondaryIndexes = schema.Indexes.Where(i => i.Value.IsGlobal).Select(i => new Aws.GlobalSecondaryIndex()
 				{
 					IndexName = i.Key,
-					KeySchema = schema.Key.ToAws(),
+					KeySchema = i.Value.Key.ToAws(),
 					Projection = i.Value.ToAwsProjection(),
 					ProvisionedThroughput = new Aws.ProvisionedThroughput(1, 1),
 				}).ToList(),
