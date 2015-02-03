@@ -81,7 +81,7 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 
 			private async Task<TState> NextChunk(TState state, CancellationToken? cancellationToken = null)
 			{
-				await Task.Yield(); // We want to return the task immediately, so as not to delay the operation that triggered getting the next chunk
+				await new YieldAwaitableWithoutContext(); // We want to return the task immediately, so as not to delay the operation that triggered getting the next chunk
 				var nextState = await enumerable.GetMore(state, cancellationToken ?? cts.Token).ConfigureAwait(false);
 				if(enumerable.ReadAhead == ReadAhead.All && !enumerable.IsComplete(nextState))
 					chunks.Enqueue(NextChunk(state)); // This is a read ahead, so it shouldn't be tied to our token
