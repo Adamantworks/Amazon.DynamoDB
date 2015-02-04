@@ -60,6 +60,7 @@
     <Compile Include="Converters\Basic\SetConverter.cs" />
     <Compile Include="Converters\CompositeValueConverters.cs" />
     <Compile Include="Converters\Composite\ViaBinaryConverter.cs" />
+    <Compile Include="Converters\Composite\ViaBooleanConverter.cs" />
     <Compile Include="Converters\Composite\ViaNumberConverter.cs" />
     <Compile Include="Converters\ValueConverterExtensions.cs" />
     <Compile Include="Internal\BatchWriteRequest.cs" />

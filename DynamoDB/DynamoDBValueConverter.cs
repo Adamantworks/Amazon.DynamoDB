@@ -88,7 +88,8 @@ namespace Adamantworks.Amazon.DynamoDB
 			var converter = new CompositeConverter();
 			converter.Add(baseConverter);
 			converter.Add(CompositeValueConverters.ViaNumber, -1);
-			converter.Add(CompositeValueConverters.ViaBinary, -2);
+			converter.Add(CompositeValueConverters.ViaBoolean, -2);
+			converter.Add(CompositeValueConverters.ViaBinary, -3);
 			return converter;
 		}
 	}

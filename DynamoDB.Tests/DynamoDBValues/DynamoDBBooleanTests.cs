@@ -23,8 +23,8 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.DynamoDBValues
 		[Test]
 		public new void ToString()
 		{
-			Assert.AreEqual("true", DynamoDBBoolean.True.ToString());
-			Assert.AreEqual("false", DynamoDBBoolean.False.ToString());
+			Assert.AreEqual("True", DynamoDBBoolean.True.ToString());
+			Assert.AreEqual("False", DynamoDBBoolean.False.ToString());
 		}
 	}
 }

@@ -19,6 +19,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 	public static class CompositeValueConverters
 	{
 		public static readonly IValueConverter ViaNumber = new ViaNumberConverter();
+		public static readonly IValueConverter ViaBoolean = new ViaBooleanConverter();
 		public static readonly IValueConverter ViaBinary = new ViaBinaryConverter();
 	}
 }

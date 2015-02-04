@@ -35,7 +35,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			Assert.AreEqual("cast;converted", Composite.Value(Cast, Convert, dummyConverter).ToString());
 			Assert.AreEqual("converted;cast", Composite.Value(Convert, Cast, dummyConverter).ToString());
 			Assert.AreEqual("converted;converted", Composite.Value(Convert, Convert, dummyConverter).ToString());
-			Assert.AreEqual("upcast;converted", Composite.Value(Upcast, Convert));
+			Assert.AreEqual("upcast;converted", Composite.Value(Upcast, Convert, dummyConverter).ToString());
 		}
 
 		private class DummyConverter : IValueConverter
