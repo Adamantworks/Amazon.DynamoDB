@@ -79,6 +79,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			return new Values(values);
 		}
 
+		// TODO add comments explaining positional values
 		public static Values Of(params object[] positionalValues)
 		{
 			return Of(DynamoDBValueConverter.Default, positionalValues);

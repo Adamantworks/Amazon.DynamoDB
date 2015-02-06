@@ -20,7 +20,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Composite
 {
 	public class ViaNumberConverter : ValueConverter<DynamoDBString>
 	{
-		private readonly Regex numberPattern = new Regex(@"^-?\d+(\.\d+)(E[+-]?\d+)?$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
+		private readonly Regex numberPattern = new Regex(@"^-?\d+(\.\d+)?(E[+-]?\d+)?$", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
 
 		public override bool CanConvertTo(Type toType, IValueConverter context)
 		{

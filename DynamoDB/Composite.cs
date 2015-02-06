@@ -544,7 +544,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			var values = Split(value);
 			if(values.Length != 3)
-				throw new ArgumentException("Must be a composite of 2 values", "value");
+				throw new ArgumentException("Must be a composite of 3 values", "value");
 
 			return Tuple.Create(
 				((DynamoDBString)values[0]).To<T1>(converter),
@@ -559,7 +559,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			var values = Split(value);
 			if(values.Length != 4)
-				throw new ArgumentException("Must be a composite of 2 values", "value");
+				throw new ArgumentException("Must be a composite of 4 values", "value");
 
 			return Tuple.Create(
 				((DynamoDBString)values[0]).To<T1>(converter),

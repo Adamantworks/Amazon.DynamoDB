@@ -27,5 +27,15 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			Assert.IsTrue(value.Item1);
 			Assert.IsFalse(value.Item2);
 		}
+
+		[Test]
+		public void StringToNumber()
+		{
+			var value = Composite.Split<int, int, int, decimal>(new DynamoDBString("-1;0;1;3.14"));
+			Assert.AreEqual(-1, value.Item1);
+			Assert.AreEqual(0, value.Item2);
+			Assert.AreEqual(1, value.Item3);
+			Assert.AreEqual(3.14m, value.Item4);
+		}
 	}
 }
