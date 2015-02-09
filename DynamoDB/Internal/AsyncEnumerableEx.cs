@@ -28,9 +28,10 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			Func<TState, CancellationToken, Task<TState>> getMore,
 			Func<TState, IEnumerable<TResult>> getResults,
 			Func<TState, bool> isComplete,
-			ReadAhead readAhead = ReadAhead.None)
+			ReadAhead readAhead = ReadAhead.None,
+			bool captureContext = false)
 		{
-			return new ChunkedAsyncEnumerable<TState, TResult>(initialState, getMore, getResults, isComplete, readAhead);
+			return new ChunkedAsyncEnumerable<TState, TResult>(initialState, getMore, getResults, isComplete, readAhead, captureContext);
 		}
 
 		private class ChunkedAsyncEnumerable<TState, TResult> : IAsyncEnumerable<TResult>
@@ -40,19 +41,16 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			internal readonly Func<TState, IEnumerable<TResult>> GetResults;
 			internal readonly Func<TState, bool> IsComplete;
 			internal readonly ReadAhead ReadAhead;
+			internal readonly bool CaptureContext;
 
-			public ChunkedAsyncEnumerable(
-				TState initialState,
-				Func<TState, CancellationToken, Task<TState>> getMore,
-				Func<TState, IEnumerable<TResult>> getResults,
-				Func<TState, bool> isComplete,
-				ReadAhead readAhead)
+			public ChunkedAsyncEnumerable(TState initialState, Func<TState, CancellationToken, Task<TState>> getMore, Func<TState, IEnumerable<TResult>> getResults, Func<TState, bool> isComplete, ReadAhead readAhead, bool captureContext)
 			{
 				this.initialState = initialState;
-				this.IsComplete = isComplete;
-				this.GetMore = getMore;
-				this.GetResults = getResults;
-				this.ReadAhead = readAhead;
+				IsComplete = isComplete;
+				GetMore = getMore;
+				GetResults = getResults;
+				ReadAhead = readAhead;
+				CaptureContext = captureContext;
 			}
 
 			public IAsyncEnumerator<TResult> GetEnumerator()
@@ -63,7 +61,11 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 
 		private class ChunkedAsyncEnumerator<TState, TResult> : IAsyncEnumerator<TResult>
 		{
-			private readonly ChunkedAsyncEnumerable<TState, TResult> enumerable;
+			private readonly Func<TState, CancellationToken, Task<TState>> getMore;
+			private readonly Func<TState, IEnumerable<TResult>> getResults;
+			private readonly Func<TState, bool> isComplete;
+			private readonly ReadAhead readAhead;
+			private readonly bool captureContext;
 			private readonly ConcurrentQueue<Task<TState>> chunks = new ConcurrentQueue<Task<TState>>();
 			private readonly Queue<TResult> results = new Queue<TResult>();
 			private CancellationTokenSource cts = new CancellationTokenSource();
@@ -73,7 +75,11 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 
 			public ChunkedAsyncEnumerator(ChunkedAsyncEnumerable<TState, TResult> enumerable, TState initialState)
 			{
-				this.enumerable = enumerable;
+				getMore = enumerable.GetMore;
+				getResults = enumerable.GetResults;
+				isComplete = enumerable.IsComplete;
+				readAhead = enumerable.ReadAhead;
+				captureContext = enumerable.CaptureContext;
 				lastState = initialState;
 				if(enumerable.ReadAhead != ReadAhead.None)
 					chunks.Enqueue(NextChunk(initialState));
@@ -81,9 +87,9 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 
 			private async Task<TState> NextChunk(TState state, CancellationToken? cancellationToken = null)
 			{
-				await new YieldAwaitableWithoutContext(); // We want to return the task immediately, so as not to delay the operation that triggered getting the next chunk
-				var nextState = await enumerable.GetMore(state, cancellationToken ?? cts.Token).ConfigureAwait(false);
-				if(enumerable.ReadAhead == ReadAhead.All && !enumerable.IsComplete(nextState))
+				var readAheadAll = readAhead == ReadAhead.All;
+				var nextState = await getMore(state, cancellationToken ?? cts.Token).ConfigureAwait(captureContext && readAheadAll);
+				if(readAheadAll && !isComplete(nextState))
 					chunks.Enqueue(NextChunk(nextState)); // This is a read ahead, so it shouldn't be tied to our token
 
 				return nextState;
@@ -105,15 +111,15 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			{
 				Task<TState> nextStateTask;
 				if(chunks.TryDequeue(out nextStateTask))
-					lastState = await nextStateTask.WithCancellation(cancellationToken).ConfigureAwait(false);
+					lastState = await nextStateTask.WithCancellation(cancellationToken).ConfigureAwait(captureContext);
 				else
-					lastState = await NextChunk(lastState, cancellationToken).ConfigureAwait(false);
+					lastState = await NextChunk(lastState, cancellationToken).ConfigureAwait(captureContext);
 
-				complete = enumerable.IsComplete(lastState);
-				foreach(var result in enumerable.GetResults(lastState))
+				complete = isComplete(lastState);
+				foreach(var result in getResults(lastState))
 					results.Enqueue(result);
 
-				if(!complete && enumerable.ReadAhead == ReadAhead.Some)
+				if(!complete && readAhead == ReadAhead.Some)
 					chunks.Enqueue(NextChunk(lastState)); // This is a read ahead, so it shouldn't be tied to our token
 
 				return await MoveNext(cancellationToken).ConfigureAwait(false);

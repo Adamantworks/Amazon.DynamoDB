@@ -187,7 +187,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					{
 						var batchResults = new List<TResult>(Limits.BatchGetSize);
 
-						while(batchItems.Count < Limits.BatchGetSize && await enumerator.MoveNext().ConfigureAwait(false))
+						while(batchItems.Count < Limits.BatchGetSize && await enumerator.MoveNext()) // Need context for later calls to keySelector and resultSelector
 						{
 							var outerItem = enumerator.Current;
 							var key = keySelector(outerItem);
@@ -203,7 +203,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 						batchKeys.AddRange(batchItems.Keys.Select(k => k.ToAws(table.Schema.Key)));
 
-						var response = await table.Region.DB.BatchGetItemAsync(request, cancellationToken).ConfigureAwait(false);
+						var response = await table.Region.DB.BatchGetItemAsync(request, cancellationToken); // Need context for later calls to keySelector and resultSelector
 						var unprocessedItems = ProcessResponse(response, innerItems, batchItems);
 
 						foreach(var batchItem in batchItems)
@@ -219,7 +219,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					},
 					lastResponse => lastResponse.Item1 ?? Enumerable.Empty<TResult>(),
 					lastResponse => lastResponse.Item2,
-					readAhead);
+					readAhead,
+					true);
 			});
 		}
 

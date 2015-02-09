@@ -67,7 +67,6 @@
     <Compile Include="Internal\ExceptionMessages.cs" />
     <Compile Include="Internal\IDynamoDBSet.cs" />
     <Compile Include="Internal\TypeExtensions.cs" />
-    <Compile Include="Internal\YieldAwaitableWithoutContext.cs" />
     <Compile Include="ItemPage.cs" />
     <Compile Include="Syntax\IConsistentSyntax.cs" />
     <Compile Include="Syntax\IIfSyntax.cs" />
