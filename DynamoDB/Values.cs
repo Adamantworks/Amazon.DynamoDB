@@ -24,8 +24,6 @@ namespace Adamantworks.Amazon.DynamoDB
 {
 	public class Values : IAwsAttributeValuesProvider
 	{
-		public static readonly Values Empty = new Values();
-
 		private readonly DynamoDBMap values;
 
 		public Values()
