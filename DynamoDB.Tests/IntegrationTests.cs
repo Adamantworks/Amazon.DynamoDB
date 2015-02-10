@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -38,11 +39,12 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 		private static TableSchema TableSchema()
 		{
-			var hashKey = new AttributeSchema("ID", DynamoDBValueType.String);
-			var rangeKey = new AttributeSchema("Order", DynamoDBValueType.Number);
-			var key = new KeySchema(hashKey, rangeKey);
-			var localIndexKey = new KeySchema(hashKey, "CreatedOn", DynamoDBValueType.String);
-			var globalIndexKey = new KeySchema(rangeKey, hashKey);
+			var id = new AttributeSchema("ID", DynamoDBValueType.String);
+			var order = new AttributeSchema("Order", DynamoDBValueType.Number);
+			var key = new KeySchema(id, order);
+			var group = new AttributeSchema("Group", DynamoDBValueType.Number);
+			var localIndexKey = new KeySchema(id, group);
+			var globalIndexKey = new KeySchema(group, order);
 			return new TableSchema(key, new Dictionary<string, IndexSchema>()
 			{
 				{ "local", new IndexSchema(false, localIndexKey) },
@@ -52,7 +54,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 		private async Task WithTableAsync(string test, Func<ITable, Task> actions)
 		{
-			var tableName = "UnitTest-" + test + "Async-" + Guid.NewGuid();
+			var tableName = "UnitTest-" + test + "Async-" + Guid.NewGuid().ToString("N");
 			var schema = TableSchema();
 			var table = await region.CreateTableAsync(tableName, schema);
 			await table.WaitUntilNotAsync(CollectionStatus.Creating);
@@ -79,28 +81,57 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				await table.WaitUntilNotAsync(CollectionStatus.Updating);
 
 				var writeBatch = region.BeginBatchWriteAsync();
-				for(var i = 0; i < 113; i++)
+				for(var i = 0; i < 513; i++)
 				{
 					var item = new DynamoDBMap()
 					{
 						{"ID", Guid.NewGuid()},
-						{"Order", 0},
-						{"CreatedOn", DateTime.UtcNow.ToString("u")},
+						{"Order", i+1},
+						{"Group", i/100},
 					};
 					table.PutAsync(writeBatch, item);
 				}
 				await writeBatch.Complete().ConfigureAwait(false);
 
-				// TODO test query limits
+				var items = await table.Scan().LimitTo(2).AllAsync().ToList().ConfigureAwait(false);
+				Assert.AreEqual(2, items.Count);
+
+				items = await table.Scan().LimitTo(112).AllAsync().ToList().ConfigureAwait(false);
+				Assert.AreEqual(112, items.Count);
+
+				// TODO paged scan
+
+				var globalIndex = table.Indexes["global"];
+				items = await globalIndex.Query(2).LimitTo(3).AllKeysAsync().ToList().ConfigureAwait(false);
+				Assert.AreEqual(3, items.Count);
+
+				items = await globalIndex.Query(2).LimitTo(98).AllKeysAsync().ToList().ConfigureAwait(false);
+				Assert.AreEqual(98, items.Count);
+
+				await PagedQueryAsync(globalIndex, 3).ConfigureAwait(false);
+				await PagedQueryAsync(globalIndex, 52).ConfigureAwait(false);
 			});
 
 			// Wait on the async to complete
 			task.WaitAndUnwrapException();
 		}
 
+		private static async Task PagedQueryAsync(IIndex globalIndex, int pageSize)
+		{
+			ItemKey? lastKey = null;
+
+			do
+			{
+				var page = await globalIndex.Query(2).Paged(pageSize, lastKey).AllKeysAsync().ConfigureAwait(false);
+				lastKey = page.LastEvaluatedKey;
+				if(lastKey != null)
+					Assert.AreEqual(pageSize, page.Items.Count);
+			} while(lastKey != null);
+		}
+
 		private void WithTable(string test, Action<ITable> actions)
 		{
-			var tableName = "UnitTest-" + test + "-" + Guid.NewGuid();
+			var tableName = "UnitTest-" + test + "-" + Guid.NewGuid().ToString("N");
 			var schema = TableSchema();
 			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
 			table.WaitUntilNot(CollectionStatus.Creating);
@@ -127,19 +158,49 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				table.WaitUntilNot(CollectionStatus.Updating);
 
 				var writeBatch = region.BeginBatchWrite();
-				for(var i = 0; i < 113; i++)
+				for(var i = 0; i < 513; i++)
 				{
 					var item = new DynamoDBMap()
 					{
 						{"ID", Guid.NewGuid()},
-						{"Order", 0},
-						{"CreatedOn", DateTime.UtcNow.ToString("u")},
+						{"Order", i+1},
+						{"Group", i/100},
 					};
 					table.Put(writeBatch, item);
 				}
 				writeBatch.Complete();
-				// TODO test query limits
+
+				var items = table.Scan().LimitTo(2).All().ToList();
+				Assert.AreEqual(2, items.Count);
+
+				items = table.Scan().LimitTo(112).All().ToList();
+				Assert.AreEqual(112, items.Count);
+
+				// TODO paged scan
+
+				var globalIndex = table.Indexes["global"];
+				items = globalIndex.Query(2).LimitTo(3).AllKeys().ToList();
+				Assert.AreEqual(3, items.Count);
+
+				items = globalIndex.Query(2).LimitTo(98).AllKeys().ToList();
+				Assert.AreEqual(98, items.Count);
+
+				PagedQuery(globalIndex, 3);
+				PagedQuery(globalIndex, 52);
 			});
+		}
+
+		private static void PagedQuery(IIndex globalIndex, int pageSize)
+		{
+			ItemKey? lastKey = null;
+
+			do
+			{
+				var page = globalIndex.Query(2).Paged(pageSize, lastKey).AllKeys();
+				lastKey = page.LastEvaluatedKey;
+				if(lastKey != null)
+					Assert.AreEqual(pageSize, page.Items.Count);
+			} while(lastKey != null);
 		}
 
 		[Test]

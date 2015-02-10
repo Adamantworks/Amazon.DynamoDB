@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
@@ -74,30 +74,32 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			{
 				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
 				var request = BuildScanRequest();
-				return AsyncEnumerableEx.GenerateChunked<Aws.ScanResponse, DynamoDBMap>(null,
-					(lastResponse, cancellationToken) =>
+				return AsyncEnumerableEx.GenerateChunked(new QueryResponse(limit, exclusiveStartKey, keySchema),
+					async (lastResponse, cancellationToken) =>
 					{
-						if(lastResponse != null)
-							request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-						return region.DB.ScanAsync(request, cancellationToken);
+						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+						if(limit != null)
+							request.Limit = lastResponse.CurrentLimit;
+						return new QueryResponse(lastResponse, await region.DB.ScanAsync(request, cancellationToken).ConfigureAwait(false));
 					},
 					lastResponse => lastResponse.Items.Select(item => item.ToMap()),
-					IsComplete,
+					lastResponse => lastResponse.IsComplete(),
 					readAhead);
 			});
 		}
 		public IEnumerable<DynamoDBMap> All()
 		{
 			var request = BuildScanRequest();
-			Aws.ScanResponse lastResponse = null;
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, keySchema);
 			do
 			{
-				if(lastResponse != null)
-					request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				lastResponse = region.DB.Scan(request);
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, region.DB.Scan(request));
 				foreach(var item in lastResponse.Items)
 					yield return item.ToMap();
-			} while(!IsComplete(lastResponse));
+			} while(!lastResponse.IsComplete());
 		}
 		#endregion
 
@@ -108,20 +110,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				TableName = tableName,
 				ExpressionAttributeNames = AwsAttributeNames.GetCombined(projection, filter),
 			};
-			if(limit != null)
-				request.Limit = limit.Value;
+			// No need to set Limit or ExclusiveStartKey, that will be handled by the first QueryResponse
 			if(projection != null)
 				request.ProjectionExpression = projection.Expression;
 			if(filter != null)
 				request.FilterExpression = filter.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
-			if(exclusiveStartKey != null)
-				request.ExclusiveStartKey = exclusiveStartKey.Value.ToAws(keySchema);
 			return request;
-		}
-		private static bool IsComplete(Aws.ScanResponse lastResponse)
-		{
-			return lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0;
 		}
 	}
 }
