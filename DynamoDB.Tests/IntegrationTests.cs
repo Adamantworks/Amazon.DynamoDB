@@ -14,10 +14,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
+using Nito.AsyncEx.Synchronous;
 using NUnit.Framework;
 using Aws = Amazon.DynamoDBv2.Model;
 
@@ -36,21 +36,41 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			region = DynamoDBRegion.Connect();
 		}
 
-		[Test]
-		public void Async()
+		private static TableSchema TableSchema()
 		{
-			var task = AsyncInternal();
-			task.Wait();
+			var hashKey = new AttributeSchema("ID", DynamoDBValueType.String);
+			var rangeKey = new AttributeSchema("Order", DynamoDBValueType.Number);
+			var key = new KeySchema(hashKey, rangeKey);
+			var localIndexKey = new KeySchema(hashKey, "CreatedOn", DynamoDBValueType.String);
+			var globalIndexKey = new KeySchema(rangeKey, hashKey);
+			return new TableSchema(key, new Dictionary<string, IndexSchema>()
+			{
+				{ "local", new IndexSchema(false, localIndexKey) },
+				{ "global", new IndexSchema(true, globalIndexKey) },
+			});
 		}
 
-		private async Task AsyncInternal()
+		private async Task WithTableAsync(string test, Func<ITable, Task> actions)
 		{
-			var tableName = "UnitTest-IntegrationTestAsync-" + Guid.NewGuid();
+			var tableName = "UnitTest-" + test + "Async-" + Guid.NewGuid();
 			var schema = TableSchema();
 			var table = await region.CreateTableAsync(tableName, schema);
 			await table.WaitUntilNotAsync(CollectionStatus.Creating);
-
 			try
+			{
+				await actions(table).ConfigureAwait(false);
+			}
+			finally
+			{
+				region.DeleteTable(tableName);
+				table.WaitUntilNot(CollectionStatus.Deleting);
+			}
+		}
+
+		[Test]
+		public void Async()
+		{
+			var task = WithTableAsync("IntegrationTest", async table =>
 			{
 				await table.UpdateTableAsync(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
 				{
@@ -72,6 +92,21 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				await writeBatch.Complete().ConfigureAwait(false);
 
 				// TODO test query limits
+			});
+
+			// Wait on the async to complete
+			task.WaitAndUnwrapException();
+		}
+
+		private void WithTable(string test, Action<ITable> actions)
+		{
+			var tableName = "UnitTest-" + test + "-" + Guid.NewGuid();
+			var schema = TableSchema();
+			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
+			table.WaitUntilNot(CollectionStatus.Creating);
+			try
+			{
+				actions(table);
 			}
 			finally
 			{
@@ -83,12 +118,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		[Test]
 		public void Sync()
 		{
-			var tableName = "UnitTest-IntegrationTestSync-" + Guid.NewGuid();
-			var schema = TableSchema();
-			var table = region.CreateTable(tableName, schema);
-			table.WaitUntilNot(CollectionStatus.Creating);
-
-			try
+			WithTable("IntegrationTest", table =>
 			{
 				table.UpdateTable(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
 				{
@@ -109,25 +139,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				}
 				writeBatch.Complete();
 				// TODO test query limits
-			}
-			finally
-			{
-				region.DeleteTable(tableName);
-				table.WaitUntilNot(CollectionStatus.Deleting);
-			}
-		}
-
-		private static TableSchema TableSchema()
-		{
-			var hashKey = new AttributeSchema("ID", DynamoDBValueType.String);
-			var rangeKey = new AttributeSchema("Order", DynamoDBValueType.Number);
-			var key = new KeySchema(hashKey, rangeKey);
-			var localIndexKey = new KeySchema(hashKey, "CreatedOn", DynamoDBValueType.String);
-			var globalIndexKey = new KeySchema(rangeKey, hashKey);
-			return new TableSchema(key, new Dictionary<string, IndexSchema>()
-			{
-				{ "local", new IndexSchema(false, localIndexKey) },
-				{ "global", new IndexSchema(true, globalIndexKey) },
 			});
 		}
 
@@ -141,19 +152,15 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		[Test]
 		public void UpdateIndexOnly()
 		{
-			var tableName = "UnitTest-UpdateIndexOnly-" + Guid.NewGuid();
-			var schema = TableSchema();
-			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
-			table.WaitUntilNot(CollectionStatus.Creating);
-
-			try
+			WithTable("UpdateIndexOnly", table =>
 			{
-				// Increate Both
+				// Increase Both
 				table.UpdateTable(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
 				{
 					{"global", LargeProvisionedThroughput}
 				});
 				table.WaitUntilNot(CollectionStatus.Updating);
+
 				// Decrease Index
 				table.UpdateTable(new Dictionary<string, ProvisionedThroughput>()
 				{
@@ -162,17 +169,13 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				table.WaitUntilNot(CollectionStatus.Updating);
 				Assert.AreEqual(0, table.ProvisionedThroughput.NumberOfDecreasesToday);
 				Assert.AreEqual(1, table.Indexes["global"].ProvisionedThroughput.NumberOfDecreasesToday);
+
 				// Decrease Table
 				table.UpdateTable(MinProvisionedThroughput);
 				table.WaitUntilNot(CollectionStatus.Updating);
 				Assert.AreEqual(1, table.ProvisionedThroughput.NumberOfDecreasesToday);
 				Assert.AreEqual(1, table.Indexes["global"].ProvisionedThroughput.NumberOfDecreasesToday);
-			}
-			finally
-			{
-				region.DeleteTable(tableName);
-				table.WaitUntilNot(CollectionStatus.Deleting);
-			}
+			});
 		}
 	}
 }

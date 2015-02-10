@@ -358,7 +358,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
 			} while(!IsComplete(lastResponse));
 			var lastEvaluatedKey = lastResponse.LastEvaluatedKey;
-			return new ItemPage(items, !IsComplete(lastResponse) ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));
+			return new ItemPage(items, HasLastEvaluatedKey(lastResponse) ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));
 		}
 		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Aws.Condition> keyConditions)
 		{
@@ -386,7 +386,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
 			} while(!IsComplete(lastResponse));
 			var lastEvaluatedKey = lastResponse.LastEvaluatedKey;
-			return new ItemPage(items, !IsComplete(lastResponse) ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));
+			return new ItemPage(items, HasLastEvaluatedKey(lastResponse) ? lastEvaluatedKey.ToItemKey(keySchema) : default(ItemKey?));
 		}
 		private Aws.QueryRequest BuildQueryRequest(Dictionary<string, Aws.Condition> keyConditions)
 		{
@@ -413,6 +413,10 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private static bool IsComplete(Aws.QueryResponse lastResponse)
 		{
 			return lastResponse.LastEvaluatedKey == null || lastResponse.LastEvaluatedKey.Count == 0;
+		}
+		private static bool HasLastEvaluatedKey(Aws.QueryResponse lastResponse)
+		{
+			return lastResponse.LastEvaluatedKey != null && lastResponse.LastEvaluatedKey.Count != 0;
 		}
 	}
 }
