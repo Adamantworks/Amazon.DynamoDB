@@ -146,7 +146,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public Values Add(string name, DynamoDBValue value)
 		{
-			values.Add(name, value);
+			values.Add(BuildName(name), value);
 			return this;
 		}
 		public Values Add(int position, DynamoDBValue value)
@@ -156,12 +156,12 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		public Values Add(string name, object value)
 		{
-			values.Add(name, DynamoDBValue.Convert(value));
+			values.Add(BuildName(name), DynamoDBValue.Convert(value));
 			return this;
 		}
 		public Values Add(string name, object value, IValueConverter converter)
 		{
-			values.Add(name, DynamoDBValue.Convert(value, converter));
+			values.Add(BuildName(name), DynamoDBValue.Convert(value, converter));
 			return this;
 		}
 		public Values Add(int position, object value)

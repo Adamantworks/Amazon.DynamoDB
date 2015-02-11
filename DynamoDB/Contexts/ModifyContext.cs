@@ -64,9 +64,9 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return response.Attributes.ToNonEmptyMap();
 		}
 
-		private global::Amazon.DynamoDBv2.Model.UpdateItemRequest BuildUpdateRequest(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		private Aws.UpdateItemRequest BuildUpdateRequest(UpdateExpression update, Values values, UpdateReturnValue returnValue)
 		{
-			var request = new global::Amazon.DynamoDBv2.Model.UpdateItemRequest()
+			var request = new Aws.UpdateItemRequest()
 			{
 				TableName = table.Name,
 				Key = key.ToAws(table.Schema.Key),
