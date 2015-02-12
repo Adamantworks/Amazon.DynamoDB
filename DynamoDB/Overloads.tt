@@ -47,6 +47,7 @@
 	var keysAsync = Param("IAsyncEnumerable<ItemKey>", "keys");
 	var keysSyncToAsync = ParamTransform("IEnumerable<ItemKey>", "keys", "keys.ToAsyncEnumerable()");
 	var keys = Param("IEnumerable<ItemKey>", "keys");
+	var tableNameBegins = Param("string", "tableNameBegins");
 	var readAhead = Param("ReadAhead", "readAhead", "ReadAhead.Some");
 	var outerItemsAsync = Param("IAsyncEnumerable<T>", "outerItems");
 	var outerItemsSyncToAsync = ParamTransform("IEnumerable<T>", "outerItems", "outerItems.ToAsyncEnumerable()");
@@ -134,6 +135,7 @@
 
 	// Region
 	var listTablesAsync = new Method("IAsyncEnumerable<string>", "ListTablesAsync", GenOverloads(readAhead));
+	var listTablesWithPrefixAsync = new Method("IAsyncEnumerable<string>", "ListTablesWithPrefixAsync", GenOverloads(tableNameBegins, readAhead));
 	var createTableAsync = new Method("Task<ITable>", "CreateTableAsync",
 		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs, cancellationToken)
 		.Where(noIndexThroughputWithoutTableThroughput));
@@ -318,6 +320,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	{
 <#		GenInterface(listTablesAsync); #>
 
+<#		GenInterface(listTablesWithPrefixAsync); #>
+
 <#		GenInterface(createTableAsync); #>
 <#		GenInterface(createTable); #>
 	}
@@ -325,6 +329,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Region
 	{
 <#		GenMethods(listTablesAsync); #>
+
+<#		GenMethods(listTablesWithPrefixAsync); #>
 
 <#		GenMethods(createTableAsync); #>
 

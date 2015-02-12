@@ -12,16 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using System.Collections.Generic;
+using NUnit.Framework;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Tests
 {
-	public interface IScanOptionsSyntax
+	[TestFixture]
+	public class RegionTests
 	{
-		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some);
-		IEnumerable<DynamoDBMap> All();
-		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
-		// TODO: Parallel(totalSegments, currentSegment)
+		[Test]
+		[TestCase("-", null)]
+		[TestCase("---", "-z")]
+		[TestCase("hello-", "hellz")]
+		[TestCase("hello", "helln")]
+		[TestCase(".", "-")]
+		[TestCase("0", ".")]
+		[TestCase("A", "9")]
+		[TestCase("_", "Z")]
+		[TestCase("a", "_")]
+		public void TableNameBefore(string name, string nameBefore)
+		{
+			if(nameBefore != null)
+				nameBefore = nameBefore.PadRight(255, 'z');
+			Assert.AreEqual(nameBefore, Region.TableNameBefore(name));
+		}
 	}
 }

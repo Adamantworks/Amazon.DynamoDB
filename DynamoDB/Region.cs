@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Internal;
@@ -39,6 +41,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead);
 		IEnumerable<string> ListTables();
 
+		IEnumerable<string> ListTablesWithPrefix(string tableNameBegins);
+
 		// The overloads of these methods are in Overloads.tt and call the private implementations
 		// Task<ITable> CreateTableAsync(...);
 		// ITable CreateTable();
@@ -57,6 +61,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	// See Overloads.tt and Overloads.cs for more method overloads of this class
 	internal partial class Region : IDynamoDBRegion
 	{
+		private static readonly Regex TableNamePrefix = new Regex("^[-A-Za-z._0-9]{1,254}$");
+
 		internal readonly AwsRoot.IAmazonDynamoDB DB;
 
 		internal Region(AwsRoot.IAmazonDynamoDB db)
@@ -135,6 +141,85 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
+		#region ListTablesWithPrefix
+		public IAsyncEnumerable<string> ListTablesWithPrefixAsync(string tableNameBegins, ReadAhead readAhead)
+		{
+			CheckTableNameBegins(tableNameBegins);
+			return AsyncEnumerable.Defer(() =>
+			{
+				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
+				var request = new Aws.ListTablesRequest();
+				return AsyncEnumerableEx.GenerateChunked<Aws.ListTablesResponse, string>(null,
+					(lastResponse, cancellationToken) =>
+					{
+						request.ExclusiveStartTableName = lastResponse != null ? lastResponse.LastEvaluatedTableName : TableNameBefore(tableNameBegins);
+						return DB.ListTablesAsync(request, cancellationToken);
+					},
+					lastResponse => lastResponse.TableNames.TakeWhile(tableName => tableName.StartsWith(tableNameBegins)),
+					lastResponse => IsComplete(lastResponse) || !lastResponse.TableNames.Last().StartsWith(tableNameBegins),
+					readAhead);
+			});
+		}
+
+		public IEnumerable<string> ListTablesWithPrefix(string tableNameBegins)
+		{
+			CheckTableNameBegins(tableNameBegins);
+			var request = new Aws.ListTablesRequest();
+			Aws.ListTablesResponse lastResponse = null;
+			do
+			{
+				request.ExclusiveStartTableName = lastResponse != null ? lastResponse.LastEvaluatedTableName : TableNameBefore(tableNameBegins);
+				lastResponse = DB.ListTables(request);
+				foreach(var tableName in lastResponse.TableNames)
+					if(tableName.StartsWith(tableNameBegins))
+						yield return tableName;
+					else
+						yield break;
+			} while(IsComplete(lastResponse));
+		}
+
+		private static void CheckTableNameBegins(string tableNameBegins)
+		{
+			if(tableNameBegins == null)
+				throw new ArgumentNullException("tableNameBegins");
+			if(!TableNamePrefix.IsMatch(tableNameBegins))
+				throw new ArgumentException("Length must be between 1 and 254 (inclusive) and all characters allowed in table names", "tableNameBegins");
+		}
+		internal static string TableNameBefore(string name)
+		{
+			var nameBefore = new StringBuilder(name);
+			var end = name.Length - 1;
+			switch(name[end])
+			{
+				case '-':
+					if(name.Length == 1)
+						return null; // Nothing comes before "-"
+					nameBefore.Length -= 1; // Remove the -
+					nameBefore[end - 1] = 'z'; // change the char before to z
+					break;
+				case '.':
+					nameBefore[end] = '-';
+					break;
+				case '0':
+					nameBefore[end] = '.';
+					break;
+				case 'A':
+					nameBefore[end] = '9';
+					break;
+				case '_':
+					nameBefore[end] = 'Z';
+					break;
+				case 'a':
+					nameBefore[end] = '_';
+					break;
+				default:
+					nameBefore[end] = (char)(name[end] - 1);
+					break;
+			}
+			return nameBefore.ToString().PadRight(255, 'z');
+		}
+		#endregion
+
 		#region CreateTable
 		private async Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput? provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs, CancellationToken cancellationToken)
 		{
@@ -191,6 +276,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			var response = await DB.DescribeTableAsync(new Aws.DescribeTableRequest(tableName), cancellationToken).ConfigureAwait(false);
 			return new Table(this, response.Table);
 		}
+
 		public ITable LoadTable(string tableName)
 		{
 			var response = DB.DescribeTable(tableName);
@@ -215,7 +301,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			try
 			{
-				return  LoadTable(tableName);
+				return LoadTable(tableName);
 			}
 			catch(Aws.ResourceNotFoundException)
 			{
@@ -230,6 +316,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			var request = new Aws.DeleteTableRequest(tableName);
 			return DB.DeleteTableAsync(request, cancellationToken);
 		}
+
 		public void DeleteTable(string tableName)
 		{
 			DB.DeleteTable(tableName);

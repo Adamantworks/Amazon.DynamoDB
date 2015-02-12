@@ -37,6 +37,16 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			region = DynamoDBRegion.Connect();
 		}
 
+		private static string TableNamePrefix(string test)
+		{
+			return "UnitTest-" + test;
+		}
+
+		private static string UniqueTableName(string test)
+		{
+			return TableNamePrefix(test) + "-" + Guid.NewGuid().ToString("N");
+		}
+
 		private static TableSchema TableSchema()
 		{
 			var id = new AttributeSchema("ID", DynamoDBValueType.String);
@@ -47,14 +57,15 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			var globalIndexKey = new KeySchema(group, order);
 			return new TableSchema(key, new Dictionary<string, IndexSchema>()
 			{
-				{ "local", new IndexSchema(false, localIndexKey) },
-				{ "global", new IndexSchema(true, globalIndexKey) },
+				{"local", new IndexSchema(false, localIndexKey)},
+				{"global", new IndexSchema(true, globalIndexKey)},
 			});
 		}
 
 		private async Task WithTableAsync(string test, Func<ITable, Task> actions)
 		{
-			var tableName = "UnitTest-" + test + "Async-" + Guid.NewGuid().ToString("N");
+			var tableName = UniqueTableName(test);
+			;
 			var schema = TableSchema();
 			var table = await region.CreateTableAsync(tableName, schema);
 			await table.WaitUntilNotAsync(CollectionStatus.Creating);
@@ -86,7 +97,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 					var item = new DynamoDBMap()
 					{
 						{"ID", Guid.NewGuid()},
-						{"Order", i+1},
+						{"Order", i + 1},
 						{"Group", i/100},
 					};
 					table.PutAsync(writeBatch, item);
@@ -131,7 +142,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 		private void WithTable(string test, Action<ITable> actions)
 		{
-			var tableName = "UnitTest-" + test + "-" + Guid.NewGuid().ToString("N");
+			var tableName = UniqueTableName(test);
 			var schema = TableSchema();
 			var table = region.CreateTable(tableName, schema); // TODO specify provisioned throughput
 			table.WaitUntilNot(CollectionStatus.Creating);
@@ -163,7 +174,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 					var item = new DynamoDBMap()
 					{
 						{"ID", Guid.NewGuid()},
-						{"Order", i+1},
+						{"Order", i + 1},
 						{"Group", i/100},
 					};
 					table.Put(writeBatch, item);
@@ -237,6 +248,42 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				Assert.AreEqual(1, table.ProvisionedThroughput.NumberOfDecreasesToday);
 				Assert.AreEqual(1, table.Indexes["global"].ProvisionedThroughput.NumberOfDecreasesToday);
 			});
+		}
+
+		[Test]
+		public void ListTablesWithPrefix()
+		{
+			var begins = TableNamePrefix("ListTablesWithPrefix");
+			var schema = TableSchema();
+			var basicTable = region.CreateTable(begins, schema);
+			var table1 = region.CreateTable(UniqueTableName("ListTablesWithPrefix"), schema);
+			var table2 = region.CreateTable(UniqueTableName("ListTablesWithPrefix"), schema);
+			var table3 = region.CreateTable(UniqueTableName("ListTablesXWithPrefix"), schema);
+			try
+			{
+				var tables = region.ListTablesWithPrefix(begins).ToList();
+				Assert.AreEqual(3, tables.Count, "Count");
+				CollectionAssert.Contains(tables, begins);
+				Assert.IsTrue(tables.All(t => t.StartsWith(begins)));
+
+				// We are checking to make sure this doesn't throw an exception, because before "-" is ""
+				tables = region.ListTablesWithPrefix("-").ToList();
+			}
+			finally
+			{
+				basicTable.WaitUntilNot(CollectionStatus.Creating);
+				table1.WaitUntilNot(CollectionStatus.Creating);
+				table2.WaitUntilNot(CollectionStatus.Creating);
+				table3.WaitUntilNot(CollectionStatus.Creating);
+				region.DeleteTable(basicTable.Name);
+				region.DeleteTable(table1.Name);
+				region.DeleteTable(table2.Name);
+				region.DeleteTable(table3.Name);
+				basicTable.WaitUntilNot(CollectionStatus.Deleting);
+				table1.WaitUntilNot(CollectionStatus.Deleting);
+				table2.WaitUntilNot(CollectionStatus.Deleting);
+				table3.WaitUntilNot(CollectionStatus.Deleting);
+			}
 		}
 	}
 }

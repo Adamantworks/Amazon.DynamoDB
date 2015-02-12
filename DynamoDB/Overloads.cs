@@ -29,6 +29,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	{
 		IAsyncEnumerable<string> ListTablesAsync();
 
+		IAsyncEnumerable<string> ListTablesWithPrefixAsync(string tableNameBegins);
+
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema);
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput);
 		Task<ITable> CreateTableAsync(string tableName, TableSchema schema, ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
@@ -46,6 +48,13 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IAsyncEnumerable<string> ListTablesAsync()
 		{
 			return ListTablesAsync(ReadAhead.Some);
+		}
+		#endregion
+
+		#region ListTablesWithPrefixAsync
+		public IAsyncEnumerable<string> ListTablesWithPrefixAsync(string tableNameBegins)
+		{
+			return ListTablesWithPrefixAsync(tableNameBegins, ReadAhead.Some);
 		}
 		#endregion
 
