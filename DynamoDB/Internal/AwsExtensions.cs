@@ -187,7 +187,7 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 		public static void AddKey(this Dictionary<string, Aws.AttributeValue> key, AttributeSchema schema, DynamoDBKeyValue value, KeySchema primaryKeySchema = null)
 		{
 			if(schema != null
-			   && (primaryKeySchema != null && (schema.Name == primaryKeySchema.HashKey.Name || schema.Name == primaryKeySchema.RangeKey.Name)))
+			   && (primaryKeySchema != null && (schema.Name == primaryKeySchema.HashKey.Name || (primaryKeySchema.RangeKey != null && schema.Name == primaryKeySchema.RangeKey.Name))))
 			{
 				// Shared key attribute
 				if(value != null)

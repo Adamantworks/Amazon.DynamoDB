@@ -78,6 +78,7 @@
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Internal\AwsExtensionsTests.cs" />
     <Compile Include="ItemKeyTests.cs" />
+    <Compile Include="LastKeyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionTests.cs" />
     <Compile Include="ValuesTests.cs" />
