@@ -18,6 +18,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 		IQueryExclusiveStartKeySyntax LimitTo(int? limit);
 		IPagedQueryRangeSyntax Paged(int pageSize);
-		IPagedQueryRangeSyntax Paged(int pageSize, ItemKey? exclusiveStartKey);
+		IPagedQueryRangeSyntax Paged(int pageSize, LastKey? exclusiveStartKey);
 	}
 }

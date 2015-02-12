@@ -157,20 +157,53 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			return new ProvisionedThroughputInfo(p.LastDecreaseDateTime, p.LastIncreaseDateTime, p.NumberOfDecreasesToday, p.ReadCapacityUnits, p.WriteCapacityUnits);
 		}
 
-		public static ItemKey ToItemKey(this Dictionary<string, Aws.AttributeValue> values, KeySchema key)
+		public static ItemKey ToItemKey(this Dictionary<string, Aws.AttributeValue> values, KeySchema schema)
 		{
-			var hashKeyValue = values[key.HashKey.Name].ToValue();
-			if(hashKeyValue.Type != key.HashKey.Type)
-				throw new InvalidCastException("Hash key types does not match schema");
-			DynamoDBValue rangeKeyValue;
-			if(key.RangeKey != null)
+			var hashKeyValue = values.ToKeyValue(schema.HashKey, "Hash");
+			var rangeKeyValue = values.ToKeyValue(schema.RangeKey, "Range");
+			return ItemKey.Create(hashKeyValue, rangeKeyValue);
+		}
+
+		public static LastKey ToLastKey(this Dictionary<string, Aws.AttributeValue> values, KeySchema tableKeySchema, KeySchema indexKeySchema)
+		{
+			var tableHashKeyValue = values.ToKeyValue(tableKeySchema.HashKey, "Table hash");
+			var tableRangeKeyValue = values.ToKeyValue(tableKeySchema.RangeKey, "Table range");
+			var indexHashKeyValue = values.ToKeyValue(indexKeySchema.HashKey, "Index hash", tableKeySchema);
+			var indexRangeKeyValue = values.ToKeyValue(indexKeySchema.RangeKey, "Index range", tableKeySchema);
+			return new LastKey(tableHashKeyValue, tableRangeKeyValue, indexHashKeyValue, indexRangeKeyValue);
+		}
+
+		private static DynamoDBKeyValue ToKeyValue(this Dictionary<string, Aws.AttributeValue> values, AttributeSchema schema, string keyType, KeySchema primaryKeySchema = null)
+		{
+			if(schema == null
+				|| (primaryKeySchema != null && (schema.Name == primaryKeySchema.HashKey.Name || schema.Name == primaryKeySchema.RangeKey.Name)))
+				return null;
+			var value = values[schema.Name].ToValue();
+			if(value.Type != schema.Type)
+				throw new InvalidCastException(keyType + " key type does not match schema");
+			return (DynamoDBKeyValue)value;
+		}
+
+		public static void AddKey(this Dictionary<string, Aws.AttributeValue> key, AttributeSchema schema, DynamoDBKeyValue value, KeySchema primaryKeySchema = null)
+		{
+			if(schema != null
+			   && (primaryKeySchema != null && (schema.Name == primaryKeySchema.HashKey.Name || schema.Name == primaryKeySchema.RangeKey.Name)))
 			{
-				rangeKeyValue = values[key.RangeKey.Name].ToValue();
-				if(rangeKeyValue.Type != key.RangeKey.Type)
-					throw new InvalidCastException("Range key types does not match schema");
+				// Shared key attribute
+				if(value != null)
+					throw new InvalidOperationException(string.Format("Do not provide value for index key attribute '{0}' that is also a table key", schema.Name));
+				return; // Don't try to add again
 			}
-			else rangeKeyValue = null;
-			return ItemKey.Create((DynamoDBKeyValue)hashKeyValue, (DynamoDBKeyValue)rangeKeyValue);
+			if(value != null)
+			{
+				if(schema == null)
+					throw new InvalidOperationException("Can't specify key value for table/index without the given key");
+				if(value.Type != schema.Type)
+					throw new InvalidCastException("Key value type does not match schema");
+				key.Add(schema.Name, value.ToAws());
+			}
+			else if(schema != null)
+				throw new InvalidOperationException(string.Format("Must specify value for key '{0}'", schema.Name));
 		}
 	}
 }

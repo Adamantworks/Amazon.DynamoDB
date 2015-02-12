@@ -68,8 +68,11 @@
 	var indexTableNameArg = Argument("Table.Name");
 	var indexNameNoneArg = Argument("null");
 	var keySchemaArg = Argument("Schema.Key");
+	var keySchemaNoneArg = Argument("null");
+	var TableDotKeySchemaArg = Argument("Table.Schema.Key");
 	var tableDotKeySchemaArg = Argument("table.Schema.Key");
 	var indexDotKeySchemaArg = Argument("index.Schema.Key");
+	var indexDotTableDotKeySchemaArg = Argument("index.Table.Schema.Key");
 	var projectionNoneArg = Argument("null");
 	var projectionArg = Argument("projection");
 	var consistentNoneArg = Argument("false");
@@ -175,19 +178,19 @@
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
 		GenOverloads(true, item, returnOldItem));
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
-		GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
-		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
-		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
-		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, regionArg, nameArg, keySchemaArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
-		GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
-		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
-		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
-		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 
 	// Syntax
@@ -222,19 +225,19 @@
 	var delete = new Method("DynamoDBMap", "Delete",
 		GenOverloads( returnOldItem));
 	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
-		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
-		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
-		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
-		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, tableDotKeySchemaArg, projectionArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQuery = new Method("IReverseSyntax", "Query", "new QueryContext",
-		GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
-		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
-		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
-		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	// Query Range
 	var allKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", GenOverloads(readAhead));

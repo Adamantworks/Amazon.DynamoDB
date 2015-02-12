@@ -26,12 +26,12 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 		public readonly Dictionary<string, Aws.AttributeValue> LastEvaluatedKey;
 		public readonly List<Dictionary<string, Aws.AttributeValue>> Items;
 
-		public QueryResponse(int? limit, ItemKey? exclusiveStartKey, KeySchema keySchema)
+		public QueryResponse(int? limit, LastKey? exclusiveStartKey, KeySchema tableKeySchema, KeySchema indexKeySchema = null)
 		{
 			Limit = limit;
 			CurrentLimit = limit ?? -1;
 			if(exclusiveStartKey != null)
-				LastEvaluatedKey = exclusiveStartKey.Value.ToAws(keySchema);
+				LastEvaluatedKey = exclusiveStartKey.Value.ToAws(tableKeySchema, indexKeySchema);
 		}
 
 		private QueryResponse(QueryResponse lastResponse, List<Dictionary<string, Aws.AttributeValue>> items, Dictionary<string, Aws.AttributeValue> lastEvaluatedKey)
@@ -59,11 +59,11 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 				   || LastEvaluatedKey == null || LastEvaluatedKey.Count == 0;
 		}
 
-		public ItemKey? GetLastEvaluatedKey(KeySchema keySchema)
+		public LastKey? GetLastEvaluatedKey(KeySchema tableKeySchema, KeySchema indexKeySchema = null)
 		{
 			return LastEvaluatedKey != null && LastEvaluatedKey.Count != 0
-				? LastEvaluatedKey.ToItemKey(keySchema)
-				: default(ItemKey?);
+				? LastEvaluatedKey.ToLastKey(tableKeySchema, indexKeySchema)
+				: default(LastKey?);
 		}
 	}
 }

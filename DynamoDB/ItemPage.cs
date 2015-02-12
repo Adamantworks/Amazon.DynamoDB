@@ -20,9 +20,9 @@ namespace Adamantworks.Amazon.DynamoDB
 	public struct ItemPage
 	{
 		public readonly IList<DynamoDBMap> Items;
-		public readonly ItemKey? LastEvaluatedKey;
+		public readonly LastKey? LastEvaluatedKey;
 
-		public ItemPage(IList<DynamoDBMap> items, ItemKey? lastEvaluatedKey)
+		public ItemPage(IList<DynamoDBMap> items, LastKey? lastEvaluatedKey)
 		{
 			Items = items;
 			LastEvaluatedKey = lastEvaluatedKey;

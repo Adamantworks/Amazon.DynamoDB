@@ -118,7 +118,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 		private static async Task PagedQueryAsync(IIndex globalIndex, int pageSize)
 		{
-			ItemKey? lastKey = null;
+			LastKey? lastKey = null;
 
 			do
 			{
@@ -192,7 +192,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 		private static void PagedQuery(IIndex globalIndex, int pageSize)
 		{
-			ItemKey? lastKey = null;
+			LastKey? lastKey = null;
 
 			do
 			{

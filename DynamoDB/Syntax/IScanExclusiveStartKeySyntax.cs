@@ -20,6 +20,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// Prefer .Paged() to this method.  This exists for unusual cases where
 		/// you are getting the exclusive start key by means other than pagining/
 		/// </summary>
-		IScanOptionsSyntax ExclusiveStartKey(ItemKey key);
+		IScanOptionsSyntax ExclusiveStartKey(LastKey key);
 	}
 }

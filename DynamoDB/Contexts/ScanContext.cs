@@ -33,7 +33,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private readonly Values values;
 		private bool limitSet;
 		private int? limit;
-		private ItemKey? exclusiveStartKey;
+		private LastKey? exclusiveStartKey;
 
 		public ScanContext(
 			Region region,
@@ -61,7 +61,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return this;
 		}
 
-		public IScanOptionsSyntax ExclusiveStartKey(ItemKey key)
+		public IScanOptionsSyntax ExclusiveStartKey(LastKey key)
 		{
 			exclusiveStartKey = key;
 			return this;

@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.Converters;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Schema;
 using System;
 using System.Collections.Generic;
+using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -45,14 +46,10 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		internal Dictionary<string, Aws.AttributeValue> ToAws(KeySchema keySchema)
 		{
-			var value = new Dictionary<string, Aws.AttributeValue>() { { keySchema.HashKey.Name, HashKey.ToAws() } };
-			if(RangeKey != null)
-			{
-				if(keySchema.RangeKey == null)
-					throw new InvalidOperationException("Can't specify range key for table or index without a range key");
-				value.Add(keySchema.RangeKey.Name, RangeKey.ToAws());
-			}
-			return value;
+			var key = new Dictionary<string, Aws.AttributeValue>();
+			key.AddKey(keySchema.HashKey, HashKey);
+			key.AddKey(keySchema.RangeKey, RangeKey);
+			return key;
 		}
 
 		public override bool Equals(object obj)

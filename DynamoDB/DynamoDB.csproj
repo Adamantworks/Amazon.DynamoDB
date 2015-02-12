@@ -69,6 +69,7 @@
     <Compile Include="Internal\QueryResponse.cs" />
     <Compile Include="Internal\TypeExtensions.cs" />
     <Compile Include="ItemPage.cs" />
+    <Compile Include="LastKey.cs" />
     <Compile Include="Syntax\IConsistentSyntax.cs" />
     <Compile Include="Syntax\IIfSyntax.cs" />
     <Compile Include="Syntax\IModifySyntax.cs" />
