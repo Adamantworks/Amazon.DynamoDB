@@ -168,15 +168,15 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 		{
 			var tableHashKeyValue = values.ToKeyValue(tableKeySchema.HashKey, "Table hash");
 			var tableRangeKeyValue = values.ToKeyValue(tableKeySchema.RangeKey, "Table range");
-			var indexHashKeyValue = values.ToKeyValue(indexKeySchema.HashKey, "Index hash", tableKeySchema);
-			var indexRangeKeyValue = values.ToKeyValue(indexKeySchema.RangeKey, "Index range", tableKeySchema);
+			var indexHashKeyValue = values.ToKeyValue(indexKeySchema != null ? indexKeySchema.HashKey : null, "Index hash", tableKeySchema);
+			var indexRangeKeyValue = values.ToKeyValue(indexKeySchema != null ? indexKeySchema.RangeKey : null, "Index range", tableKeySchema);
 			return new LastKey(tableHashKeyValue, tableRangeKeyValue, indexHashKeyValue, indexRangeKeyValue);
 		}
 
 		private static DynamoDBKeyValue ToKeyValue(this Dictionary<string, Aws.AttributeValue> values, AttributeSchema schema, string keyType, KeySchema primaryKeySchema = null)
 		{
 			if(schema == null
-				|| (primaryKeySchema != null && (schema.Name == primaryKeySchema.HashKey.Name || schema.Name == primaryKeySchema.RangeKey.Name)))
+				|| (primaryKeySchema != null && (schema.Name == primaryKeySchema.HashKey.Name || (primaryKeySchema.RangeKey != null && schema.Name == primaryKeySchema.RangeKey.Name))))
 				return null;
 			var value = values[schema.Name].ToValue();
 			if(value.Type != schema.Type)

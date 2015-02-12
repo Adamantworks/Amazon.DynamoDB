@@ -12,12 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Schema;
 using NUnit.Framework;
+using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Tests
 {
 	[TestFixture]
 	public class ItemKeyTests
 	{
+		[Test]
+		public void ToAws_NoRangeKey()
+		{
+			var schema = new KeySchema("ID", DynamoDBValueType.String);
+			var key = ItemKey.Create("Hello");
+			var value = key.ToAws(schema);
+			Assert.AreEqual(1, value.Count, "Count");
+			Assert.IsTrue(value.ContainsKey("ID"));
+			Assert.AreEqual("Hello", value["ID"].S);
+		}
 	}
 }

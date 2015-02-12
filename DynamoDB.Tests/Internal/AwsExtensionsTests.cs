@@ -89,5 +89,110 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.Internal
 			var schema = new KeySchema("ID", DynamoDBValueType.Number);
 			Assert.Throws<InvalidCastException>(() => key.ToItemKey(schema));
 		}
+
+		[Test]
+		public void ToItemKey()
+		{
+			var schema = new KeySchema("H", DynamoDBValueType.String, "R", DynamoDBValueType.Number);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+				{"R", new Aws.AttributeValue() {N = "42"}}
+			};
+
+			Assert.AreEqual(ItemKey.Create("hash", 42), awsKey.ToItemKey(schema));
+		}
+		[Test]
+		public void ToItemKey_NoRangeKey()
+		{
+			var schema = new KeySchema("H", DynamoDBValueType.String);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+			};
+
+			Assert.AreEqual(ItemKey.Create("hash"), awsKey.ToItemKey(schema));
+		}
+
+		[Test]
+		public void ToLastKey_Table()
+		{
+			var schema = new KeySchema("H", DynamoDBValueType.String, "R", DynamoDBValueType.Number);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+				{"R", new Aws.AttributeValue() {N = "42"}}
+			};
+
+			Assert.AreEqual(new LastKey("hash", 42), awsKey.ToLastKey(schema, null));
+		}
+		[Test]
+		public void ToLastKey_TableNoRangeKey()
+		{
+			var schema = new KeySchema("H", DynamoDBValueType.String);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+			};
+
+			Assert.AreEqual(new LastKey("hash"), awsKey.ToLastKey(schema, null));
+		}
+		[Test]
+		public void ToLastKey_Index()
+		{
+			var tableSchema = new KeySchema("H", DynamoDBValueType.String, "R", DynamoDBValueType.Number);
+			var indexSchema = new KeySchema("IH", DynamoDBValueType.String, "IR", DynamoDBValueType.Number);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+				{"R", new Aws.AttributeValue() {N = "42"}},
+				{"IH", new Aws.AttributeValue("i-hash")},
+				{"IR", new Aws.AttributeValue() {N = "52"}},
+			};
+
+			Assert.AreEqual(new LastKey("hash", 42, "i-hash", 52), awsKey.ToLastKey(tableSchema, indexSchema));
+		}
+		[Test]
+		public void ToLastKey_LocalIndex()
+		{
+			var tableSchema = new KeySchema("H", DynamoDBValueType.String, "R", DynamoDBValueType.Number);
+			var indexSchema = new KeySchema("H", DynamoDBValueType.String, "IR", DynamoDBValueType.Number);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+				{"R", new Aws.AttributeValue() {N = "42"}},
+				{"IR", new Aws.AttributeValue() {N = "52"}},
+			};
+
+			Assert.AreEqual(new LastKey("hash", 42, null, 52), awsKey.ToLastKey(tableSchema, indexSchema));
+		}
+		[Test]
+		public void ToLastKey_SharedIndex()
+		{
+			var tableSchema = new KeySchema("H", DynamoDBValueType.String, "R", DynamoDBValueType.Number);
+			var indexSchema = new KeySchema("R", DynamoDBValueType.Number, "H", DynamoDBValueType.String);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+				{"R", new Aws.AttributeValue() {N = "42"}},
+			};
+
+			Assert.AreEqual(new LastKey("hash", 42, null, null), awsKey.ToLastKey(tableSchema, indexSchema));
+		}
+		[Test]
+		public void ToLastKey_IndexAndTableNoRangeKey()
+		{
+			var tableSchema = new KeySchema("H", DynamoDBValueType.String);
+			var indexSchema = new KeySchema("IH", DynamoDBValueType.String, "IR", DynamoDBValueType.Number);
+			var awsKey = new Dictionary<string, Aws.AttributeValue>()
+			{
+				{"H", new Aws.AttributeValue("hash")},
+				{"R", new Aws.AttributeValue() {N = "42"}},
+				{"IH", new Aws.AttributeValue("i-hash")},
+				{"IR", new Aws.AttributeValue() {N = "52"}},
+			};
+
+			Assert.AreEqual(new LastKey("hash", null, "i-hash", 52), awsKey.ToLastKey(tableSchema, indexSchema));
+		}
 	}
 }
