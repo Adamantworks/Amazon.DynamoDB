@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using Adamantworks.Amazon.DynamoDB.Converters;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using NUnit.Framework;
 
 namespace Adamantworks.Amazon.DynamoDB.Tests.Converters.Basic

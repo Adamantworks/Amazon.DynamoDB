@@ -79,6 +79,7 @@
     <Compile Include="Internal\AwsExtensionsTests.cs" />
     <Compile Include="ItemKeyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValuesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

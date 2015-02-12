@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Adamantworks.Amazon.DynamoDB.Converters;
@@ -22,7 +23,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public class Values : IAwsAttributeValuesProvider
+	public class Values : IAwsAttributeValuesProvider, IReadOnlyCollection<KeyValuePair<string, DynamoDBValue>>
 	{
 		private readonly DynamoDBMap values;
 
@@ -144,6 +145,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
+		public int Count { get { return values.Count; } }
+
 		public Values Add(string name, DynamoDBValue value)
 		{
 			values.Add(BuildName(name), value);
@@ -183,6 +186,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		Dictionary<string, Aws.AttributeValue> IAwsAttributeValuesProvider.ToAwsAttributeValues()
 		{
 			return values.ToAwsDictionary();
+		}
+
+		public IEnumerator<KeyValuePair<string, DynamoDBValue>> GetEnumerator()
+		{
+			return values.GetEnumerator();
+		}
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return values.GetEnumerator();
 		}
 	}
 }
