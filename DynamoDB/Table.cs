@@ -305,16 +305,42 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Insert
 		public Task InsertAsync(DynamoDBMap item)
 		{
-			return insertContext.PutAsync(item, false, CancellationToken.None);
+			try
+			{
+				return insertContext.PutAsync(item, false, CancellationToken.None);
+			}
+			catch(Aws.ConditionalCheckFailedException ex)
+			{
+				throw InsertFailedException(ex);
+			}
 		}
 		public Task InsertAsync(DynamoDBMap item, CancellationToken cancellationToken)
 		{
-			return insertContext.PutAsync(item, false, cancellationToken);
+			try
+			{
+				return insertContext.PutAsync(item, false, cancellationToken);
+			}
+			catch(Aws.ConditionalCheckFailedException ex)
+			{
+				throw InsertFailedException(ex);
+			}
 		}
 
 		public void Insert(DynamoDBMap item)
 		{
-			insertContext.Put(item, false);
+			try
+			{
+				insertContext.Put(item, false);
+			}
+			catch(Aws.ConditionalCheckFailedException ex)
+			{
+				throw InsertFailedException(ex);
+			}
+		}
+
+		private static Aws.ConditionalCheckFailedException InsertFailedException(Aws.ConditionalCheckFailedException ex)
+		{
+			return new Aws.ConditionalCheckFailedException("Insert conditional check failed. There is already an item with the same key in the table.", ex);
 		}
 		#endregion
 
