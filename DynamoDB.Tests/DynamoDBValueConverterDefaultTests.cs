@@ -72,5 +72,40 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			Assert.IsInstanceOf<DynamoDBSet<DynamoDBString>>(value);
 			Assert.AreEqual(values.Count, ((DynamoDBSet<DynamoDBString>)value).Count);
 		}
+
+
+		[Test]
+		public void ListOfNumberToListOfInt()
+		{
+			IList<int> expected = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8 };
+			var values = new DynamoDBList(expected.Select(v => (DynamoDBNumber)v));
+
+			CollectionAssert.AreEqual(expected, values.To<IList<int>>());
+		}
+
+		[Test]
+		public void NullToListOfInt()
+		{
+			DynamoDBValue value = null;
+			Assert.IsNull(value.To<IList<int>>());
+		}
+
+		[Test]
+		public void ListOfStringToListOfGuid()
+		{
+			IList<Guid> expected = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+			var values = new DynamoDBList(expected.Select(v => (DynamoDBString)v.ToString()));
+
+			CollectionAssert.AreEqual(expected, values.To<IList<Guid>>());
+		}
+
+		[Test]
+		public void ListOfGuidToListOfString()
+		{
+			var values = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+			var value = DynamoDBValue.Convert(values);
+			Assert.IsInstanceOf<DynamoDBList>(value);
+			Assert.AreEqual(values.Count, ((DynamoDBList)value).Count);
+		}
 	}
 }

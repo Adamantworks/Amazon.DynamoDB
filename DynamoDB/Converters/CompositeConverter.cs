@@ -65,7 +65,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 				if(matchingConverters == 1)
 					return true;
 				if(matchingConverters > 1)
-					throw new Exception(string.Format("Ambiguous conversion from {0} to {1}, more than one coverter with the same priority matches", fromValue == null ? "<null>" : fromValue.GetType().FullName, toType.FullName));
+					throw new Exception(string.Format("Ambiguous conversion from {0} to {1}, more than one converter with the same priority matches", fromValue == null ? "<null>" : fromValue.GetType().FullName, toType.FullName));
 			}
 			return false;
 		}

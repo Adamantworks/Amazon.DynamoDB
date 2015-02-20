@@ -24,13 +24,13 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 	{
 		public override bool CanConvertTo(Type toType, IValueConverter context)
 		{
-			// Must be assignable from HashSet<X> from T converts to X
+			// Must be assignable from HashSet<X> where T converts to X
 			return PossibleSetOfTypes(toType, context).Any();
 		}
 
 		private static IEnumerable<Type> PossibleSetOfTypes(Type toType, IValueConverter context)
 		{
-			return toType.GetInterfaces().Concat(new[] { toType }) // The to type might itself be ISet<X>
+			return toType.GetInterfaces().Concat(new[] { toType }) // The to type might itself be a type we can convert to
 				.Where(i =>
 				{
 					if(!i.IsGenericType) return false;

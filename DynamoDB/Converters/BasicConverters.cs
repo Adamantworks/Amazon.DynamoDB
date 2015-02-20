@@ -33,5 +33,6 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 		public static readonly IValueConverter SetOfString = new SetConverter<DynamoDBString>();
 		public static readonly IValueConverter SetOfNumber = new SetConverter<DynamoDBNumber>();
 		public static readonly IValueConverter SetOfBinary = new SetConverter<DynamoDBBinary>();
+		public static readonly IValueConverter List = new ListConverter();
 	}
 }
