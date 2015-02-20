@@ -54,7 +54,7 @@
     <Compile Include="Contexts\ScanContext.cs" />
     <Compile Include="Converters\Basic\ArrayConverter.cs" />
     <Compile Include="Converters\Basic\CastConverter.cs" />
-    <Compile Include="Converters\Basic\ImmutableArrayBinaryConverter.cs" />
+    <Compile Include="Converters\Basic\ImmutableByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\BooleanConverter.cs" />
     <Compile Include="Converters\Basic\ByteArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\ListConverter.cs" />

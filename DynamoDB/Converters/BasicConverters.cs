@@ -27,7 +27,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 		public static readonly IValueConverter String = new StringConverter();
 		public static readonly IValueConverter Boolean = new BooleanConverter();
 		public static readonly IValueConverter MemoryStreamBinary = new MemoryStreamBinaryConverter();
-		public static readonly IValueConverter ImmutableArrayBinary = new ImmutableArrayBinaryConverter();
+		public static readonly IValueConverter ImmutableByteArrayBinary = new ImmutableByteArrayBinaryConverter();
 		public static readonly IValueConverter ByteArrayBinary = new ByteArrayBinaryConverter();
 		public static readonly IValueConverter Nullable = new NullableConverter();
 		public static readonly IValueConverter SetOfString = new SetConverter<DynamoDBString>();

@@ -17,7 +17,7 @@ using System.Collections.Immutable;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class ImmutableArrayBinaryConverter : ValueConverter<ImmutableArray<byte>, DynamoDBBinary>
+	internal class ImmutableByteArrayBinaryConverter : ValueConverter<ImmutableArray<byte>, DynamoDBBinary>
 	{
 		public override bool TryConvert(ImmutableArray<byte> fromValue, out DynamoDBBinary toValue, IValueConverter context)
 		{

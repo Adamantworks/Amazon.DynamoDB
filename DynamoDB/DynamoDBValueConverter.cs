@@ -66,10 +66,11 @@ namespace Adamantworks.Amazon.DynamoDB
 			converter.Add(BasicConverters.Number, int.MinValue + 3);
 			converter.Add(BasicConverters.MemoryStreamBinary, int.MinValue + 4);
 			converter.Add(BasicConverters.Array, int.MinValue + 5);
-			converter.Add(BasicConverters.ByteArrayBinary, int.MinValue + 6); // higher priority than Array so byte[] -> DynamoDBBinary is preferred
-			converter.Add(BasicConverters.ImmutableArrayBinary, int.MinValue + 7);
+			converter.Add(BasicConverters.ImmutableByteArrayBinary, int.MinValue + 6); // lower than ByteArrayBinary so people don't unexpectedly get immutable arrays
+			converter.Add(BasicConverters.ByteArrayBinary, int.MinValue + 7); // higher priority than Array so byte[] -> DynamoDBBinary is preferred
 			converter.Add(BasicConverters.List, int.MinValue + 8);
 			// Sets must have higher priority than list so ISet<X> -> DynamoDBSet<Y> is preferred over ISet<X> -> DynamoDBList
+			// All sets have same priority to force user to disambiguate if set type unclear
 			converter.Add(BasicConverters.SetOfBinary, int.MinValue + 9);
 			converter.Add(BasicConverters.SetOfString, int.MinValue + 9);
 			converter.Add(BasicConverters.SetOfNumber, int.MinValue + 9);
