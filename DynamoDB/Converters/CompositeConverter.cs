@@ -22,12 +22,12 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 	public class CompositeConverter : IValueConverter
 	{
 		private static readonly Comparer<int> ReverseIntComparer = Comparer<int>.Create((x, y) => -x.CompareTo(y));
-		private readonly IDictionary<int, ISet<IValueConverter>> converters = new SortedList<int, ISet<IValueConverter>>(ReverseIntComparer);
+		private readonly IDictionary<int, IList<IValueConverter>> converters = new SortedList<int, IList<IValueConverter>>(ReverseIntComparer);
 
 		public CompositeConverter Add(IValueConverter converter, int priority = 0)
 		{
 			if(!converters.ContainsKey(priority))
-				converters[priority] = new HashSet<IValueConverter>();
+				converters[priority] = new List<IValueConverter>();
 
 			converters[priority].Add(converter);
 			return this;
@@ -58,9 +58,13 @@ namespace Adamantworks.Amazon.DynamoDB.Converters
 			foreach(var priorityLevel in converters)
 			{
 				var matchingConverters = 0;
+				object convertedValue;
 				foreach(var converter in priorityLevel.Value)
-					if(converter.TryConvert(fromValue, toType, out toValue, context))
+					if(converter.TryConvert(fromValue, toType, out convertedValue, context))
+					{
 						matchingConverters++;
+						toValue = convertedValue; // only set for success, so failures can't overwrite success values
+					}
 
 				if(matchingConverters == 1)
 					return true;

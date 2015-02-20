@@ -66,6 +66,8 @@
   <ItemGroup>
     <Compile Include="CompositeTests.cs" />
     <Compile Include="Converters\Basic\CastConverterTests.cs" />
+    <Compile Include="Converters\CompositeConverterTests.cs" />
+    <Compile Include="Converters\FakeConverter.cs" />
     <Compile Include="Converters\NullConverter.cs" />
     <Compile Include="DotNetFrameworkTests.cs" />
     <Compile Include="DynamoDBValueConverterDefaultTests.cs" />

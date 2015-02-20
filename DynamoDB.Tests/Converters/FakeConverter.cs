@@ -14,33 +14,42 @@
 
 using System;
 using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Tests.Converters
 {
-	public class NullConverter : IValueConverter
+	public class FakeConverter : IValueConverter
 	{
 		#region Singleton
-		private static readonly IValueConverter instance = new NullConverter();
+		public static readonly DynamoDBString Value = "converted";
+		private static readonly IValueConverter instance = new FakeConverter(Value);
 
 		public static IValueConverter Instance
 		{
 			get { return instance; }
 		}
 
-		private NullConverter()
+		private FakeConverter()
 		{
 		}
 		#endregion
 
+		private readonly DynamoDBValue value;
+
+		public FakeConverter(DynamoDBValue value)
+		{
+			this.value = value;
+		}
+
 		public bool CanConvert(Type fromType, Type toType, IValueConverter context)
 		{
-			return false;
+			return true;
 		}
 
 		public bool TryConvert(object fromValue, Type toType, out object toValue, IValueConverter context)
 		{
-			toValue = null;
-			return false;
+			toValue = value;
+			return true;
 		}
 	}
 }

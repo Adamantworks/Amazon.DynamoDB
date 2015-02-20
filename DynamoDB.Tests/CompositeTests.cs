@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System;
-using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Tests.Converters;
 using NUnit.Framework;
 
 namespace Adamantworks.Amazon.DynamoDB.Tests
@@ -29,28 +29,13 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		[Test]
 		public void ValueSelectsCorrectOverload()
 		{
-			var dummyConverter = new DummyConverter();
+			var fakeConverter = FakeConverter.Instance;
 
-			Assert.AreEqual("cast;cast", Composite.Value(Cast, Cast, dummyConverter).ToString());
-			Assert.AreEqual("cast;converted", Composite.Value(Cast, Convert, dummyConverter).ToString());
-			Assert.AreEqual("converted;cast", Composite.Value(Convert, Cast, dummyConverter).ToString());
-			Assert.AreEqual("converted;converted", Composite.Value(Convert, Convert, dummyConverter).ToString());
-			Assert.AreEqual("upcast;converted", Composite.Value(Upcast, Convert, dummyConverter).ToString());
-		}
-
-		private class DummyConverter : IValueConverter
-		{
-			private static readonly DynamoDBString Value = "converted";
-			public bool CanConvert(Type fromType, Type toType, IValueConverter context)
-			{
-				return true;
-			}
-
-			public bool TryConvert(object fromValue, Type toType, out object toValue, IValueConverter context)
-			{
-				toValue = Value;
-				return true;
-			}
+			Assert.AreEqual("cast;cast", Composite.Value(Cast, Cast, fakeConverter).ToString());
+			Assert.AreEqual("cast;converted", Composite.Value(Cast, Convert, fakeConverter).ToString());
+			Assert.AreEqual("converted;cast", Composite.Value(Convert, Cast, fakeConverter).ToString());
+			Assert.AreEqual("converted;converted", Composite.Value(Convert, Convert, fakeConverter).ToString());
+			Assert.AreEqual("upcast;converted", Composite.Value(Upcast, Convert, fakeConverter).ToString());
 		}
 	}
 }
