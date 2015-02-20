@@ -60,7 +60,6 @@
     <Compile Include="Converters\Basic\ListConverter.cs" />
     <Compile Include="Converters\Basic\MemoryStreamBinaryConverter.cs" />
     <Compile Include="Converters\Basic\SetConverter.cs" />
-    <Compile Include="Converters\Basic\SetPriorityConverter.cs" />
     <Compile Include="Converters\CompositeValueConverters.cs" />
     <Compile Include="Converters\Composite\ViaBinaryConverter.cs" />
     <Compile Include="Converters\Composite\ViaBooleanConverter.cs" />

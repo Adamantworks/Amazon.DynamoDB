@@ -68,14 +68,11 @@ namespace Adamantworks.Amazon.DynamoDB
 			converter.Add(BasicConverters.Array, int.MinValue + 5);
 			converter.Add(BasicConverters.ByteArrayBinary, int.MinValue + 6); // higher priority than Array so byte[] -> DynamoDBBinary is preferred
 			converter.Add(BasicConverters.ImmutableArrayBinary, int.MinValue + 7);
-			converter.Add(BasicConverters.SetOfBinary, int.MinValue + 8);
-			converter.Add(BasicConverters.SetOfString, int.MinValue + 8);
-			converter.Add(BasicConverters.SetOfNumber, int.MinValue + 8);
-			converter.Add(BasicConverters.List, int.MinValue + 9);
-			// TODO these are a hack to given priority to converting to DynamoDBSet when coming from ISet
-			converter.Add(new SetPriorityConverter<DynamoDBBinary>(), int.MinValue + 10);
-			converter.Add(new SetPriorityConverter<DynamoDBString>(), int.MinValue + 10);
-			converter.Add(new SetPriorityConverter<DynamoDBNumber>(), int.MinValue + 10);
+			converter.Add(BasicConverters.List, int.MinValue + 8);
+			// Sets must have higher priority than list so ISet<X> -> DynamoDBSet<Y> is preferred over ISet<X> -> DynamoDBList
+			converter.Add(BasicConverters.SetOfBinary, int.MinValue + 9);
+			converter.Add(BasicConverters.SetOfString, int.MinValue + 9);
+			converter.Add(BasicConverters.SetOfNumber, int.MinValue + 9);
 
 			// Casting conversions are always first because no conversion is actually needed
 			converter.Add(BasicConverters.Cast, int.MaxValue);
