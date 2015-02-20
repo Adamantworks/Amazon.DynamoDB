@@ -52,6 +52,7 @@
     <Compile Include="Composite.cs" />
     <Compile Include="Contexts\IndexContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
+    <Compile Include="Converters\Basic\ArrayConverter.cs" />
     <Compile Include="Converters\Basic\CastConverter.cs" />
     <Compile Include="Converters\Basic\ImmutableArrayBinaryConverter.cs" />
     <Compile Include="Converters\Basic\BooleanConverter.cs" />

@@ -20,39 +20,43 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 {
-	internal class ListConverter : ValueConverter<DynamoDBList>
+	internal class ArrayConverter : ValueConverter<DynamoDBList>
 	{
 		public override bool CanConvertTo(Type toType, IValueConverter context)
 		{
-			// Must be assignable from List<X>
-			return PossibleListOfType(toType, context) != null;
+			// Must be assignable from X[]
+			return PossibleArrayOfType(toType, context) != null;
 		}
 
-		private static Type PossibleListOfType(Type toType, IValueConverter context)
+		private static Type PossibleArrayOfType(Type toType, IValueConverter context)
 		{
+			if(toType.IsArray && toType.GetArrayRank() == 1)
+				return toType.GetElementType();
+
+			// To be a full array converter, we have to allow things arrays implement
 			if(!toType.IsGenericType) return null;
 			var openGeneric = toType.GetGenericTypeDefinition();
-			if(openGeneric == typeof(List<>) || openGeneric == typeof(IList<>) || openGeneric == typeof(ICollection<>) || openGeneric == typeof(IEnumerable<>))
+			if(openGeneric == typeof(IList<>) || openGeneric == typeof(ICollection<>) || openGeneric == typeof(IEnumerable<>))
 			{
 				// We must assume we can convert the values, because we don't know their concrete type yet inorder to check
 				return toType.GenericTypeArguments[0];
 			}
+
 			return null;
 		}
 
 		public override bool CanConvertFrom(Type fromType, IValueConverter context)
 		{
-			// Must implement IEnumerable<X>
-			return fromType.GetInterfaces().Concat(new[] { fromType }) // The from type might itself be IEnumerable<X>
-				.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-				.Any(i => context.CanConvert(i.GenericTypeArguments[0], typeof(DynamoDBValue), context));
+			// Must be an array
+			return fromType.IsArray && fromType.GetArrayRank() == 1
+				&& context.CanConvert(fromType.GetElementType(), typeof(DynamoDBValue), context);
 		}
 
 		public override bool TryConvert(object fromValue, out DynamoDBList toValue, IValueConverter context)
 		{
 			toValue = null;
 			if(fromValue == null) return true;
-			if(!CanConvertFrom(fromValue.GetType(), context)) return false; // Always need this to make sure we are coming from a list
+			if(!CanConvertFrom(fromValue.GetType(), context)) return false; // Always need this to make sure we are coming from an array
 
 			toValue = new DynamoDBList();
 			foreach(var fromElementValue in (IEnumerable)fromValue)
@@ -70,29 +74,29 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 		{
 			toValue = null;
 
-			var possibleListType = PossibleListOfType(toType, context);
-			if(possibleListType == null) return false;
+			var possibleArrayType = PossibleArrayOfType(toType, context);
+			if(possibleArrayType == null) return false;
 			if(fromValue == null) return true;
 
-			return TryConvertToList(fromValue, possibleListType, out toValue, context);
+			return TryConvertToArray(fromValue, possibleArrayType, out toValue, context);
 		}
 
-		private static bool TryConvertToList(DynamoDBList fromValue, Type possibleListType, out object toValue, IValueConverter context)
+		private static bool TryConvertToArray(DynamoDBList fromValue, Type possibleArrayType, out object toValue, IValueConverter context)
 		{
-			var listType = typeof(List<>).MakeGenericType(possibleListType);
-			var list = (IList)Activator.CreateInstance(listType);
+			var arrayType = possibleArrayType.MakeArrayType();
+			var array = (IList)Activator.CreateInstance(arrayType, fromValue.Count);
 
-			foreach(var fromElementValue in fromValue)
+			for(var i = 0; i < fromValue.Count; i++)
 			{
 				object toElementValue;
-				if(!context.TryConvert(fromElementValue, possibleListType, out toElementValue, context))
+				if(!context.TryConvert(fromValue[i], possibleArrayType, out toElementValue, context))
 				{
 					toValue = null;
 					return false;
 				}
-				list.Add(toElementValue);
+				array[i] = toElementValue;
 			}
-			toValue = list;
+			toValue = array;
 			return true;
 		}
 	}

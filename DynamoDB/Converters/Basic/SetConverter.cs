@@ -25,20 +25,20 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 		public override bool CanConvertTo(Type toType, IValueConverter context)
 		{
 			// Must be assignable from HashSet<X> where T converts to X
-			return PossibleSetOfTypes(toType, context).Any();
+			return PossibleSetOfType(toType, context) != null;
 		}
 
-		private static IEnumerable<Type> PossibleSetOfTypes(Type toType, IValueConverter context)
+		private static Type PossibleSetOfType(Type toType, IValueConverter context)
 		{
-			return toType.GetInterfaces().Concat(new[] { toType }) // The to type might itself be a type we can convert to
-				.Where(i =>
-				{
-					if(!i.IsGenericType) return false;
-					var openGeneric = i.GetGenericTypeDefinition();
-					return openGeneric == typeof(HashSet<>) || openGeneric == typeof(ISet<>) || openGeneric == typeof(ICollection<>) || openGeneric == typeof(IEnumerable<>);
-				})
-				.Select(i => i.GenericTypeArguments[0])
-				.Where(setOfType => context.CanConvert(typeof(T), setOfType, context));
+			if(!toType.IsGenericType) return null;
+			var openGeneric = toType.GetGenericTypeDefinition();
+			if(openGeneric == typeof(HashSet<>) || openGeneric == typeof(ISet<>) || openGeneric == typeof(ICollection<>) || openGeneric == typeof(IEnumerable<>))
+			{
+				var setOfType = toType.GenericTypeArguments[0];
+				if(context.CanConvert(typeof(T), setOfType, context))
+					return setOfType;
+			}
+			return null;
 		}
 
 		public override bool CanConvertFrom(Type fromType, IValueConverter context)
@@ -75,15 +75,11 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 		{
 			toValue = null;
 
-			var possibleSetTypes = PossibleSetOfTypes(toType, context).Distinct().ToList();
-			if(possibleSetTypes.Count == 0) return false;
+			var possibleSetType = PossibleSetOfType(toType, context);
+			if(possibleSetType == null) return false;
 			if(fromValue == null) return true;
 
-			foreach(var possibleSetType in possibleSetTypes)
-				if(TryConvertToHashSet(fromValue, possibleSetType, out toValue, context))
-					return true;
-
-			return false;
+			return TryConvertToHashSet(fromValue, possibleSetType, out toValue, context);
 		}
 
 		private static bool TryConvertToHashSet(DynamoDBSet<T> fromValue, Type possibleSetType, out object toValue, IValueConverter context)

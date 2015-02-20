@@ -56,7 +56,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		}
 
 		[Test]
-		public void SetOfStringToSetOfGuid()
+		public void SetOfStringToISetOfGuid()
 		{
 			ISet<Guid> expected = new HashSet<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
 			var values = new DynamoDBSet<DynamoDBString>(expected.Select(v => (DynamoDBString)v.ToString()));
@@ -72,7 +72,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			Assert.IsInstanceOf<DynamoDBSet<DynamoDBString>>(value);
 			Assert.AreEqual(values.Count, ((DynamoDBSet<DynamoDBString>)value).Count);
 		}
-
 
 		[Test]
 		public void ListOfNumberToListOfInt()
@@ -106,6 +105,40 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			var value = DynamoDBValue.Convert(values);
 			Assert.IsInstanceOf<DynamoDBList>(value);
 			Assert.AreEqual(values.Count, ((DynamoDBList)value).Count);
+		}
+
+		[Test]
+		public void ArrayOfNumberToListOfInt()
+		{
+			var expected = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+			var values = new DynamoDBList(expected.Select(v => (DynamoDBNumber)v));
+
+			CollectionAssert.AreEqual(expected, values.To<IList<int>>());
+		}
+
+		[Test]
+		public void NullToArrayOfInt()
+		{
+			DynamoDBValue value = null;
+			Assert.IsNull(value.To<int[]>());
+		}
+
+		[Test]
+		public void ListOfStringToArrayOfGuid()
+		{
+			var expected = new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+			var values = new DynamoDBList(expected.Select(v => (DynamoDBString)v.ToString()));
+
+			CollectionAssert.AreEqual(expected, values.To<Guid[]>());
+		}
+
+		[Test]
+		public void ArrayOfGuidToListOfString()
+		{
+			var values = new Guid[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+			var value = DynamoDBValue.Convert(values);
+			Assert.IsInstanceOf<DynamoDBList>(value);
+			Assert.AreEqual(values.Length, ((DynamoDBList)value).Count);
 		}
 	}
 }
