@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Schema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
 using AwsEnums = Amazon.DynamoDBv2;
 
@@ -25,8 +24,6 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 {
 	internal static class AwsExtensions
 	{
-		private static readonly object[] NoArgs = new object[0];
-
 		public static DynamoDBMap ToMap(this Dictionary<string, Aws.AttributeValue> values)
 		{
 			return new DynamoDBMap(values);
@@ -55,7 +52,18 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			if(value.BS != null && value.BS.Count != 0)
 				return new DynamoDBSet<DynamoDBBinary>(value.BS.Select(v => new DynamoDBBinary(v.ToArray())));
 
-			// For performance reasons, we check for these cases before going to reflection
+			if(value.IsBOOLSet)
+				return (DynamoDBBoolean)value.BOOL;
+			if(value.IsLSet)
+				return new DynamoDBList(value.L.Select(ToValue));
+			if(value.IsMSet)
+				return new DynamoDBMap(value.M);
+
+			// At this point we have exhausted all official means of determining the value of an AttributeValue.
+			// We shouldn't get to this point.  However, if the AttributeValue was not correctly constructed by
+			// setting IsLSet or IsMSet we could.  Now we are going to fall back to some heuristic checks.
+
+			// If one of these actually has content, then it must be the value type
 			if(value.L != null && value.L.Count != 0)
 				return new DynamoDBList(value.L.Select(ToValue));
 			if(value.M != null && value.M.Count != 0)
@@ -63,20 +71,15 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			if(value.BOOL)
 				return (DynamoDBBoolean)value.BOOL;
 
-			// Now we have to start using reflection because the rest are indistinguishable through the public API
-			if(IsBool(value))
-				return (DynamoDBBoolean)value.BOOL;
-			if(value.L != null) // This is still picking up the case of an empty map due to the limitations of the AWS SDK
-				return new DynamoDBList(value.L.Select(ToValue));
-			if(value.M != null)
-				return new DynamoDBMap(value.M);
+			// At this point, the value could be one of:
+			//     new Aws.AttributeValue() { BOOL = false };
+			//     new Aws.AttributeValue() { L = new List<Aws.AttributeValue>() };
+			//     new Aws.AttributeValue() { M = new Dictionary<string, Aws.AttributeValue>() };
+			// Because AWS SDK always initializes collections, we don't know.  But really, those are incorrect
+			// uses of AttributeValue. So rather than accepting those values, are will consider this AttributeValue
+			// invalid.
 
 			throw new NotSupportedException("AttributeValue type is not supported");
-		}
-
-		private static bool IsBool(Aws.AttributeValue value)
-		{
-			return (bool)typeof(Aws.AttributeValue).InvokeMember("IsSetBOOL", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod, null, value, NoArgs);
 		}
 
 		public static TableSchema ToSchema(this Aws.TableDescription tableDescription)

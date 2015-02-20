@@ -44,13 +44,21 @@ namespace Adamantworks.Amazon.DynamoDB.Tests.Internal
 			Assert.AreEqual(expected, value.ToValue());
 		}
 
+		/// <summary>
+		/// This test exists because of issues with distinguishing false and empty AttributeValues. That issue
+		/// led to the addition of the IsLSet and IsMSet properties which is the now correct way to create these
+		/// values.  This test now demonstrates that when those properties are used correctly, the values can
+		/// be correctly distinguished.
+		/// </summary>
 		[Test]
-		[Ignore("This is failing due to a bug in AWS SDK")]
 		public void ToValue_EquivalenceOfEmpty()
 		{
 			var boolValue = new Aws.AttributeValue() { BOOL = false };
-			var listValue = new Aws.AttributeValue() { L = new List<Aws.AttributeValue>() };
-			var mapValue = new Aws.AttributeValue() { M = new Dictionary<string, Aws.AttributeValue>() };
+			var listValue = new Aws.AttributeValue() { IsLSet = true };
+			var mapValue = new Aws.AttributeValue() { IsMSet = true };
+			// The old ways of creating these values.
+			//var listValue = new Aws.AttributeValue() { L = new List<Aws.AttributeValue>() };
+			//var mapValue = new Aws.AttributeValue() { M = new Dictionary<string, Aws.AttributeValue>() };
 			Assert.IsInstanceOf<DynamoDBBoolean>(boolValue.ToValue());
 			Assert.IsInstanceOf<DynamoDBList>(listValue.ToValue());
 			Assert.IsInstanceOf<DynamoDBMap>(mapValue.ToValue());
