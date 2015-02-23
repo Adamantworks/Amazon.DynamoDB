@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>Adamantworks.Amazon.DynamoDB</id>
-		<version>0.1.0-alpha021</version>
+		<version>0.1.0-alpha022</version>
 		<title>Adamantworks Amazon DynamoDB Alternate SDK</title>
 		<authors>Adamantworks LLC</authors>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -14,8 +14,8 @@
 		<tags>AWS Amazon cloud DynamoDB</tags>
 		<dependencies>
 			<!-- AWS SDK does NOT use SemVer (they had breaking changes in release 2.2.1) -->
-			<!-- No DynamoDB changes from 2.3.16 to 2.3.17, 2.3.18 adds  add/remove index -->
-			<dependency id="AWSSDK" version="2.3.16.0" />
+			<!-- No DynamoDB changes (N/A, up to date) -->
+			<dependency id="AWSSDK" version="2.3.22.0" />
 			<dependency id="Ix-Async" version="1.2.3" />
 			<dependency id="System.Collections.Immutable" version="1.1.33-beta" />
 		</dependencies>

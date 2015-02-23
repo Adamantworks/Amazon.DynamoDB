@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,8 +61,12 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		internal override Aws.AttributeValue ToAws()
 		{
-			return new Aws.AttributeValue() { M = ToAwsDictionary() };
+			var value = new Aws.AttributeValue() { M = ToAwsDictionary() };
+			// AWS SDK doesn't correctly handle empty maps, so if the list is empty, we have to manually set IsMSet
+			if(value.M.Count == 0) value.IsMSet = true;
+			return value;
 		}
+
 		internal Dictionary<string, Aws.AttributeValue> ToAwsDictionary()
 		{
 			return values.ToDictionary(e => e.Key, e => e.Value == null ? new Aws.AttributeValue() { NULL = true } : e.Value.ToAws());

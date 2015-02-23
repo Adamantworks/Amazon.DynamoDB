@@ -29,6 +29,15 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			return new DynamoDBMap(values);
 		}
 
+		/// <summary>
+		/// Needed so we can check IsItemSet
+		/// </summary>
+		public static DynamoDBMap GetItem(this Aws.GetItemResponse response)
+		{
+			return response.IsItemSet ? response.Item.ToMap() : null;
+		}
+
+		// TODO think more carefully about the remaining usages of this and whether they are correct
 		public static DynamoDBMap ToNonEmptyMap(this Dictionary<string, Aws.AttributeValue> values)
 		{
 			if(values == null || values.Count == 0) return null;
@@ -61,18 +70,7 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 
 			// At this point we have exhausted all official means of determining the value of an AttributeValue.
 			// We shouldn't get to this point.  However, if the AttributeValue was not correctly constructed by
-			// setting IsLSet or IsMSet we could.  Now we are going to fall back to some heuristic checks.
-
-			// If one of these actually has content, then it must be the value type
-			if(value.L != null && value.L.Count != 0)
-				return new DynamoDBList(value.L.Select(ToValue));
-			if(value.M != null && value.M.Count != 0)
-				return new DynamoDBMap(value.M);
-			if(value.BOOL)
-				return (DynamoDBBoolean)value.BOOL;
-
-			// At this point, the value could be one of:
-			//     new Aws.AttributeValue() { BOOL = false };
+			// setting IsLSet or IsMSet we could.  The value could be one of:
 			//     new Aws.AttributeValue() { L = new List<Aws.AttributeValue>() };
 			//     new Aws.AttributeValue() { M = new Dictionary<string, Aws.AttributeValue>() };
 			// Because AWS SDK always initializes collections, we don't know.  But really, those are incorrect

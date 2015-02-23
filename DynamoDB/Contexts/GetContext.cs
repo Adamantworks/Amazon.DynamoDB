@@ -56,14 +56,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			var request = BuildGetRequest(key);
 			var result = await table.Region.DB.GetItemAsync(request, cancellationToken).ConfigureAwait(false);
-			return result.Item.ToNonEmptyMap();
+			return result.GetItem();
 		}
 
 		public DynamoDBMap Get(ItemKey key)
 		{
 			var request = BuildGetRequest(key);
 			var result = table.Region.DB.GetItem(request);
-			return result.Item.ToNonEmptyMap();
+			return result.GetItem();
 		}
 
 		private Aws.GetItemRequest BuildGetRequest(ItemKey key)
@@ -109,7 +109,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 						return response;
 					},
-					lastResponse => lastResponse != null ? lastResponse.Responses[table.Name].Select(item => item.ToNonEmptyMap()) : Enumerable.Empty<DynamoDBMap>(),
+					lastResponse => lastResponse != null ? lastResponse.Responses[table.Name].Select(item => item.ToMap()) : Enumerable.Empty<DynamoDBMap>(),
 					lastResponse => lastResponse == null,
 					readAhead);
 			});
@@ -137,7 +137,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					ReBatchUnprocessedKeys(response, batchKeys);
 
 					foreach(var item in response.Responses[table.Name])
-						yield return item.ToNonEmptyMap();
+						yield return item.ToMap();
 				}
 			}
 		}
@@ -270,7 +270,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			foreach(var item in response.Responses[table.Name])
 			{
-				var innerItem = item.ToNonEmptyMap();
+				var innerItem = item.ToMap();
 				if(innerItem != null)
 					innerItems.Add(table.GetKey(innerItem), innerItem);
 			}

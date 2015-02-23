@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +46,10 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 		internal override Aws.AttributeValue ToAws()
 		{
-			return new Aws.AttributeValue() { L = values.Select(v => v == null ? new Aws.AttributeValue() { NULL = true } : v.ToAws()).ToList() };
+			var value = new Aws.AttributeValue() { L = values.Select(v => v == null ? new Aws.AttributeValue() { NULL = true } : v.ToAws()).ToList() };
+			// AWS SDK doesn't correctly handle empty lists, so if the list is empty, we have to manually set IsLSet
+			if(value.L.Count == 0) value.IsLSet = true;
+			return value;
 		}
 
 		public new static DynamoDBList Convert(object value)

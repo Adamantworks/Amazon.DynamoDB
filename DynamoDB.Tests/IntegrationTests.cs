@@ -285,5 +285,50 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				table3.WaitUntilNot(CollectionStatus.Deleting);
 			}
 		}
+
+		[Test]
+		public void SaveEmptyValues()
+		{
+			WithTable("SaveEmptyValues", table =>
+			{
+				var id = new Guid("3A7A929F-C779-48B7-B3B6-8D5243D787CC");
+				var item = new DynamoDBMap()
+				{
+					{"ID", id},
+					{"Order", 1},
+					{"EmptyList", new DynamoDBList()},
+					{"NonEmptyList", new DynamoDBList(){"Value"}},
+					{"EmptyMap", new DynamoDBMap()},
+					{"NonEmptyMap", new DynamoDBMap(){{"Key", "Value"}}},
+					{"BoolFalse", DynamoDBBoolean.False},
+					{"Null", null},
+				};
+				table.Put(item);
+
+				// Should get null when there is no such item
+				var noItemId = new Guid("96824777-CA5E-4694-86DE-49BE7319CF24");
+				Assert.IsNull(table.Get(noItemId, 1));
+
+				var getItem = table.Get(id, 1);
+				Assert.IsNotNull(getItem);
+
+				Assert.IsInstanceOf<DynamoDBList>(getItem["EmptyList"]);
+				Assert.AreEqual(0, ((DynamoDBList)getItem["EmptyList"]).Count, "EmptyList Count");
+				Assert.AreEqual(1, ((DynamoDBList)getItem["NonEmptyList"]).Count, "NonEmptyList Count");
+
+				Assert.IsInstanceOf<DynamoDBMap>(getItem["EmptyMap"]);
+				Assert.AreEqual(0, ((DynamoDBMap)getItem["EmptyMap"]).Count, "EmptyMap Count");
+				Assert.AreEqual(1, ((DynamoDBMap)getItem["NonEmptyMap"]).Count, "NonEmptyMap Count");
+
+				Assert.AreEqual(DynamoDBBoolean.False, getItem["BoolFalse"]);
+
+				Assert.IsNull(getItem["Null"]);
+
+				var projection = new ProjectionExpression("Foo");
+				var projectedItem = table.With(projection).Get(id, 1);
+				Assert.IsNotNull(projectedItem, "projectedItem");
+				Assert.AreEqual(0, projectedItem.Count, "projectedItem Count");
+			});
+		}
 	}
 }
