@@ -37,13 +37,6 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 			return response.IsItemSet ? response.Item.ToMap() : null;
 		}
 
-		// TODO think more carefully about the remaining usages of this and whether they are correct
-		public static DynamoDBMap ToNonEmptyMap(this Dictionary<string, Aws.AttributeValue> values)
-		{
-			if(values == null || values.Count == 0) return null;
-			return new DynamoDBMap(values);
-		}
-
 		public static DynamoDBValue ToValue(this Aws.AttributeValue value)
 		{
 			if(value.NULL)

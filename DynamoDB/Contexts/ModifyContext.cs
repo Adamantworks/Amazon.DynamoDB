@@ -53,7 +53,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var request = BuildUpdateRequest(update, values, returnValue);
 			var response = await table.Region.DB.UpdateItemAsync(request, cancellationToken).ConfigureAwait(false);
 			if(returnValue == UpdateReturnValue.None) return null;
-			return response.Attributes.ToNonEmptyMap();
+			return response.Attributes.ToMap();
 		}
 
 		public DynamoDBMap Update(UpdateExpression update, Values values, UpdateReturnValue returnValue)
@@ -61,7 +61,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var request = BuildUpdateRequest(update, values, returnValue);
 			var response = table.Region.DB.UpdateItem(request);
 			if(returnValue == UpdateReturnValue.None) return null;
-			return response.Attributes.ToNonEmptyMap();
+			return response.Attributes.ToMap();
 		}
 
 		private Aws.UpdateItemRequest BuildUpdateRequest(UpdateExpression update, Values values, UpdateReturnValue returnValue)
@@ -116,7 +116,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var request = BuildDeleteRequest(returnOldItem);
 			var response = await table.Region.DB.DeleteItemAsync(request, cancellationToken).ConfigureAwait(false);
 			if(!returnOldItem) return null;
-			return response.Attributes.ToNonEmptyMap();
+			return response.Attributes.ToMap();
 		}
 
 		public DynamoDBMap Delete(bool returnOldItem)
@@ -124,7 +124,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var request = BuildDeleteRequest(returnOldItem);
 			var response = table.Region.DB.DeleteItem(request);
 			if(!returnOldItem) return null;
-			return response.Attributes.ToNonEmptyMap();
+			return response.Attributes.ToMap();
 		}
 
 		private Aws.DeleteItemRequest BuildDeleteRequest(bool returnOldItem)

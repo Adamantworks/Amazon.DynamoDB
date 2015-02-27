@@ -76,7 +76,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			finally
 			{
 				region.DeleteTable(tableName);
-				table.WaitUntilNot(CollectionStatus.Deleting);
 			}
 		}
 
@@ -153,7 +152,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			finally
 			{
 				region.DeleteTable(tableName);
-				table.WaitUntilNot(CollectionStatus.Deleting);
 			}
 		}
 
@@ -328,6 +326,41 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				var projectedItem = table.With(projection).Get(id, 1);
 				Assert.IsNotNull(projectedItem, "projectedItem");
 				Assert.AreEqual(0, projectedItem.Count, "projectedItem Count");
+			});
+		}
+
+		private static readonly UpdateExpression SetValue = new UpdateExpression("SET #v=:p0", "v", "Value");
+		private static readonly UpdateExpression RemoveValue = new UpdateExpression("REMOVE #v", "v", "Value");
+		[Test]
+		public void ReturnValues()
+		{
+			WithTable("ReturnValues", table =>
+			{
+				var id = new Guid("3A7A929F-C779-48B7-B3B6-8D5243D787CC");
+				table.Insert(new DynamoDBMap() { { "ID", id }, { "Order", 1 }, { "Value", 5 } });
+
+				var oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(6), UpdateReturnValue.AllOld);
+				Assert.AreEqual(3, oldItem.Count, "AllOld");
+				Assert.AreEqual(5, oldItem["Value"].To<int>(), "AllOld");
+
+				oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(7), UpdateReturnValue.UpdatedOld);
+				Assert.AreEqual(1, oldItem.Count, "UpdatedOld");
+				Assert.AreEqual(6, oldItem["Value"].To<int>(), "UpdatedOld");
+
+				oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(8), UpdateReturnValue.AllNew);
+				Assert.AreEqual(3, oldItem.Count, "AllNew");
+				Assert.AreEqual(8, oldItem["Value"].To<int>(), "AllNew");
+
+				oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(9), UpdateReturnValue.UpdatedNew);
+				Assert.AreEqual(1, oldItem.Count, "UpdatedNew");
+				Assert.AreEqual(9, oldItem["Value"].To<int>(), "UpdatedNew");
+
+				oldItem = table.ForKey(id, 1).Update(RemoveValue, UpdateReturnValue.UpdatedOld);
+				Assert.AreEqual(1, oldItem.Count, "RemoveValue");
+				Assert.AreEqual(9, oldItem["Value"].To<int>(), "UpdatedNew");
+
+				oldItem = table.ForKey(id, 1).Update(RemoveValue, UpdateReturnValue.UpdatedNew);
+				Assert.AreEqual(0, oldItem.Count, "RemoveValue");
 			});
 		}
 	}
