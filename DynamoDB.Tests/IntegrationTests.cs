@@ -382,5 +382,21 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			});
 			task.WaitAndUnwrapException();
 		}
+
+		/// <summary>
+		/// This unit test demonstrates that when using update to insert an item, it isn't necassary to include
+		/// the key values in the update expression
+		/// </summary>
+		[Test]
+		public void UpdateToInsertItem()
+		{
+			WithTable("UpdateToInsertItem", table =>
+			{
+				const string id = "Hello";
+				const int order = 1;
+				table.ForKey(id, order).Update(SetValue, Values.Of("insert"));
+				table.ForKey(id, order).Update(SetValue, Values.Of("update"));
+			});
+		}
 	}
 }
