@@ -32,20 +32,24 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal class BatchWriteAsync : IBatchWriteAsync, IBatchWriteOperations
 	{
 		private readonly Region region;
+		private readonly CancellationTokenSource cts;
 		private readonly CancellationToken cancellationToken;
 		private readonly ConcurrentQueue<BatchWriteRequest> requests = new ConcurrentQueue<BatchWriteRequest>();
-		private readonly ConcurrentQueue<Task<Aws.BatchWriteItemResponse>> responses = new ConcurrentQueue<Task<Aws.BatchWriteItemResponse>>();
+		private readonly ConcurrentQueue<Task> tasks = new ConcurrentQueue<Task>();
+		private readonly ConcurrentQueue<Exception> exceptions = new ConcurrentQueue<Exception>();
 		private readonly object syncRoot = new object();
 		private bool complete;
 
 		public BatchWriteAsync(Region region, CancellationToken cancellationToken)
 		{
 			this.region = region;
-			this.cancellationToken = cancellationToken;
+			cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			this.cancellationToken = cts.Token;
 		}
 
 		public void Put(ITable table, DynamoDBMap item)
 		{
+			ReportExceptions();
 			if(complete) throw new InvalidOperationException(ExceptionMessages.BatchComplete);
 			requests.Enqueue(BatchWriteRequest.Put(table, item));
 			if(requests.Count >= Limits.BatchWriteSize)
@@ -54,6 +58,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public void Delete(ITable table, ItemKey key)
 		{
+			ReportExceptions();
 			if(complete) throw new InvalidOperationException(ExceptionMessages.BatchComplete);
 			requests.Enqueue(BatchWriteRequest.Delete(table, key));
 			if(requests.Count >= Limits.BatchWriteSize)
@@ -66,7 +71,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(batchRequests == null) return; // Someone must have beat us to it
 			var request = new Aws.BatchWriteItemRequest(batchRequests.GroupBy(r => r.TableName).ToDictionary(g => g.Key, g => g.Select(r => r.Request).ToList()));
 			var response = region.DB.BatchWriteItemAsync(request, cancellationToken);
-			responses.Enqueue(response);
+			tasks.Enqueue(HandleResponse(response));
 		}
 
 		private IList<BatchWriteRequest> DequeueBatch(bool allowPartial)
@@ -92,6 +97,39 @@ namespace Adamantworks.Amazon.DynamoDB
 			return null;
 		}
 
+		private async Task HandleResponse(Task<Aws.BatchWriteItemResponse> responseTask)
+		{
+			try
+			{
+				var response = await responseTask.ConfigureAwait(false);
+				foreach(var unprocessedTable in response.UnprocessedItems)
+					foreach(var unprocessedItem in unprocessedTable.Value)
+						requests.Enqueue(new BatchWriteRequest(unprocessedTable.Key, unprocessedItem));
+			}
+			catch(Exception ex)
+			{
+				cts.Cancel();
+				exceptions.Enqueue(ex);
+				lock(syncRoot)
+				{
+					complete = true;
+				}
+			}
+		}
+
+		private void ReportExceptions()
+		{
+			if(exceptions.IsEmpty) return;
+			// Wait for all to complete, so we get all exceptions and clear task blockage.
+			// Since we cancelled, hopefully won't take too long.
+			Task.WaitAll(tasks.ToArray());
+			var allExceptions = exceptions.ToArray();
+			if(allExceptions.Length == 1)
+				throw new Exception("Batch Write Failed: " + allExceptions[0].Message, allExceptions[0]);
+
+			throw new AggregateException("Batch Write Failed", allExceptions);
+		}
+
 		public async Task Complete()
 		{
 			// only one thread should complete the batch
@@ -107,23 +145,20 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(!requests.IsEmpty)
 				DoBatchWrite(true);
 
-			// work through the tasks, retrying any items as needed
+			// work through the tasks, this will cause any items to be retryed as needed
 			do
 			{
+				ReportExceptions();
+
 				// if we have enough requests for a batch or are out of responses
 				if(requests.Count >= Limits.BatchWriteSize
-					|| (responses.IsEmpty && !requests.IsEmpty))
+					|| (tasks.IsEmpty && !requests.IsEmpty))
 					DoBatchWrite(true);
 
-				Task<Aws.BatchWriteItemResponse> responseTask;
-				if(responses.TryDequeue(out responseTask))
-				{
-					var response = await responseTask.ConfigureAwait(false);
-					foreach(var unprocessedTable in response.UnprocessedItems)
-						foreach(var unprocessedItem in unprocessedTable.Value)
-							requests.Enqueue(new BatchWriteRequest(unprocessedTable.Key, unprocessedItem));
-				}
-			} while(!cancellationToken.IsCancellationRequested && (!responses.IsEmpty || !requests.IsEmpty));
+				Task responseTask;
+				if(tasks.TryDequeue(out responseTask))
+					await responseTask.ConfigureAwait(false);
+			} while(!cancellationToken.IsCancellationRequested && (!tasks.IsEmpty || !requests.IsEmpty));
 		}
 	}
 }

@@ -363,5 +363,24 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				Assert.AreEqual(0, oldItem.Count, "RemoveValue");
 			});
 		}
+
+		[Test]
+		public void BatchWriteAsyncExceptions()
+		{
+			var task = WithTableAsync("BatchWriteAsyncExceptions", async table =>
+			{
+				var batch = region.BeginBatchWriteAsync();
+				Assert.Throws(Is.InstanceOf<Exception>().Or.InstanceOf<AggregateException>(), async () =>
+				{
+					for(var i = 0; ; i++)
+					{
+						table.PutAsync(batch, new DynamoDBMap() { { "Foo", 6 } });
+						if(i > 0 && i % 25 == 0)
+							await Task.Delay(TimeSpan.FromSeconds(1));
+					}
+				});
+			});
+			task.WaitAndUnwrapException();
+		}
 	}
 }
