@@ -50,6 +50,7 @@
     <Compile Include="BatchGet.cs" />
     <Compile Include="BatchWrite.cs" />
     <Compile Include="Composite.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Contexts\IndexContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
     <Compile Include="Converters\Basic\ArrayConverter.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Syntax\IScanLimitToSyntax.cs" />
     <Compile Include="Syntax\ITryPutSyntax.cs" />
     <Compile Include="Syntax\ITryModifySyntax.cs" />
+    <Compile Include="Syntax\NamedDynamoDBValues.cs" />
     <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="PredicateExpression.cs" />

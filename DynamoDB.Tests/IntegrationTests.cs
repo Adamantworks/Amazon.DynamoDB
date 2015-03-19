@@ -329,7 +329,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			});
 		}
 
-		private static readonly UpdateExpression SetValue = new UpdateExpression("SET #v=:p0", "v", "Value");
+		private static readonly UpdateExpression SetValue = new UpdateExpression("SET #v=:v0", "v", "Value");
 		private static readonly UpdateExpression RemoveValue = new UpdateExpression("REMOVE #v", "v", "Value");
 		[Test]
 		public void ReturnValues()

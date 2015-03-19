@@ -24,7 +24,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		private static readonly DynamoDBMap EmptyValues = new DynamoDBMap();
 
 		private readonly Dictionary<string, string> names;
-		private readonly DynamoDBMap values;
+		private readonly DynamoDBMap constants;
 
 		public UpdateExpression(string expression)
 		{
@@ -46,28 +46,28 @@ namespace Adamantworks.Amazon.DynamoDB
 			Expression = expression;
 			this.names = AwsAttributeNames.Build(names);
 		}
-		public UpdateExpression(string expression, Values values)
+		public UpdateExpression(string expression, Constants constants)
 		{
 			Expression = expression;
-			this.values = values.DynamoDBMapDeepClone();
+			this.constants = constants.DynamoDBMapDeepClone();
 			names = new Dictionary<string, string>();
 		}
-		public UpdateExpression(string expression, Values values, IEnumerable<KeyValuePair<string, string>> names)
+		public UpdateExpression(string expression, Constants constants, IEnumerable<KeyValuePair<string, string>> names)
 		{
 			Expression = expression;
-			this.values = values.DynamoDBMapDeepClone();
+			this.constants = constants.DynamoDBMapDeepClone();
 			this.names = AwsAttributeNames.Build(names);
 		}
-		public UpdateExpression(string expression, Values values, params string[] names)
+		public UpdateExpression(string expression, Constants constants, params string[] names)
 		{
 			Expression = expression;
-			this.values = values.DynamoDBMapDeepClone();
+			this.constants = constants.DynamoDBMapDeepClone();
 			this.names = AwsAttributeNames.Build(names);
 		}
-		public UpdateExpression(string expression, Values values, object names)
+		public UpdateExpression(string expression, Constants constants, object names)
 		{
 			Expression = expression;
-			this.values = values.DynamoDBMapDeepClone();
+			this.constants = constants.DynamoDBMapDeepClone();
 			this.names = AwsAttributeNames.Build(names);
 		}
 
@@ -79,10 +79,10 @@ namespace Adamantworks.Amazon.DynamoDB
 			return names;
 		}
 
-		public IReadOnlyDictionary<string, DynamoDBValue> Values { get { return values ?? EmptyValues; } }
+		public IReadOnlyDictionary<string, DynamoDBValue> Constants { get { return constants ?? EmptyValues; } }
 		Dictionary<string, Aws.AttributeValue> IAwsAttributeValuesProvider.ToAwsAttributeValues()
 		{
-			return values != null ? values.ToAwsDictionary() : null;
+			return constants != null ? constants.ToAwsDictionary() : null;
 		}
 	}
 }
