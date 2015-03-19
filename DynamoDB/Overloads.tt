@@ -90,6 +90,8 @@
 	var rangeKeyOnly = Param("DynamoDBKeyValue", "rangeKey");
 	var rangeKeyOnlyObject = ParamTransform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey)");
 	var rangeKeyOnlyObjectConverter = ParamTransform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey, converter)");
+	var batchWrite = Param("IBatchWrite", "batch");
+	var batchWriteAsync = Param("IBatchWriteAsync", "batch");
 
 	Func<IReadOnlyList<Parameter>, bool> noIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(indexProvisionedThroughputs) && ! overload.Contains(provisionedThroughput));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
@@ -169,12 +171,7 @@
 		.Concat(GenOverloads(true, outerItemsAsync, keySelector, resultSelector, readAhead)));
 	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
 		GenOverloads(true, outerItemsSync, keySelector, resultSelector));
-	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext",  keyOverloads.Select(overload =>
-		{
-			var newOverload = overload.ToList();
-			newOverload.Insert(0, thisArg);
-			return newOverload;
-		}).ToList());
+	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext", GenOverloads(true, thisArg,  keyOverloads));
 	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
 		GenOverloads(true, item, returnOldItem, cancellationToken));
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
@@ -194,6 +191,10 @@
 		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
+	var batchDelete = new Method("void", "Delete",
+			GenOverloads(false, batchWrite, keyOverloads));
+	var batchDeleteAsync = new Method("void", "Delete",
+			GenOverloads(false, batchWriteAsync, keyOverloads));
 
 	// Syntax
 	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
@@ -225,7 +226,7 @@
 	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
 		GenOverloads(returnOldItem, cancellationToken));
 	var delete = new Method("DynamoDBMap", "Delete",
-		GenOverloads( returnOldItem));
+		GenOverloads(returnOldItem));
 	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKey, filter, values)
 		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
@@ -347,6 +348,9 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenInterface(updateTable); #>
 
 <#		GenInterface(forKey); #>
+
+<#		GenInterface(batchDeleteAsync); #>
+<#		GenInterface(batchDelete); #>
 	}
 
 	internal partial class Table
@@ -380,6 +384,10 @@ namespace Adamantworks.Amazon.DynamoDB
 <#		GenMethods(queryForwards); #>
 
 <#		GenMethods(scanForwards); #>
+
+<#		GenMethods(batchDeleteAsync); #>
+
+<#		GenMethods(batchDelete); #>
 	}
 
 	internal partial class Index
@@ -626,6 +634,19 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(bool includeAll, params Parameter[] parameters)
 	{
 		return GenOverloads(includeAll, Enumerable.Empty<IReadOnlyList<Parameter>>(), parameters);
+	}
+
+	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(bool includeAll, Parameter beforeParam, IEnumerable<IReadOnlyList<Parameter>> baseOverloads)
+	{
+		var overloads = baseOverloads.Select(overload =>
+		{
+			var newOverload = overload.ToList();
+			newOverload.Insert(0, beforeParam);
+			return newOverload;
+		}).ToList();
+		if(!includeAll)
+			overloads.RemoveAt(overloads.Count-1); // The last one has no defaults
+		return overloads;
 	}
 
 	public IEnumerable<IReadOnlyList<Parameter>> GenOverloads(bool includeAll, IEnumerable<IReadOnlyList<Parameter>> baseOverloads, params Parameter[] parameters)
