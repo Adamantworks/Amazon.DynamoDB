@@ -132,7 +132,7 @@ namespace Adamantworks.Amazon.DynamoDB
 				lastResponse = DB.ListTables(request);
 				foreach(var tableName in lastResponse.TableNames)
 					yield return tableName;
-			} while(IsComplete(lastResponse));
+			} while(!IsComplete(lastResponse));
 		}
 
 		private static bool IsComplete(Aws.ListTablesResponse lastResponse)
@@ -175,7 +175,7 @@ namespace Adamantworks.Amazon.DynamoDB
 						yield return tableName;
 					else
 						yield break;
-			} while(IsComplete(lastResponse));
+			} while(!IsComplete(lastResponse));
 		}
 
 		private static void CheckTableNameBegins(string tableNameBegins)
