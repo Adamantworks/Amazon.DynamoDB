@@ -182,7 +182,7 @@
 		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
-	var scanForwards = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
+	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, regionArg, nameArg, keySchemaArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
@@ -233,7 +233,7 @@
 		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
-	var scan = new Method("IScanLimitToSyntax", "Scan", "new ScanContext",
+	var scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, tableDotKeySchemaArg, projectionArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQuery = new Method("IReverseSyntax", "Query", "new QueryContext",
@@ -242,6 +242,7 @@
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
+
 	// Query Range
 	var allKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", GenOverloads(readAhead));
 	var rangeKeyBeginsWithAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBeginsWithAsync",
@@ -303,6 +304,9 @@
 		GenOverloads(false, rangeKeyBetweenOverloads, cancellationToken));
 	var rangeKeyBetweenPaged = new Method("ItemPage", "RangeKeyBetween",
 		GenOverloads(false, rangeKeyBetweenOverloads));
+
+	// Scan Options Paged
+	var scanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", GenOverloads(cancellationToken));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
@@ -448,6 +452,11 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 <#		GenInterface(rangeKeyBetweenAsyncPaged); #>
 <#		GenInterface(rangeKeyBetweenPaged); #>
+	}
+
+	public partial interface IPagedScanOptionsSyntax
+	{
+<#		GenInterface(scanAllAsyncPaged); #>
 	}
 
 	public partial interface IPutSyntax
@@ -602,6 +611,11 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenExplicitImplementations(rangeKeyBetweenAsyncPaged, "IPagedQueryRangeSyntax"); #>
 
 <#		GenExplicitImplementations(rangeKeyBetweenPaged, "IPagedQueryRangeSyntax"); #>
+	}
+
+	internal partial class ScanContext
+	{
+<#		GenExplicitImplementations(scanAllAsyncPaged, "IPagedScanOptionsSyntax"); #>
 	}
 }
 <#+

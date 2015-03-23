@@ -76,6 +76,7 @@
     <Compile Include="Syntax\IConsistentSyntax.cs" />
     <Compile Include="Syntax\IIfSyntax.cs" />
     <Compile Include="Syntax\IModifySyntax.cs" />
+    <Compile Include="Syntax\IPagedScanOptionsSyntax.cs" />
     <Compile Include="Syntax\IPutSyntax.cs" />
     <Compile Include="Contexts\GetContext.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
@@ -117,7 +118,7 @@
     <Compile Include="Contexts\ModifyContext.cs" />
     <Compile Include="Contexts\PutContext.cs" />
     <Compile Include="Syntax\IScanExclusiveStartKeySyntax.cs" />
-    <Compile Include="Syntax\IScanLimitToSyntax.cs" />
+    <Compile Include="Syntax\IScanLimitToOrPagedSyntax.cs" />
     <Compile Include="Syntax\ITryPutSyntax.cs" />
     <Compile Include="Syntax\ITryModifySyntax.cs" />
     <Compile Include="Syntax\NamedDynamoDBValues.cs" />

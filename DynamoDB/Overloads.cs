@@ -571,15 +571,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region Scan
-		public IScanLimitToSyntax Scan()
+		public IScanLimitToOrPagedSyntax Scan()
 		{
 			return new ScanContext(Region, Name, Schema.Key, null, null, null);
 		}
-		public IScanLimitToSyntax Scan(PredicateExpression filter)
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
 			return new ScanContext(Region, Name, Schema.Key, null, filter, null);
 		}
-		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
 			return new ScanContext(Region, Name, Schema.Key, null, filter, values);
 		}
@@ -747,9 +747,9 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
 	public partial interface IConsistentOrScanSyntax
 	{
-		IScanLimitToSyntax Scan();
-		IScanLimitToSyntax Scan(PredicateExpression filter);
-		IScanLimitToSyntax Scan(PredicateExpression filter, Values values);
+		IScanLimitToOrPagedSyntax Scan();
+		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter);
+		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values);
 	}
 
 	public partial interface IGetSyntax
@@ -912,6 +912,11 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		ItemPage RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
 		ItemPage RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive);
 		ItemPage RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+	}
+
+	public partial interface IPagedScanOptionsSyntax
+	{
+		Task<ItemPage> AllAsync();
 	}
 
 	public partial interface IPutSyntax
@@ -1286,15 +1291,15 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#endregion
 
 		#region Scan
-		public IScanLimitToSyntax Scan()
+		public IScanLimitToOrPagedSyntax Scan()
 		{
 			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, null, null);
 		}
-		public IScanLimitToSyntax Scan(PredicateExpression filter)
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
 			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, filter, null);
 		}
-		public IScanLimitToSyntax Scan(PredicateExpression filter, Values values)
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
 			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, filter, values);
 		}
@@ -2226,6 +2231,16 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
 		{
 			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(startInclusive, endExclusive);
+		}
+		#endregion
+	}
+
+	internal partial class ScanContext
+	{
+		#region IPagedScanOptionsSyntax.AllAsync
+		Task<ItemPage> IPagedScanOptionsSyntax.AllAsync()
+		{
+			return ((IPagedScanOptionsSyntax)this).AllAsync(CancellationToken.None);
 		}
 		#endregion
 	}

@@ -14,8 +14,10 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IScanLimitToSyntax : IScanExclusiveStartKeySyntax
+	public interface IScanLimitToOrPagedSyntax : IScanExclusiveStartKeySyntax
 	{
 		IScanExclusiveStartKeySyntax LimitTo(int? limit);
+		IPagedScanOptionsSyntax Paged(int pageSize);
+		IPagedScanOptionsSyntax Paged(int pageSize, LastKey? exclusiveStartKey);
 	}
 }

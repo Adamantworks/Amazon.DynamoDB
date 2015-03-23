@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -23,7 +25,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal class ScanContext : IScanLimitToSyntax
+	internal partial class ScanContext : IScanLimitToOrPagedSyntax, IPagedScanOptionsSyntax
 	{
 		private readonly Region region;
 		private readonly string tableName;
@@ -67,6 +69,23 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return this;
 		}
 
+		public IPagedScanOptionsSyntax Paged(int pageSize)
+		{
+			if(limitSet)
+				throw new Exception("Limit of Scan operation already set");
+			limit = pageSize;
+			return this;
+		}
+
+		public IPagedScanOptionsSyntax Paged(int pageSize, LastKey? exclusiveStartKey)
+		{
+			if(limitSet)
+				throw new Exception("Limit of Scan operation already set");
+			limit = pageSize;
+			this.exclusiveStartKey = exclusiveStartKey;
+			return this;
+		}
+
 		#region All
 		public IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some)
 		{
@@ -87,6 +106,22 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					readAhead);
 			});
 		}
+		async Task<ItemPage> IPagedScanOptionsSyntax.AllAsync(CancellationToken cancellationToken)
+		{
+			var request = BuildScanRequest();
+			var items = new List<DynamoDBMap>();
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, keySchema);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, await region.DB.ScanAsync(request, cancellationToken).ConfigureAwait(false));
+				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
+			} while(!lastResponse.IsComplete());
+			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(keySchema));
+		}
+
 		public IEnumerable<DynamoDBMap> All()
 		{
 			var request = BuildScanRequest();
@@ -100,6 +135,21 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				foreach(var item in lastResponse.Items)
 					yield return item.ToMap();
 			} while(!lastResponse.IsComplete());
+		}
+		ItemPage IPagedScanOptionsSyntax.All()
+		{
+			var request = BuildScanRequest();
+			var items = new List<DynamoDBMap>();
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, keySchema);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, region.DB.Scan(request));
+				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
+			} while(!lastResponse.IsComplete());
+			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(keySchema));
 		}
 		#endregion
 
