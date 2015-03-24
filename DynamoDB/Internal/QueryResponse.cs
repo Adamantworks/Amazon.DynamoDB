@@ -21,7 +21,7 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 	internal class QueryResponse
 	{
 		public readonly int? Limit;
-		public readonly int ItemsReturned;
+		public readonly long Count;
 		public readonly int CurrentLimit;
 		public readonly Dictionary<string, Aws.AttributeValue> LastEvaluatedKey;
 		public readonly List<Dictionary<string, Aws.AttributeValue>> Items;
@@ -34,28 +34,28 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 				LastEvaluatedKey = exclusiveStartKey.Value.ToAws(tableKeySchema, indexKeySchema);
 		}
 
-		private QueryResponse(QueryResponse lastResponse, List<Dictionary<string, Aws.AttributeValue>> items, Dictionary<string, Aws.AttributeValue> lastEvaluatedKey)
+		private QueryResponse(QueryResponse lastResponse, int itemCount, List<Dictionary<string, Aws.AttributeValue>> items, Dictionary<string, Aws.AttributeValue> lastEvaluatedKey)
 		{
 			Limit = lastResponse.Limit;
 			Items = items;
-			ItemsReturned = lastResponse.ItemsReturned + items.Count;
-			CurrentLimit = (Limit - ItemsReturned) ?? -1;
+			Count = lastResponse.Count + itemCount;
+			CurrentLimit = (int?)(Limit - Count) ?? -1;
 			LastEvaluatedKey = lastEvaluatedKey;
 		}
 
 		public QueryResponse(QueryResponse lastResponse, Aws.ScanResponse scanResponse)
-			: this(lastResponse, scanResponse.Items, scanResponse.LastEvaluatedKey)
+			: this(lastResponse, scanResponse.Count, scanResponse.Items, scanResponse.LastEvaluatedKey)
 		{
 		}
 
 		public QueryResponse(QueryResponse lastResponse, Aws.QueryResponse queryResponse)
-			: this(lastResponse, queryResponse.Items, queryResponse.LastEvaluatedKey)
+			: this(lastResponse, queryResponse.Count, queryResponse.Items, queryResponse.LastEvaluatedKey)
 		{
 		}
 
 		public bool IsComplete()
 		{
-			return (Limit != null && ItemsReturned >= Limit)
+			return (Limit != null && Count >= Limit)
 				   || LastEvaluatedKey == null || LastEvaluatedKey.Count == 0;
 		}
 

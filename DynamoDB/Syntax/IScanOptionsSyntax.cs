@@ -23,5 +23,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IEnumerable<DynamoDBMap> All();
 		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
 		// TODO: Parallel(totalSegments, currentSegment)
+
+		long CountAll();
 	}
 }

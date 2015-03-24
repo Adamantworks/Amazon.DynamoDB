@@ -22,6 +22,7 @@ using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
 using Aws = Amazon.DynamoDBv2.Model;
+using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -136,6 +137,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					yield return item.ToMap();
 			} while(!lastResponse.IsComplete());
 		}
+
 		ItemPage IPagedScanOptionsSyntax.All()
 		{
 			var request = BuildScanRequest();
@@ -153,6 +155,23 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
+		#region CountAll
+		public long CountAll()
+		{
+			var request = BuildCountRequest();
+			request.ReturnConsumedCapacity = AwsEnums.ReturnConsumedCapacity.TOTAL;
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, keySchema);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, region.DB.Scan(request));
+			} while(!lastResponse.IsComplete());
+			return lastResponse.Count;
+		}
+		#endregion
+
 		private Aws.ScanRequest BuildScanRequest()
 		{
 			var request = new Aws.ScanRequest()
@@ -166,6 +185,12 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			if(filter != null)
 				request.FilterExpression = filter.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
+			return request;
+		}
+		private Aws.ScanRequest BuildCountRequest()
+		{
+			var request = BuildScanRequest();
+			request.Select = AwsEnums.Select.COUNT;
 			return request;
 		}
 	}

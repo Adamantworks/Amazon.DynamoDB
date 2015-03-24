@@ -185,6 +185,11 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				items = table.Scan().LimitTo(112).All().ToList();
 				Assert.AreEqual(112, items.Count);
 
+				// TODO more count tests, and put in async too
+				// TODO why can't we count everything we just inserted? Eventual consistency?
+				var count = table.Scan().LimitTo(300).CountAll();
+				Assert.AreEqual(300, count);
+
 				// TODO paged scan
 
 				var globalIndex = table.Indexes["global"];
