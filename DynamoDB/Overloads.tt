@@ -402,11 +402,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IConsistentOrScanSyntax
-	{
-<#		GenInterface(scan); #>
-	}
-
 	public partial interface IGetSyntax
 	{
 <#		GenInterface(getAsync); #>
@@ -495,6 +490,12 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 <#		GenInterface(query); #>
 	}
+
+	public partial interface IScanSyntax
+	{
+<#		GenInterface(scan); #>
+	}
+
 	public partial interface ITryModifySyntax
 	{
 <#		GenInterface(tryUpdateAsync); #>

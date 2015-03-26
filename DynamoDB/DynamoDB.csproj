@@ -119,6 +119,7 @@
     <Compile Include="Contexts\PutContext.cs" />
     <Compile Include="Syntax\IScanExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IScanLimitToOrPagedSyntax.cs" />
+    <Compile Include="Syntax\IScanSyntax.cs" />
     <Compile Include="Syntax\ITryPutSyntax.cs" />
     <Compile Include="Syntax\ITryModifySyntax.cs" />
     <Compile Include="Syntax\NamedDynamoDBValues.cs" />

@@ -15,9 +15,7 @@
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
 	// See Overloads.tt and Overloads.cs for more methods of this interface
-	public interface IConsistentOrScanSyntax : IGetSyntax, IScanSyntax
+	public partial interface IScanSyntax
 	{
-		IGetSyntax Consistent { get; }
-		IGetSyntax ConsistentIf(bool consistentRead);
 	}
 }

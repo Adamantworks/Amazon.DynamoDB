@@ -745,13 +745,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IConsistentOrScanSyntax
-	{
-		IScanLimitToOrPagedSyntax Scan();
-		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter);
-		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values);
-	}
-
 	public partial interface IGetSyntax
 	{
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
@@ -1036,6 +1029,14 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter);
 		IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values);
 	}
+
+	public partial interface IScanSyntax
+	{
+		IScanLimitToOrPagedSyntax Scan();
+		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter);
+		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values);
+	}
+
 	public partial interface ITryModifySyntax
 	{
 		Task<bool> TryUpdateAsync(UpdateExpression update);
