@@ -17,7 +17,8 @@ using Adamantworks.Amazon.DynamoDB.Syntax;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class IndexContext : IConsistentSyntax
+	// See Overloads.tt and Overloads.cs for more methods of this class
+	internal partial class IndexContext : IConsistentQuerySyntax
 	{
 		private readonly Index index;
 		private readonly ProjectionExpression projection;

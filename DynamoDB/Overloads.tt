@@ -183,13 +183,16 @@
 		.Concat(GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		GenOverloads(true, regionArg, nameArg, keySchemaArg, projectionNoneArg, filter, values)
+		GenOverloads(true, regionArg, nameArg, indexNameNoneArg, keySchemaArg, keySchemaNoneArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
 		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
 		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		.Where(noValuesWithoutFilter));
+	var indexScanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
+		GenOverloads(true, indexRegionArg, indexTableNameArg, nameArg, TableDotKeySchemaArg, keySchemaArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var batchDelete = new Method("void", "Delete",
 			GenOverloads(false, batchWrite, keyOverloads));
@@ -234,13 +237,16 @@
 		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, tableDotKeySchemaArg, projectionArg, filter, values)
+		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, filter, values)
 		.Where(noValuesWithoutFilter));
 	var indexQuery = new Method("IReverseSyntax", "Query", "new QueryContext",
 		GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, filter, values)
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		.Where(noValuesWithoutFilter));
+	var indexScan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
+		GenOverloads(true, indexDotTableDotRegionArg, indexDotTableDotTableNameArg, indexNameArg, indexDotTableDotKeySchemaArg, indexDotKeySchemaArg, projectionArg, filter, values)
 		.Where(noValuesWithoutFilter));
 
 	// Query Range
@@ -397,6 +403,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Index
 	{
 <#		GenMethods(indexQueryForwards); #>
+
+<#		GenMethods(indexScanForwards); #>
 	}
 }
 
@@ -527,6 +535,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 	internal partial class IndexContext
 	{
 <#		GenMethods(indexQuery); #>
+
+<#		GenMethods(indexScan); #>
 	}
 
 	internal partial class ModifyContext

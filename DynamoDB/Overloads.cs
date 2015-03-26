@@ -573,15 +573,15 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(Region, Name, Schema.Key, null, null, null);
+			return new ScanContext(Region, Name, null, Schema.Key, null, null, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(Region, Name, Schema.Key, null, filter, null);
+			return new ScanContext(Region, Name, null, Schema.Key, null, null, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(Region, Name, Schema.Key, null, filter, values);
+			return new ScanContext(Region, Name, null, Schema.Key, null, null, filter, values);
 		}
 		#endregion
 
@@ -738,6 +738,21 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
 			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
+		}
+		#endregion
+
+		#region Scan
+		public IScanLimitToOrPagedSyntax Scan()
+		{
+			return new ScanContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, null, null);
+		}
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
+		{
+			return new ScanContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, filter, null);
+		}
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
+		{
+			return new ScanContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, filter, values);
 		}
 		#endregion
 	}
@@ -1294,15 +1309,15 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, null, null);
+			return new ScanContext(table.Region, table.Name, null, table.Schema.Key, null, projection, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, filter, null);
+			return new ScanContext(table.Region, table.Name, null, table.Schema.Key, null, projection, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(table.Region, table.Name, table.Schema.Key, projection, filter, values);
+			return new ScanContext(table.Region, table.Name, null, table.Schema.Key, null, projection, filter, values);
 		}
 		#endregion
 	}
@@ -1357,6 +1372,21 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
 			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
+		}
+		#endregion
+
+		#region Scan
+		public IScanLimitToOrPagedSyntax Scan()
+		{
+			return new ScanContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, null, null);
+		}
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
+		{
+			return new ScanContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, filter, null);
+		}
+		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
+		{
+			return new ScanContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, filter, values);
 		}
 		#endregion
 	}

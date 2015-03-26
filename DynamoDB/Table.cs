@@ -29,7 +29,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB
 {
 	// See Overloads.tt and Overloads.cs for more methods of this interface
-	public partial interface ITable : IConsistentOrScanSyntax, IPutSyntax
+	public partial interface ITable : IConsistentGetSyntax, IPutSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -54,7 +54,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		IConsistentOrScanSyntax With(ProjectionExpression projection);
+		IConsistentGetSyntax With(ProjectionExpression projection);
 
 		ITryPutSyntax If(PredicateExpression condition);
 		ITryPutSyntax If(PredicateExpression condition, Values values);
@@ -267,7 +267,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Schema.Key.GetKey(item);
 		}
 
-		public IConsistentOrScanSyntax With(ProjectionExpression projection)
+		public IConsistentGetSyntax With(ProjectionExpression projection)
 		{
 			return new GetContext(this, projection);
 		}

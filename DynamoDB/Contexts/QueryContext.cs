@@ -25,6 +25,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
+	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class QueryContext : IReverseSyntax, IPagedQueryRangeSyntax
 	{
 		private readonly Region region;

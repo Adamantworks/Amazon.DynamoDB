@@ -22,6 +22,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
+	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class PutContext : ITryPutSyntax
 	{
 		private readonly Table table;

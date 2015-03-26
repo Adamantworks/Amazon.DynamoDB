@@ -21,7 +21,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IIndex : IConsistentSyntax
+	public interface IIndex : IConsistentQuerySyntax
 	{
 		ITable Table { get; }
 		string Name { get; }
@@ -31,7 +31,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		IConsistentSyntax With(ProjectionExpression projection);
+		IConsistentQuerySyntax With(ProjectionExpression projection);
 	}
 
 	// See Overloads.tt and Overloads.cs for more methods of this class
@@ -74,7 +74,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Schema.Key.GetKey(item);
 		}
 
-		public IConsistentSyntax With(ProjectionExpression projection)
+		public IConsistentQuerySyntax With(ProjectionExpression projection)
 		{
 			return new IndexContext(this, projection);
 		}

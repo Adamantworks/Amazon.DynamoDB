@@ -73,7 +73,7 @@
     <Compile Include="Internal\TypeExtensions.cs" />
     <Compile Include="ItemPage.cs" />
     <Compile Include="LastKey.cs" />
-    <Compile Include="Syntax\IConsistentSyntax.cs" />
+    <Compile Include="Syntax\IConsistentQuerySyntax.cs" />
     <Compile Include="Syntax\IIfSyntax.cs" />
     <Compile Include="Syntax\IModifySyntax.cs" />
     <Compile Include="Syntax\IPagedScanOptionsSyntax.cs" />
@@ -112,7 +112,7 @@
     <Compile Include="Syntax\IQuerySyntax.cs" />
     <Compile Include="Syntax\IReverseSyntax.cs" />
     <Compile Include="Contexts\QueryContext.cs" />
-    <Compile Include="Syntax\IConsistentOrScanSyntax.cs" />
+    <Compile Include="Syntax\IConsistentGetSyntax.cs" />
     <Compile Include="Syntax\IGetSyntax.cs" />
     <Compile Include="Syntax\IScanOptionsSyntax.cs" />
     <Compile Include="Contexts\ModifyContext.cs" />
