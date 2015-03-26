@@ -15,12 +15,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 {
+	[DebuggerDisplay("{DebuggerDisplay(),nq}")]
 	public abstract class DynamoDBKeyValue : DynamoDBScalar, IEquatable<DynamoDBKeyValue>
 	{
 		public abstract override bool Equals(object other);
@@ -274,5 +276,7 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 
 			keyConditions.Add(rangeKeySchema.Name, new Aws.Condition() { ComparisonOperator = comparisonOperator, AttributeValueList = new List<Aws.AttributeValue>() { ToAws() } });
 		}
+
+		internal abstract string DebuggerDisplay();
 	}
 }

@@ -103,5 +103,10 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			return value;
 		}
+
+		internal override string DebuggerDisplay()
+		{
+			return string.Format("\"{0}\"", value);
+		}
 	}
 }

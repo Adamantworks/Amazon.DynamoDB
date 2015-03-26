@@ -165,5 +165,10 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 				hex.AppendFormat("{0:X2}", value[i]);
 			return hex.ToString();
 		}
+
+		internal override string DebuggerDisplay()
+		{
+			return "0x" + ToString();
+		}
 	}
 }

@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -28,6 +29,7 @@ namespace Adamantworks.Amazon.DynamoDB
 	/// Note that for local indexes the IndexHashKey must be null because it is the same
 	/// as the TableHashKey.
 	/// </summary>
+	[DebuggerDisplay("{ToString(),nq}")]
 	public struct LastKey : IEquatable<LastKey>
 	{
 		// Note: this class exists because for indexes the LastEvaluatedKey can't be just an ItemKey.
@@ -100,6 +102,18 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(IndexRangeKey != null)
 				hash ^= IndexRangeKey.GetHashCode();
 			return hash;
+		}
+
+		public override string ToString()
+		{
+			var tableHashKey = TableHashKey != null ? TableHashKey.DebuggerDisplay() : "null";
+			var tableRangeKey = TableRangeKey != null ? TableRangeKey.DebuggerDisplay() : "null";
+			if(IndexHashKey == null && IndexRangeKey == null)
+				return TableRangeKey == null ? string.Format("({0})", tableHashKey) : string.Format("({0}, {1})", tableHashKey, tableRangeKey);
+
+			var indexHashKey = IndexHashKey != null ? IndexHashKey.DebuggerDisplay() : "null";
+			var indexRangeKey = IndexRangeKey != null ? IndexRangeKey.DebuggerDisplay() : "null";
+			return string.Format("({0}, {1}, {2}, {3})", tableHashKey, tableRangeKey, indexHashKey, indexRangeKey);
 		}
 	}
 }

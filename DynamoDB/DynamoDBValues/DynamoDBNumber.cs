@@ -246,5 +246,10 @@ namespace Adamantworks.Amazon.DynamoDB.DynamoDBValues
 		{
 			return value;
 		}
+
+		internal override string DebuggerDisplay()
+		{
+			return value;
+		}
 	}
 }

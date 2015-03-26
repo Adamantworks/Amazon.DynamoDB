@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
@@ -22,6 +23,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
+	[DebuggerDisplay("{ToString(),nq}")]
 	public struct ItemKey : IEquatable<ItemKey>
 	{
 		public readonly DynamoDBKeyValue HashKey;
@@ -123,6 +125,11 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static ItemKey Create(object hashKey, object rangeKey, IValueConverter converter)
 		{
 			return new ItemKey(DynamoDBKeyValue.Convert(hashKey, converter), DynamoDBKeyValue.Convert(rangeKey, converter));
+		}
+
+		public override string ToString()
+		{
+			return RangeKey != null ? string.Format("({0}, {1})", HashKey.DebuggerDisplay(), RangeKey.DebuggerDisplay()) : string.Format("({0})", HashKey.DebuggerDisplay());
 		}
 	}
 }
