@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
@@ -24,6 +25,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
 		// TODO: Parallel(totalSegments, currentSegment)
 
+		Task<long> CountAllAsync();
 		long CountAll();
 	}
 }

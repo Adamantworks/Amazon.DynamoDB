@@ -163,10 +163,23 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#endregion
 
 		#region CountAll
+		public async Task<long> CountAllAsync()
+		{
+			var request = BuildCountRequest();
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, await region.DB.ScanAsync(request).ConfigureAwait(false));
+			} while(!lastResponse.IsComplete());
+			return lastResponse.Count;
+		}
+
 		public long CountAll()
 		{
 			var request = BuildCountRequest();
-			request.ReturnConsumedCapacity = AwsEnums.ReturnConsumedCapacity.TOTAL;
 			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
 			do
 			{

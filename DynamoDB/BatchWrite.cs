@@ -82,7 +82,7 @@ namespace Adamantworks.Amazon.DynamoDB
 			if(complete) throw new InvalidOperationException(ExceptionMessages.BatchComplete);
 			complete = true; // really there is a risk some other method is still completing, but the caller should prevent that
 
-			if(requests.Count > 0)
+			while(requests.Count > 0) // because of unprocessed items we might have to do this more than once
 				DoBatchWrite(true);
 		}
 	}

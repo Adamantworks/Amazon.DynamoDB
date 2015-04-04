@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
@@ -109,7 +110,13 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				items = await table.Scan().LimitTo(112).AllAsync().ToList().ConfigureAwait(false);
 				Assert.AreEqual(112, items.Count);
 
-				// TODO paged scan
+				await PagedScanAsync(table, 2).ConfigureAwait(false);
+				await PagedScanAsync(table, 52).ConfigureAwait(false);
+
+				// TODO more count tests
+				Thread.Sleep(TimeSpan.FromSeconds(1));
+				var count = await table.Scan().CountAllAsync().ConfigureAwait(false);
+				Assert.AreEqual(513, count);
 
 				var globalIndex = table.Indexes["global"];
 				items = await globalIndex.Query(2).LimitTo(3).AllKeysAsync().ToList().ConfigureAwait(false);
@@ -125,6 +132,20 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			// Wait on the async to complete
 			task.WaitAndUnwrapException();
 		}
+
+		private static async Task PagedScanAsync(ITable table, int pageSize)
+		{
+			LastKey? lastKey = null;
+
+			do
+			{
+				var page = await table.Scan().Paged(pageSize, lastKey).AllAsync().ConfigureAwait(false);
+				lastKey = page.LastEvaluatedKey;
+				if(lastKey != null)
+					Assert.AreEqual(pageSize, page.Items.Count);
+			} while(lastKey != null);
+		}
+
 
 		private static async Task PagedQueryAsync(IIndex globalIndex, int pageSize)
 		{
@@ -185,12 +206,13 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				items = table.Scan().LimitTo(112).All().ToList();
 				Assert.AreEqual(112, items.Count);
 
-				// TODO more count tests, and put in async too
-				// TODO why can't we count everything we just inserted? Eventual consistency?
-				var count = table.Scan().LimitTo(300).CountAll();
-				Assert.AreEqual(300, count);
+				PagedScan(table, 2);
+				PagedScan(table, 52);
 
-				// TODO paged scan
+				// TODO more count tests
+				Thread.Sleep(TimeSpan.FromSeconds(1));
+				var count = table.Scan().CountAll();
+				Assert.AreEqual(513, count);
 
 				var globalIndex = table.Indexes["global"];
 				items = globalIndex.Query(2).LimitTo(3).AllKeys().ToList();
@@ -202,6 +224,19 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				PagedQuery(globalIndex, 3);
 				PagedQuery(globalIndex, 52);
 			});
+		}
+
+		private static void PagedScan(ITable table, int pageSize)
+		{
+			LastKey? lastKey = null;
+
+			do
+			{
+				var page = table.Scan().Paged(pageSize, lastKey).All();
+				lastKey = page.LastEvaluatedKey;
+				if(lastKey != null)
+					Assert.AreEqual(pageSize, page.Items.Count);
+			} while(lastKey != null);
 		}
 
 		private static void PagedQuery(IIndex globalIndex, int pageSize)
@@ -389,8 +424,8 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		}
 
 		/// <summary>
-		/// This unit test demonstrates that when using update to insert an item, it isn't necassary to include
-		/// the key values in the update expression
+		/// This unit test demonstrates that when using update to insert an item, it isn't necessary to include
+		/// the key values in the update expression even when it causes an insert
 		/// </summary>
 		[Test]
 		public void UpdateToInsertItem()
