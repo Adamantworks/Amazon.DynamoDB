@@ -92,6 +92,8 @@
 	var rangeKeyOnlyObjectConverter = ParamTransform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey, converter)");
 	var batchWrite = Param("IBatchWrite", "batch");
 	var batchWriteAsync = Param("IBatchWriteAsync", "batch");
+	var segment = Param("int", "segment");
+	var totalSegments = Param("int", "totalSegments");
 
 	Func<IReadOnlyList<Parameter>, bool> noIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(indexProvisionedThroughputs) && ! overload.Contains(provisionedThroughput));
 	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
@@ -236,6 +238,10 @@
 		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
+	var scanAllAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllAsync",
+		GenOverloads(readAhead));
+	var scanParallelAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "ParallelAsync",
+		GenOverloads(segment, totalSegments, readAhead));
 	var scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, tableDotRegionArg, tableDotTableNameArg, indexNameNoneArg, tableDotKeySchemaArg, keySchemaNoneArg, projectionArg, filter, values)
 		.Where(noValuesWithoutFilter));
@@ -313,6 +319,7 @@
 
 	// Scan Options Paged
 	var scanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", GenOverloads(cancellationToken));
+	var scanParallelAsyncPaged = new Method("Task<ItemPage>", "ParallelAsync", GenOverloads(segment, totalSegments, cancellationToken));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
@@ -460,6 +467,8 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public partial interface IPagedScanOptionsSyntax
 	{
 <#		GenInterface(scanAllAsyncPaged); #>
+
+<#		GenInterface(scanParallelAsyncPaged); #>
 	}
 
 	public partial interface IPutSyntax
@@ -497,6 +506,13 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public partial interface IQuerySyntax
 	{
 <#		GenInterface(query); #>
+	}
+
+	public partial interface IScanOptionsSyntax
+	{
+<#		GenInterface(scanAllAsync); #>
+
+<#		GenInterface(scanParallelAsync); #>
 	}
 
 	public partial interface IScanSyntax
@@ -626,7 +642,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 	internal partial class ScanContext
 	{
+<#		GenMethods(scanAllAsync); #>
+
 <#		GenExplicitImplementations(scanAllAsyncPaged, "IPagedScanOptionsSyntax"); #>
+
+<#		GenMethods(scanParallelAsync); #>
+
+<#		GenExplicitImplementations(scanParallelAsyncPaged, "IPagedScanOptionsSyntax"); #>
 	}
 }
 <#+

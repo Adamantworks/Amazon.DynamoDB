@@ -18,12 +18,21 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IScanOptionsSyntax
+	// See Overloads.tt and Overloads.cs for more methods of this interface
+	public partial interface IScanOptionsSyntax
 	{
-		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some);
+		IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead);
 		IEnumerable<DynamoDBMap> All();
+
+		/// <param name="segment">zero based index of the segment to scan</param>
+		/// <param name="totalSegments">the total number of segments being scanned i.e. the number of workers</param>
+		IAsyncEnumerable<DynamoDBMap> ParallelAsync(int segment, int totalSegments, ReadAhead readAhead);
+
+		/// <param name="segment">zero based index of the segment to scan</param>
+		/// <param name="totalSegments">the total number of segments being scanned i.e. the number of workers</param>
+		IEnumerable<DynamoDBMap> Parallel(int segment, int totalSegments);
+
 		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
-		// TODO: Parallel(totalSegments, currentSegment)
 
 		Task<long> CountAllAsync();
 		long CountAll();

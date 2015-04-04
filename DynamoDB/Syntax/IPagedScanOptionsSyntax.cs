@@ -22,7 +22,11 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 		Task<ItemPage> AllAsync(CancellationToken cancellationToken);
 		ItemPage All();
+
+		Task<ItemPage> ParallelAsync(int segment, int totalSegments, CancellationToken cancellationToken);
+
+		ItemPage Parallel(int segment, int totalSegments);
+
 		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
-		// TODO: Parallel(totalSegments, currentSegment)
 	}
 }

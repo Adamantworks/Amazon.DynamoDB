@@ -95,7 +95,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 
 		#region All
-		public IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead = ReadAhead.Some)
+		public IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead)
 		{
 			return AsyncEnumerable.Defer(() =>
 			{
@@ -144,10 +144,76 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					yield return item.ToMap();
 			} while(!lastResponse.IsComplete());
 		}
-
 		ItemPage IPagedScanOptionsSyntax.All()
 		{
 			var request = BuildScanRequest();
+			var items = new List<DynamoDBMap>();
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, region.DB.Scan(request));
+				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
+			} while(!lastResponse.IsComplete());
+			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(tableKeySchema, indexKeySchema));
+		}
+		#endregion
+
+		#region Parrallel
+		public IAsyncEnumerable<DynamoDBMap> ParallelAsync(int segment, int totalSegments, ReadAhead readAhead)
+		{
+			return AsyncEnumerable.Defer(() =>
+			{
+				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
+				var request = BuildScanRequest(segment, totalSegments);
+				return AsyncEnumerableEx.GenerateChunked(new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema),
+					async (lastResponse, cancellationToken) =>
+					{
+						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+						if(limit != null)
+							request.Limit = lastResponse.CurrentLimit;
+						return new QueryResponse(lastResponse, await region.DB.ScanAsync(request, cancellationToken).ConfigureAwait(false));
+					},
+					lastResponse => lastResponse.Items.Select(item => item.ToMap()),
+					lastResponse => lastResponse.IsComplete(),
+					readAhead);
+			});
+		}
+		async Task<ItemPage> IPagedScanOptionsSyntax.ParallelAsync(int segment, int totalSegments, CancellationToken cancellationToken)
+		{
+			var request = BuildScanRequest(segment, totalSegments);
+			var items = new List<DynamoDBMap>();
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, await region.DB.ScanAsync(request, cancellationToken).ConfigureAwait(false));
+				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
+			} while(!lastResponse.IsComplete());
+			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(tableKeySchema, indexKeySchema));
+		}
+
+		public IEnumerable<DynamoDBMap> Parallel(int segment, int totalSegments)
+		{
+			var request = BuildScanRequest(segment, totalSegments);
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, region.DB.Scan(request));
+				foreach(var item in lastResponse.Items)
+					yield return item.ToMap();
+			} while(!lastResponse.IsComplete());
+		}
+		ItemPage IPagedScanOptionsSyntax.Parallel(int segment, int totalSegments)
+		{
+			var request = BuildScanRequest(segment, totalSegments);
 			var items = new List<DynamoDBMap>();
 			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
 			do
@@ -206,6 +272,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			if(filter != null)
 				request.FilterExpression = filter.Expression;
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
+			return request;
+		}
+		private Aws.ScanRequest BuildScanRequest(int segment, int totalSegments)
+		{
+			var request = BuildScanRequest();
+			request.Segment = segment;
+			request.TotalSegments = totalSegments;
 			return request;
 		}
 		private Aws.ScanRequest BuildCountRequest()
