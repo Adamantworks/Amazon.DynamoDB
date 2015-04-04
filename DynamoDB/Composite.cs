@@ -508,6 +508,616 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
+		#region 5 values
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				key3,
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				key3,
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, object key5)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				key5);
+		}
+		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, DynamoDBScalar key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, object key4, object key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, DynamoDBScalar key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, object key4, object key5)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, DynamoDBScalar key2, object key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, object key3, object key4, DynamoDBScalar key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				key5);
+		}
+		public static DynamoDBString Value(object key1, object key2, object key3, object key4, DynamoDBScalar key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				key5);
+		}
+
+		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				key4,
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, object key2, object key3, DynamoDBScalar key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				key4,
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				key3,
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, object key2, DynamoDBScalar key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				key3,
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				key2,
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, DynamoDBScalar key2, object key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				key2,
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, object key4, object key5)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(DynamoDBScalar key1, object key2, object key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				key1,
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+
+		public static DynamoDBString Value(object key1, object key2, object key3, object key4, object key5)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key2, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key3, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key4, DynamoDBValueConverter.CompositeValueDefault),
+				DynamoDBScalar.Convert(key5, DynamoDBValueConverter.CompositeValueDefault));
+		}
+		public static DynamoDBString Value(object key1, object key2, object key3, object key4, object key5, IValueConverter converter)
+		{
+			return Join(
+				DynamoDBScalar.Convert(key1, converter),
+				DynamoDBScalar.Convert(key2, converter),
+				DynamoDBScalar.Convert(key3, converter),
+				DynamoDBScalar.Convert(key4, converter),
+				DynamoDBScalar.Convert(key5, converter));
+		}
+		#endregion
+
 		public static string Name(params string[] names)
 		{
 			return String.Join(separatorString, names);
@@ -567,6 +1177,23 @@ namespace Adamantworks.Amazon.DynamoDB
 				((DynamoDBString)values[2]).To<T3>(converter),
 				((DynamoDBString)values[3]).To<T4>(converter));
 		}
+		public static Tuple<T1, T2, T3, T4, T5> Split<T1, T2, T3, T4, T5>(DynamoDBString value)
+		{
+			return Split<T1, T2, T3, T4, T5>(value, DynamoDBValueConverter.CompositeValueDefault);
+		}
+		public static Tuple<T1, T2, T3, T4, T5> Split<T1, T2, T3, T4, T5>(DynamoDBString value, IValueConverter converter)
+		{
+			var values = Split(value);
+			if(values.Length != 5)
+				throw new ArgumentException("Must be a composite of 5 values", "value");
+
+			return Tuple.Create(
+				((DynamoDBString)values[0]).To<T1>(converter),
+				((DynamoDBString)values[1]).To<T2>(converter),
+				((DynamoDBString)values[2]).To<T3>(converter),
+				((DynamoDBString)values[3]).To<T4>(converter),
+				((DynamoDBString)values[4]).To<T5>(converter));
+		}
 
 		public static Tuple<T1, T2> Split<T1, T2>(DynamoDBValue value)
 		{
@@ -591,6 +1218,14 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static Tuple<T1, T2, T3, T4> Split<T1, T2, T3, T4>(DynamoDBValue value, IValueConverter converter)
 		{
 			return Split<T1, T2, T3, T4>(AsString(value), converter);
+		}
+		public static Tuple<T1, T2, T3, T4, T5> Split<T1, T2, T3, T4, T5>(DynamoDBValue value)
+		{
+			return Split<T1, T2, T3, T4, T5>(AsString(value), DynamoDBValueConverter.CompositeValueDefault);
+		}
+		public static Tuple<T1, T2, T3, T4, T5> Split<T1, T2, T3, T4, T5>(DynamoDBValue value, IValueConverter converter)
+		{
+			return Split<T1, T2, T3, T4, T5>(AsString(value), converter);
 		}
 
 		private static DynamoDBString AsString(DynamoDBValue value)
