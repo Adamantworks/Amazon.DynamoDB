@@ -78,7 +78,9 @@
     <Compile Include="DynamoDBValues\DynamoDBNumberTests.cs" />
     <Compile Include="DynamoDBValues\DynamoDBStringTests.cs" />
     <Compile Include="IntegrationTests.cs" />
+    <Compile Include="Internal\AsyncEnumerableExTests.cs" />
     <Compile Include="Internal\AwsExtensionsTests.cs" />
+    <Compile Include="Internal\FakeAsyncEnumerator.cs" />
     <Compile Include="ItemKeyTests.cs" />
     <Compile Include="LastKeyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

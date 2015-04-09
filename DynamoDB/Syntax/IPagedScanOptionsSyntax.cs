@@ -23,10 +23,12 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		Task<ItemPage> AllAsync(CancellationToken cancellationToken);
 		ItemPage All();
 
+		/// <param name="segment">zero based index of the segment to scan</param>
+		/// <param name="totalSegments">the total number of segments being scanned i.e. the number of workers</param>
 		Task<ItemPage> ParallelAsync(int segment, int totalSegments, CancellationToken cancellationToken);
 
+		/// <param name="segment">zero based index of the segment to scan</param>
+		/// <param name="totalSegments">the total number of segments being scanned i.e. the number of workers</param>
 		ItemPage Parallel(int segment, int totalSegments);
-
-		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
 	}
 }

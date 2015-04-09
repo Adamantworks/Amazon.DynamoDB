@@ -161,7 +161,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region Parrallel
+		#region Parallel
 		public IAsyncEnumerable<DynamoDBMap> ParallelAsync(int segment, int totalSegments, ReadAhead readAhead)
 		{
 			return AsyncEnumerable.Defer(() =>
@@ -226,6 +226,35 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			} while(!lastResponse.IsComplete());
 			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(tableKeySchema, indexKeySchema));
 		}
+		#endregion
+
+		#region ParallelTasks
+		public IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync(int totalSegments)
+		{
+			if(totalSegments == 1) return AllAsync(ReadAhead.All);
+
+			return AsyncEnumerable.Defer(() =>
+			{
+				var segments = Enumerable.Range(0, totalSegments).Select(segment => ParallelAsync(segment, totalSegments, ReadAhead.All).GetEnumerator()).ToList();
+
+				return AsyncEnumerableEx.GenerateChunked(new List<DynamoDBMap>(),
+					async (lastResult, token) =>
+					{
+						var moveNext = await Task.WhenAll(segments.Select(e => e.MoveNext(token))).ConfigureAwait(false);
+						var result = new List<DynamoDBMap>(segments.Count);
+						for(var i = segments.Count - 1; i >= 0; i--)
+							if(moveNext[i])
+								result.Add(segments[i].Current);
+							else
+								segments.RemoveAt(i);
+						return result;
+					},
+					state => state,
+					state => state.Count == 0,
+					ReadAhead.All);
+			});
+		}
+
 		#endregion
 
 		#region CountAll

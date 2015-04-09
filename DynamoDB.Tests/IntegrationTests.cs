@@ -81,9 +81,9 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		}
 
 		[Test]
-		public void Async()
+		public async Task Async() // Must be async for NUnit to get it!
 		{
-			var task = WithTableAsync("IntegrationTest", async table =>
+			await WithTableAsync("IntegrationTest", async table =>
 			{
 				await table.UpdateTableAsync(LargeProvisionedThroughput, new Dictionary<string, ProvisionedThroughput>()
 				{
@@ -110,8 +110,12 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				items = await table.Scan().LimitTo(112).AllAsync().ToList().ConfigureAwait(false);
 				Assert.AreEqual(112, items.Count);
 
-				items = await table.Scan().ParallelAsync(1, 2).ToList().ConfigureAwait(false);
-				Assert.AreEqual(245, items.Count);
+				items = await table.Scan().ParallelAsync(1, 2).Concat(table.Scan().ParallelAsync(0, 2))
+							.ToList().ConfigureAwait(false);
+				Assert.AreEqual(513, items.Count);
+
+				items = await table.Scan().ParallelTasksAsync(2).ToList().ConfigureAwait(false);
+				Assert.AreEqual(513, items.Count);
 
 				await PagedScanAsync(table, 2).ConfigureAwait(false);
 				await PagedScanAsync(table, 52).ConfigureAwait(false);
@@ -131,9 +135,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				await PagedQueryAsync(globalIndex, 3).ConfigureAwait(false);
 				await PagedQueryAsync(globalIndex, 52).ConfigureAwait(false);
 			});
-
-			// Wait on the async to complete
-			task.WaitAndUnwrapException();
 		}
 
 		private static async Task PagedScanAsync(ITable table, int pageSize)
@@ -148,7 +149,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 					Assert.AreEqual(pageSize, page.Items.Count);
 			} while(lastKey != null);
 		}
-
 
 		private static async Task PagedQueryAsync(IIndex globalIndex, int pageSize)
 		{
@@ -209,8 +209,8 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				items = table.Scan().LimitTo(112).All().ToList();
 				Assert.AreEqual(112, items.Count);
 
-				items = table.Scan().Parallel(1, 2).ToList();
-				Assert.AreEqual(245, items.Count);
+				items = table.Scan().Parallel(1, 2).Concat(table.Scan().Parallel(0, 2)).ToList();
+				Assert.AreEqual(513, items.Count);
 
 				PagedScan(table, 2);
 				PagedScan(table, 52);
@@ -411,9 +411,9 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		}
 
 		[Test]
-		public void BatchWriteAsyncExceptions()
+		public async Task BatchWriteAsyncExceptions() // Must be async for NUnit to get it!
 		{
-			var task = WithTableAsync("BatchWriteAsyncExceptions", async table =>
+			await WithTableAsync("BatchWriteAsyncExceptions", async table =>
 			{
 				var batch = region.BeginBatchWriteAsync();
 				Assert.Throws(Is.InstanceOf<Exception>().Or.InstanceOf<AggregateException>(), async () =>
@@ -426,7 +426,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 					}
 				});
 			});
-			task.WaitAndUnwrapException();
 		}
 
 		/// <summary>
