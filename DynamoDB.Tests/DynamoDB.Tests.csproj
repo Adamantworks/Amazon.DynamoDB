@@ -70,6 +70,7 @@
     <Compile Include="Converters\FakeConverter.cs" />
     <Compile Include="Converters\NullConverter.cs" />
     <Compile Include="DotNetFrameworkTests.cs" />
+    <Compile Include="DynamoDBRegionTests.cs" />
     <Compile Include="DynamoDBValueConverterDefaultTests.cs" />
     <Compile Include="DynamoDBValueConverterCompositeValueDefaultTests.cs" />
     <Compile Include="DynamoDBValueExtensions.cs" />

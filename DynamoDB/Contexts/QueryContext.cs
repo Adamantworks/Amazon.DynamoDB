@@ -28,11 +28,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class QueryContext : IReverseSyntax, IPagedQueryRangeSyntax
 	{
-		private readonly Region region;
-		private readonly string tableName;
-		private readonly string indexName;
-		private readonly KeySchema tableKeySchema;
-		private readonly KeySchema indexKeySchema;
+		private readonly Table table;
+		private readonly Index index;
 		private readonly KeySchema keySchema;
 		private readonly DynamoDBKeyValue hashKey;
 		private readonly ProjectionExpression projection;
@@ -45,23 +42,17 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private LastKey? exclusiveStartKey;
 
 		public QueryContext(
-			Region region,
-			string tableName,
-			string indexName,
-			KeySchema tableKeySchema,
-			KeySchema indexKeySchema,
+			Table table,
+			Index index,
 			ProjectionExpression projection,
 			bool consistent,
 			DynamoDBKeyValue hashKey,
 			PredicateExpression filter,
 			Values values)
 		{
-			this.region = region;
-			this.tableName = tableName;
-			this.indexName = indexName;
-			this.tableKeySchema = tableKeySchema;
-			this.indexKeySchema = indexKeySchema;
-			keySchema = indexKeySchema ?? tableKeySchema;
+			this.table = table;
+			this.index = index;
+			keySchema = index != null ? index.Schema.Key : table.Schema.Key;
 			this.hashKey = hashKey;
 			this.projection = projection;
 			this.filter = filter;
@@ -339,13 +330,13 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			{
 				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
 				var request = BuildQueryRequest(keyConditions);
-				return AsyncEnumerableEx.GenerateChunked(new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema),
+				return AsyncEnumerableEx.GenerateChunked(new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null),
 					async (lastResponse, cancellationToken) =>
 					{
 						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 						if(limit != null)
 							request.Limit = lastResponse.CurrentLimit;
-						return new QueryResponse(lastResponse, await region.DB.QueryAsync(request, cancellationToken).ConfigureAwait(false));
+						return new QueryResponse(lastResponse, await table.Region.DB.QueryAsync(request, cancellationToken).ConfigureAwait(false));
 					},
 					lastResponse => lastResponse.Items.Select(item => item.ToMap()),
 					lastResponse => lastResponse.IsComplete(),
@@ -356,27 +347,27 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			var request = BuildQueryRequest(keyConditions);
 			var items = new List<DynamoDBMap>();
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
 			do
 			{
 				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 				if(limit != null)
 					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, await region.DB.QueryAsync(request, cancellationToken).ConfigureAwait(false));
+				lastResponse = new QueryResponse(lastResponse, await table.Region.DB.QueryAsync(request, cancellationToken).ConfigureAwait(false));
 				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
 			} while(!lastResponse.IsComplete());
-			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(tableKeySchema, indexKeySchema));
+			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(table.Schema.Key, index != null ? index.Schema.Key : null));
 		}
 		private IEnumerable<DynamoDBMap> Query(Dictionary<string, Aws.Condition> keyConditions)
 		{
 			var request = BuildQueryRequest(keyConditions);
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
 			do
 			{
 				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 				if(limit != null)
 					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, region.DB.Query(request));
+				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Query(request));
 				foreach(var item in lastResponse.Items)
 					yield return item.ToMap();
 			} while(!lastResponse.IsComplete());
@@ -385,23 +376,23 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		{
 			var request = BuildQueryRequest(keyConditions);
 			var items = new List<DynamoDBMap>();
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, tableKeySchema, indexKeySchema);
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
 			do
 			{
 				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
 				if(limit != null)
 					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, region.DB.Query(request));
+				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Query(request));
 				items.AddRange(lastResponse.Items.Select(item => item.ToMap()));
 			} while(!lastResponse.IsComplete());
-			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(tableKeySchema, indexKeySchema));
+			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(table.Schema.Key, index != null ? index.Schema.Key : null));
 		}
 		private Aws.QueryRequest BuildQueryRequest(Dictionary<string, Aws.Condition> keyConditions)
 		{
 			var request = new Aws.QueryRequest()
 			{
-				TableName = tableName,
-				IndexName = indexName,
+				TableName = table.Name,
+				IndexName = index != null ? index.Name : null,
 				KeyConditions = keyConditions,
 				ExpressionAttributeNames = AwsAttributeNames.GetCombined(projection, filter),
 				ConsistentRead = consistent,

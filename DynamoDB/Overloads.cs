@@ -522,66 +522,66 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, hashKey, null, null);
+			return new QueryContext(this, null, null, false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, hashKey, filter, null);
+			return new QueryContext(this, null, null, false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, hashKey, filter, values);
+			return new QueryContext(this, null, null, false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, hashKey, null, null);
+			return new QueryContext(this, null, null, false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, hashKey, filter, null);
+			return new QueryContext(this, null, null, false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, hashKey, filter, values);
+			return new QueryContext(this, null, null, false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(object hashKey)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, DynamoDBKeyValue.Convert(hashKey), null, null);
+			return new QueryContext(this, null, null, false, DynamoDBKeyValue.Convert(hashKey), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, DynamoDBKeyValue.Convert(hashKey), filter, null);
+			return new QueryContext(this, null, null, false, DynamoDBKeyValue.Convert(hashKey), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, DynamoDBKeyValue.Convert(hashKey), filter, values);
+			return new QueryContext(this, null, null, false, DynamoDBKeyValue.Convert(hashKey), filter, values);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
+			return new QueryContext(this, null, null, false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
+			return new QueryContext(this, null, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Region, Name, null, Schema.Key, null, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
+			return new QueryContext(this, null, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
 		}
 		#endregion
 
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(Region, Name, null, Schema.Key, null, null, null, null);
+			return new ScanContext(this, null, null, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(Region, Name, null, Schema.Key, null, null, filter, null);
+			return new ScanContext(this, null, null, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(Region, Name, null, Schema.Key, null, null, filter, values);
+			return new ScanContext(this, null, null, filter, values);
 		}
 		#endregion
 
@@ -693,66 +693,66 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, hashKey, null, null);
+			return new QueryContext(Table, this, null, false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, hashKey, filter, null);
+			return new QueryContext(Table, this, null, false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, hashKey, filter, values);
+			return new QueryContext(Table, this, null, false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, hashKey, null, null);
+			return new QueryContext(Table, this, null, false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, hashKey, filter, null);
+			return new QueryContext(Table, this, null, false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, hashKey, filter, values);
+			return new QueryContext(Table, this, null, false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(object hashKey)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, DynamoDBKeyValue.Convert(hashKey), null, null);
+			return new QueryContext(Table, this, null, false, DynamoDBKeyValue.Convert(hashKey), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, DynamoDBKeyValue.Convert(hashKey), filter, null);
+			return new QueryContext(Table, this, null, false, DynamoDBKeyValue.Convert(hashKey), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, DynamoDBKeyValue.Convert(hashKey), filter, values);
+			return new QueryContext(Table, this, null, false, DynamoDBKeyValue.Convert(hashKey), filter, values);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
+			return new QueryContext(Table, this, null, false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
+			return new QueryContext(Table, this, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
+			return new QueryContext(Table, this, null, false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
 		}
 		#endregion
 
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, null, null);
+			return new ScanContext(Table, this, null, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, filter, null);
+			return new ScanContext(Table, this, null, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(Table.Region, Table.Name, Name, Table.Schema.Key, Schema.Key, null, filter, values);
+			return new ScanContext(Table, this, null, filter, values);
 		}
 		#endregion
 	}
@@ -1267,66 +1267,66 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, hashKey, null, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, hashKey, filter, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, hashKey, filter, values);
+			return new QueryContext(table, null, projection, consistentRead ?? false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, hashKey, null, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, hashKey, filter, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, hashKey, filter, values);
+			return new QueryContext(table, null, projection, consistentRead ?? false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(object hashKey)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), null, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, values);
+			return new QueryContext(table, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, values);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
+			return new QueryContext(table, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(table.Region, table.Name, null, table.Schema.Key, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
+			return new QueryContext(table, null, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
 		}
 		#endregion
 
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(table.Region, table.Name, null, table.Schema.Key, null, projection, null, null);
+			return new ScanContext(table, null, projection, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(table.Region, table.Name, null, table.Schema.Key, null, projection, filter, null);
+			return new ScanContext(table, null, projection, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(table.Region, table.Name, null, table.Schema.Key, null, projection, filter, values);
+			return new ScanContext(table, null, projection, filter, values);
 		}
 		#endregion
 	}
@@ -1336,66 +1336,66 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, hashKey, null, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, hashKey, filter, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, hashKey, filter, values);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, hashKey, null, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, hashKey, null, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, hashKey, filter, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, hashKey, filter, null);
 		}
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, hashKey, filter, values);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, hashKey, filter, values);
 		}
 		public IReverseSyntax Query(object hashKey)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), null, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, values);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey), filter, values);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), null, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, null);
 		}
 		public IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values)
 		{
-			return new QueryContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
+			return new QueryContext(index.Table, index, projection, consistentRead ?? false, DynamoDBKeyValue.Convert(hashKey, converter), filter, values);
 		}
 		#endregion
 
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, null, null);
+			return new ScanContext(index.Table, index, projection, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, filter, null);
+			return new ScanContext(index.Table, index, projection, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(index.Table.Region, index.Table.Name, index.Name, index.Table.Schema.Key, index.Schema.Key, projection, filter, values);
+			return new ScanContext(index.Table, index, projection, filter, values);
 		}
 		#endregion
 	}

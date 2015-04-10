@@ -40,7 +40,12 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// <param name="totalSegments">the number of parallel requests to make</param>
 		IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync(int totalSegments);
 
-		// TODO: AllSegmented() // do a parallel scan to distribute load (better name?)
+		/// <summary>
+		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
+		/// read capacity for large tables by splitting reads more evenly across the table.
+		/// Note: this method is always ReadAhead.All
+		/// </summary>
+		IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync();
 
 		Task<long> CountAllAsync();
 		long CountAll();

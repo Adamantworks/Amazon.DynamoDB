@@ -26,6 +26,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		ITable Table { get; }
 		string Name { get; }
 		IndexSchema Schema { get; }
+		long ItemCount { get; }
+		long SizeInBytes { get; }
 		CollectionStatus Status { get; }
 		IProvisionedThroughputInfo ProvisionedThroughput { get; }
 
@@ -53,19 +55,26 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			//TODO in debug check that index names match
 			Schema = schema;
-			ProvisionedThroughput = description.ProvisionedThroughput.ToInfo();
+			ItemCount = description.ItemCount;
+			SizeInBytes = description.IndexSizeBytes;
 			Status = description.IndexStatus.ToCollectionStatus();
+			ProvisionedThroughput = description.ProvisionedThroughput.ToInfo();
+			// TODO support the backfilling flag
 		}
 		internal void UpdateDescription(Aws.LocalSecondaryIndexDescription description, IndexSchema schema)
 		{
 			//TODO in debug check that index names match
 			Schema = schema;
+			ItemCount = description.ItemCount;
+			SizeInBytes = description.IndexSizeBytes;
 			Status = Table.Status;
 		}
 
 		ITable IIndex.Table { get { return Table; } }
 		public string Name { get; private set; }
 		public IndexSchema Schema { get; private set; }
+		public long ItemCount { get; private set; }
+		public long SizeInBytes { get; private set; }
 		public CollectionStatus Status { get; private set; }
 		public IProvisionedThroughputInfo ProvisionedThroughput { get; private set; }
 

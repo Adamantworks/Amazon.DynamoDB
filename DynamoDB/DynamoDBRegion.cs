@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Amazon;
 using Amazon.Runtime;
 using AwsEnums = Amazon.DynamoDBv2;
@@ -68,6 +69,46 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, string awsSessionToken, AwsEnums.AmazonDynamoDBConfig config)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey, awsSessionToken, config));
+		}
+
+		public const long DefaultBytesPerSegment = 2L * 1024 * 1024 * 1024; // 2 GB
+		public const int DefaultSegmentsPerProcessor = 2;
+		public const int DefaultMaxSegments = 4096;
+
+		/// <summary>
+		/// Estimates the optimal number of segments to use to Scan based on guidelines from amazon (see http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/QueryAndScanGuidelines.html#QueryAndScanGuidelines.ParallelScan).
+		/// </summary>
+		/// <param name="sizeInBytes">size of table or index in bytes</param>
+		/// <param name="bytesPerSegment">how many bytes should be in each segment</param>
+		/// <param name="segmentsPerProcessor">how many segments there should be for each processor (null for no limit)</param>
+		/// <param name="maxSegments">the max number of segments to use (null for no limit)</param>
+		/// <returns></returns>
+		public static int EstimateScanSegments(long sizeInBytes, long bytesPerSegment, int? segmentsPerProcessor, int? maxSegments)
+		{
+			if(sizeInBytes < 0) throw new ArgumentOutOfRangeException("sizeInBytes", "can't be negative");
+			if(bytesPerSegment < 1) throw new ArgumentOutOfRangeException("bytesPerSegment", "must be greater than zero");
+			if(segmentsPerProcessor != null && segmentsPerProcessor.Value < 1) throw new ArgumentOutOfRangeException("segmentsPerProcessor", "must be greater than zero");
+			if(maxSegments != null && maxSegments.Value < 1) throw new ArgumentOutOfRangeException("maxSegments", "must be greater than zero");
+
+			var segments = (int)Math.Round((decimal)sizeInBytes / bytesPerSegment, MidpointRounding.ToEven); // convert to decimal so we can round and not lose precision
+			segments = Math.Max(segments, 1); // in case there was a round down
+			if(segmentsPerProcessor != null)
+				segments = Math.Min(segments, Environment.ProcessorCount * segmentsPerProcessor.Value);
+			if(maxSegments != null)
+				segments = Math.Min(segments, maxSegments.Value);
+			return segments;
+		}
+		public static int EstimateScanSegments(long sizeInBytes, long bytesPerSegment, int? segmentsPerProcessor)
+		{
+			return EstimateScanSegments(sizeInBytes, bytesPerSegment, segmentsPerProcessor, DefaultMaxSegments);
+		}
+		public static int EstimateScanSegments(long sizeInBytes, long bytesPerSegment)
+		{
+			return EstimateScanSegments(sizeInBytes, bytesPerSegment, DefaultSegmentsPerProcessor, DefaultMaxSegments);
+		}
+		public static int EstimateScanSegments(long sizeInBytes)
+		{
+			return EstimateScanSegments(sizeInBytes, DefaultBytesPerSegment, DefaultSegmentsPerProcessor, DefaultMaxSegments);
 		}
 	}
 }
