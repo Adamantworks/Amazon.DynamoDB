@@ -245,11 +245,19 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					ReadAhead.All);
 			});
 		}
-
 		public IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync()
 		{
 			var sizeInBytes = index != null ? index.SizeInBytes : table.SizeInBytes;
 			return ParallelTasksAsync(DynamoDBRegion.EstimateScanSegments(sizeInBytes));
+		}
+
+		public IEnumerable<DynamoDBMap> ParallelTasks(int totalSegments)
+		{
+			return ParallelTasksAsync(totalSegments).ToEnumerable();
+		}
+		public IEnumerable<DynamoDBMap> ParallelTasks()
+		{
+			return ParallelTasksAsync().ToEnumerable();
 		}
 		#endregion
 

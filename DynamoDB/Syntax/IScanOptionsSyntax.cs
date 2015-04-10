@@ -35,7 +35,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// <summary>
 		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
 		/// read capacity for large tables by splitting reads more evenly across the table.
-		/// Note: this method is always ReadAhead.All
+		/// Note: this method is always ReadAhead.All and doesn't return results in order
 		/// </summary>
 		/// <param name="totalSegments">the number of parallel requests to make</param>
 		IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync(int totalSegments);
@@ -43,9 +43,25 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// <summary>
 		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
 		/// read capacity for large tables by splitting reads more evenly across the table.
-		/// Note: this method is always ReadAhead.All
+		/// Note: this method is always ReadAhead.All and doesn't return results in order
 		/// </summary>
 		IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync();
+
+
+		/// <summary>
+		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
+		/// read capacity for large tables by splitting reads more evenly across the table.
+		/// Note: this method is always ReadAhead.All and doesn't return results in order
+		/// </summary>
+		/// <param name="totalSegments">the number of parallel requests to make</param>
+		IEnumerable<DynamoDBMap> ParallelTasks(int totalSegments);
+
+		/// <summary>
+		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
+		/// read capacity for large tables by splitting reads more evenly across the table.
+		/// Note: this method is always ReadAhead.All and doesn't return results in order
+		/// </summary>
+		IEnumerable<DynamoDBMap> ParallelTasks();
 
 		Task<long> CountAllAsync();
 		long CountAll();
