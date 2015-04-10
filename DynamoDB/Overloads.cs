@@ -926,7 +926,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 		Task<ItemPage> AllAsync();
 
-		Task<ItemPage> ParallelAsync(int segment, int totalSegments);
+		Task<ItemPage> SegmentAsync(int segment, int totalSegments);
 	}
 
 	public partial interface IPutSyntax
@@ -1051,7 +1051,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 		IAsyncEnumerable<DynamoDBMap> AllAsync();
 
-		IAsyncEnumerable<DynamoDBMap> ParallelAsync(int segment, int totalSegments);
+		IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments);
 	}
 
 	public partial interface IScanSyntax
@@ -2291,17 +2291,17 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region ParallelAsync
-		public IAsyncEnumerable<DynamoDBMap> ParallelAsync(int segment, int totalSegments)
+		#region SegmentAsync
+		public IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments)
 		{
-			return ParallelAsync(segment, totalSegments, ReadAhead.Some);
+			return SegmentAsync(segment, totalSegments, ReadAhead.Some);
 		}
 		#endregion
 
-		#region IPagedScanOptionsSyntax.ParallelAsync
-		Task<ItemPage> IPagedScanOptionsSyntax.ParallelAsync(int segment, int totalSegments)
+		#region IPagedScanOptionsSyntax.SegmentAsync
+		Task<ItemPage> IPagedScanOptionsSyntax.SegmentAsync(int segment, int totalSegments)
 		{
-			return ((IPagedScanOptionsSyntax)this).ParallelAsync(segment, totalSegments, CancellationToken.None);
+			return ((IPagedScanOptionsSyntax)this).SegmentAsync(segment, totalSegments, CancellationToken.None);
 		}
 		#endregion
 	}

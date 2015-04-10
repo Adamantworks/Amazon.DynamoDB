@@ -152,8 +152,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region Parallel
-		public IAsyncEnumerable<DynamoDBMap> ParallelAsync(int segment, int totalSegments, ReadAhead readAhead)
+		#region Segment
+		public IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments, ReadAhead readAhead)
 		{
 			return AsyncEnumerable.Defer(() =>
 			{
@@ -172,7 +172,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					readAhead);
 			});
 		}
-		async Task<ItemPage> IPagedScanOptionsSyntax.ParallelAsync(int segment, int totalSegments, CancellationToken cancellationToken)
+		async Task<ItemPage> IPagedScanOptionsSyntax.SegmentAsync(int segment, int totalSegments, CancellationToken cancellationToken)
 		{
 			var request = BuildScanRequest(segment, totalSegments);
 			var items = new List<DynamoDBMap>();
@@ -188,7 +188,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return new ItemPage(items, lastResponse.GetLastEvaluatedKey(table.Schema.Key, index != null ? index.Schema.Key : null));
 		}
 
-		public IEnumerable<DynamoDBMap> Parallel(int segment, int totalSegments)
+		public IEnumerable<DynamoDBMap> Segment(int segment, int totalSegments)
 		{
 			var request = BuildScanRequest(segment, totalSegments);
 			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
@@ -202,7 +202,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					yield return item.ToMap();
 			} while(!lastResponse.IsComplete());
 		}
-		ItemPage IPagedScanOptionsSyntax.Parallel(int segment, int totalSegments)
+		ItemPage IPagedScanOptionsSyntax.Segment(int segment, int totalSegments)
 		{
 			var request = BuildScanRequest(segment, totalSegments);
 			var items = new List<DynamoDBMap>();
@@ -219,14 +219,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region ParallelTasks
-		public IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync(int totalSegments)
+		#region InParallel
+		public IAsyncEnumerable<DynamoDBMap> InParallelAsync(int totalSegments)
 		{
 			if(totalSegments == 1) return AllAsync(ReadAhead.All);
 
 			return AsyncEnumerable.Defer(() =>
 			{
-				var segments = Enumerable.Range(0, totalSegments).Select(segment => ParallelAsync(segment, totalSegments, ReadAhead.All).GetEnumerator()).ToList();
+				var segments = Enumerable.Range(0, totalSegments).Select(segment => SegmentAsync(segment, totalSegments, ReadAhead.All).GetEnumerator()).ToList();
 
 				return AsyncEnumerableEx.GenerateChunked(new List<DynamoDBMap>(),
 					async (lastResult, token) =>
@@ -245,19 +245,18 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 					ReadAhead.All);
 			});
 		}
-		public IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync()
+		public IAsyncEnumerable<DynamoDBMap> InParallelAsync()
 		{
-			var sizeInBytes = index != null ? index.SizeInBytes : table.SizeInBytes;
-			return ParallelTasksAsync(DynamoDBRegion.EstimateScanSegments(sizeInBytes));
+			return InParallelAsync(EstimateScanSegments());
 		}
 
-		public IEnumerable<DynamoDBMap> ParallelTasks(int totalSegments)
+		public IEnumerable<DynamoDBMap> InParallel(int totalSegments)
 		{
-			return ParallelTasksAsync(totalSegments).ToEnumerable();
+			return InParallelAsync(totalSegments).ToEnumerable();
 		}
-		public IEnumerable<DynamoDBMap> ParallelTasks()
+		public IEnumerable<DynamoDBMap> InParallel()
 		{
-			return ParallelTasksAsync().ToEnumerable();
+			return InParallelAsync().ToEnumerable();
 		}
 		#endregion
 
@@ -291,6 +290,66 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
+		#region CountSegment
+		public async Task<long> CountSegmentAsync(int segment, int totalSegments)
+		{
+			var request = BuildCountRequest(segment, totalSegments);
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, await table.Region.DB.ScanAsync(request).ConfigureAwait(false));
+			} while(!lastResponse.IsComplete());
+			return lastResponse.Count;
+		}
+
+		public long CountSegment(int segment, int totalSegments)
+		{
+			var request = BuildCountRequest(segment, totalSegments);
+			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				if(limit != null)
+					request.Limit = lastResponse.CurrentLimit;
+				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Scan(request));
+			} while(!lastResponse.IsComplete());
+			return lastResponse.Count;
+		}
+		#endregion
+
+		#region CountInParallel
+		public async Task<long> CountInParallelAsync(int totalSegments)
+		{
+			if(totalSegments == 1) return await CountAllAsync();
+
+			var segmentCountTasks = Enumerable.Range(0, totalSegments)
+				.Select(segment => CountSegmentAsync(segment, totalSegments));
+			var segmentCounts = await Task.WhenAll(segmentCountTasks).ConfigureAwait(false);
+			return segmentCounts.Sum();
+		}
+		public long CountInParallel(int totalSegments)
+		{
+			if(totalSegments == 1) return CountAll();
+
+			var segmentCountTasks = Enumerable.Range(0, totalSegments)
+				.Select(segment => CountSegmentAsync(segment, totalSegments));
+			var segmentCounts = Task.WhenAll(segmentCountTasks).WaitAndUnwrapException();
+			return segmentCounts.Sum();
+		}
+
+		public Task<long> CountInParallelAsync()
+		{
+			return CountInParallelAsync(EstimateScanSegments());
+		}
+		public long CountInParallel()
+		{
+			return CountInParallel(EstimateScanSegments());
+		}
+		#endregion
+
 		private Aws.ScanRequest BuildScanRequest()
 		{
 			var request = new Aws.ScanRequest()
@@ -319,6 +378,19 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			var request = BuildScanRequest();
 			request.Select = AwsEnums.Select.COUNT;
 			return request;
+		}
+		private Aws.ScanRequest BuildCountRequest(int segment, int totalSegments)
+		{
+			var request = BuildCountRequest();
+			request.Segment = segment;
+			request.TotalSegments = totalSegments;
+			return request;
+		}
+
+		private int EstimateScanSegments()
+		{
+			var sizeInBytes = index != null ? index.SizeInBytes : table.SizeInBytes;
+			return DynamoDBRegion.EstimateScanSegments(sizeInBytes);
 		}
 	}
 }

@@ -29,5 +29,13 @@ namespace Adamantworks.Amazon.DynamoDB.Internal
 					TaskContinuationOptions.ExecuteSynchronously,
 					TaskScheduler.Default);
 		}
+
+		/// <summary>
+		/// Waits for the task to complete, unwrapping any exceptions.
+		/// </summary>
+		public static TResult WaitAndUnwrapException<TResult>(this Task<TResult> task)
+		{
+			return task.GetAwaiter().GetResult();
+		}
 	}
 }

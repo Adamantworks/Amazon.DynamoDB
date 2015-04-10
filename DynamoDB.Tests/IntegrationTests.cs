@@ -110,11 +110,11 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				items = await table.Scan().LimitTo(112).AllAsync().ToList().ConfigureAwait(false);
 				Assert.AreEqual(112, items.Count);
 
-				items = await table.Scan().ParallelAsync(1, 2).Concat(table.Scan().ParallelAsync(0, 2))
+				items = await table.Scan().SegmentAsync(1, 2).Concat(table.Scan().SegmentAsync(0, 2))
 							.ToList().ConfigureAwait(false);
 				Assert.AreEqual(513, items.Count);
 
-				items = await table.Scan().ParallelTasksAsync(2).ToList().ConfigureAwait(false);
+				items = await table.Scan().InParallelAsync(2).ToList().ConfigureAwait(false);
 				Assert.AreEqual(513, items.Count);
 
 				await PagedScanAsync(table, 2).ConfigureAwait(false);
@@ -208,10 +208,10 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				items = table.Scan().LimitTo(112).All().ToList();
 				Assert.AreEqual(112, items.Count);
 
-				items = table.Scan().Parallel(1, 2).Concat(table.Scan().Parallel(0, 2)).ToList();
+				items = table.Scan().Segment(1, 2).Concat(table.Scan().Segment(0, 2)).ToList();
 				Assert.AreEqual(513, items.Count);
 
-				items = table.Scan().ParallelTasks(2).ToList();
+				items = table.Scan().InParallel(2).ToList();
 				Assert.AreEqual(513, items.Count);
 
 				PagedScan(table, 2);

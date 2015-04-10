@@ -229,7 +229,7 @@
 		.Where(noValuesWithoutFilter));
 	var scanAllAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllAsync",
 		GenOverloads(readAhead));
-	var scanParallelAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "ParallelAsync",
+	var scanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
 		GenOverloads(segment, totalSegments, readAhead));
 	var scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, tableArg, indexNoneArg, projectionArg, filter, values)
@@ -308,7 +308,7 @@
 
 	// Scan Options Paged
 	var scanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", GenOverloads(cancellationToken));
-	var scanParallelAsyncPaged = new Method("Task<ItemPage>", "ParallelAsync", GenOverloads(segment, totalSegments, cancellationToken));
+	var scanSegmentAsyncPaged = new Method("Task<ItemPage>", "SegmentAsync", GenOverloads(segment, totalSegments, cancellationToken));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
@@ -457,7 +457,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 <#		GenInterface(scanAllAsyncPaged); #>
 
-<#		GenInterface(scanParallelAsyncPaged); #>
+<#		GenInterface(scanSegmentAsyncPaged); #>
 	}
 
 	public partial interface IPutSyntax
@@ -501,7 +501,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 <#		GenInterface(scanAllAsync); #>
 
-<#		GenInterface(scanParallelAsync); #>
+<#		GenInterface(scanSegmentAsync); #>
 	}
 
 	public partial interface IScanSyntax
@@ -635,9 +635,9 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 <#		GenExplicitImplementations(scanAllAsyncPaged, "IPagedScanOptionsSyntax"); #>
 
-<#		GenMethods(scanParallelAsync); #>
+<#		GenMethods(scanSegmentAsync); #>
 
-<#		GenExplicitImplementations(scanParallelAsyncPaged, "IPagedScanOptionsSyntax"); #>
+<#		GenExplicitImplementations(scanSegmentAsyncPaged, "IPagedScanOptionsSyntax"); #>
 	}
 }
 <#+

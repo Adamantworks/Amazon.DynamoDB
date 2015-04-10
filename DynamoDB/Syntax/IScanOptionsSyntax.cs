@@ -26,11 +26,11 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 		/// <param name="segment">zero based index of the segment to scan</param>
 		/// <param name="totalSegments">the total number of segments being scanned i.e. the number of workers</param>
-		IAsyncEnumerable<DynamoDBMap> ParallelAsync(int segment, int totalSegments, ReadAhead readAhead);
+		IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments, ReadAhead readAhead);
 
 		/// <param name="segment">zero based index of the segment to scan</param>
 		/// <param name="totalSegments">the total number of segments being scanned i.e. the number of workers</param>
-		IEnumerable<DynamoDBMap> Parallel(int segment, int totalSegments);
+		IEnumerable<DynamoDBMap> Segment(int segment, int totalSegments);
 
 		/// <summary>
 		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
@@ -38,15 +38,14 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// Note: this method is always ReadAhead.All and doesn't return results in order
 		/// </summary>
 		/// <param name="totalSegments">the number of parallel requests to make</param>
-		IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync(int totalSegments);
+		IAsyncEnumerable<DynamoDBMap> InParallelAsync(int totalSegments);
 
 		/// <summary>
 		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
 		/// read capacity for large tables by splitting reads more evenly across the table.
 		/// Note: this method is always ReadAhead.All and doesn't return results in order
 		/// </summary>
-		IAsyncEnumerable<DynamoDBMap> ParallelTasksAsync();
-
+		IAsyncEnumerable<DynamoDBMap> InParallelAsync();
 
 		/// <summary>
 		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
@@ -54,16 +53,25 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// Note: this method is always ReadAhead.All and doesn't return results in order
 		/// </summary>
 		/// <param name="totalSegments">the number of parallel requests to make</param>
-		IEnumerable<DynamoDBMap> ParallelTasks(int totalSegments);
+		IEnumerable<DynamoDBMap> InParallel(int totalSegments);
 
 		/// <summary>
 		/// Scan by making multiple async request in parallel from this machine.  This can help better utilize
 		/// read capacity for large tables by splitting reads more evenly across the table.
 		/// Note: this method is always ReadAhead.All and doesn't return results in order
 		/// </summary>
-		IEnumerable<DynamoDBMap> ParallelTasks();
+		IEnumerable<DynamoDBMap> InParallel();
 
 		Task<long> CountAllAsync();
 		long CountAll();
+
+		Task<long> CountSegmentAsync(int segment, int totalSegments);
+		long CountSegment(int segment, int totalSegments);
+
+		Task<long> CountInParallelAsync(int totalSegments);
+		long CountInParallel(int totalSegments);
+
+		Task<long> CountInParallelAsync();
+		long CountInParallel();
 	}
 }
