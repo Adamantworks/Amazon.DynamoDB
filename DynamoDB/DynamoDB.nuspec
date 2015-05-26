@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>Adamantworks.Amazon.DynamoDB</id>
-		<version>0.1.0-alpha024</version>
+		<version>0.2.0</version>
 		<title>Adamantworks Amazon DynamoDB Alternate SDK</title>
 		<authors>Adamantworks LLC</authors>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
 		<projectUrl>https://github.com/Adamantworks/Amazon.DynamoDB</projectUrl>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>An alternate SDK for Amazon DynamoDB with a cleaner API and advanced operations. Supports async and sync.</description>
-		<releaseNotes>Continue filling out API</releaseNotes>
+		<releaseNotes>Fixed bug in BatchGetJoin and upgrade to release version of Immutable collections</releaseNotes>
 		<copyright>Copyright © 2015 Adamantworks.  All Rights Reserved.</copyright>
 		<tags>AWS Amazon cloud DynamoDB</tags>
 		<dependencies>
@@ -17,7 +17,7 @@
 			<!-- No DynamoDB changes (N/A, up to date) -->
 			<dependency id="AWSSDK" version="2.3.22.0" />
 			<dependency id="Ix-Async" version="1.2.3" />
-			<dependency id="System.Collections.Immutable" version="1.1.34-rc" />
+			<dependency id="System.Collections.Immutable" version="1.1.36" />
 		</dependencies>
 	</metadata>
 	<files>
