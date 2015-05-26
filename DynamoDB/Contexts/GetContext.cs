@@ -179,7 +179,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			{
 				// These must be in the using so they are deferred until GetEnumerator() is called on us (need one per enumerator)
 				var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
-				var batchItems = new Dictionary<ItemKey, T>(Limits.BatchGetSize);
+				var batchItems = new Dictionary<ItemKey, IList<T>>(Limits.BatchGetSize);
 				var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 				var request = BuildBatchGetItemRequest(batchKeys);
 
@@ -196,7 +196,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 							if(innerItems.TryGetValue(key, out innerItem))
 								batchResults.Add(resultSelector(outerItem, innerItem));
 							else
-								batchItems.Add(key, outerItem);
+								BatchItem(batchItems, key, outerItem);
 						}
 
 						if(batchItems.Count == 0) // No more items to get
@@ -209,9 +209,10 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 						foreach(var batchItem in batchItems)
 						{
-							var outerItem = batchItem.Value;
+							var batchItemOuterItems = batchItem.Value;
 							var innerItem = GetInnerItem(batchItem, innerItems);
-							batchResults.Add(resultSelector(outerItem, innerItem));
+							foreach(var outerItem in batchItemOuterItems)
+								batchResults.Add(resultSelector(outerItem, innerItem));
 						}
 
 						ReBatchUnprocessedKeys(batchItems, batchKeys, unprocessedItems);
@@ -228,7 +229,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public IEnumerable<TResult> BatchGetJoin<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector)
 		{
 			var innerItems = new Dictionary<ItemKey, DynamoDBMap>();
-			var batchItems = new Dictionary<ItemKey, T>(Limits.BatchGetSize);
+			var batchItems = new Dictionary<ItemKey, IList<T>>(Limits.BatchGetSize);
 			var batchKeys = new List<Dictionary<string, Aws.AttributeValue>>(Limits.BatchGetSize);
 			var request = BuildBatchGetItemRequest(batchKeys);
 
@@ -244,7 +245,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 						if(innerItems.TryGetValue(key, out innerItem))
 							yield return resultSelector(outerItem, innerItem);
 						else
-							batchItems.Add(key, outerItem);
+							BatchItem(batchItems, key, outerItem);
 					}
 
 					if(batchItems.Count == 0) // No more items to get
@@ -257,9 +258,10 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 					foreach(var batchItem in batchItems)
 					{
-						var outerItem = batchItem.Value;
+						var batchItemOuterItems = batchItem.Value;
 						var innerItem = GetInnerItem(batchItem, innerItems);
-						yield return resultSelector(outerItem, innerItem);
+						foreach(var outerItem in batchItemOuterItems)
+							yield return resultSelector(outerItem, innerItem);
 					}
 
 					ReBatchUnprocessedKeys(batchItems, batchKeys, unprocessedItems);
@@ -267,7 +269,18 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			}
 		}
 
-		private IDictionary<ItemKey, T> ProcessResponse<T>(Aws.BatchGetItemResponse response, IDictionary<ItemKey, DynamoDBMap> innerItems, IDictionary<ItemKey, T> batchItems)
+		private static void BatchItem<T>(IDictionary<ItemKey, IList<T>> batchItems, ItemKey key, T item)
+		{
+			IList<T> items;
+			if(!batchItems.TryGetValue(key, out items))
+			{
+				items = new List<T>();
+				batchItems.Add(key, items);
+			}
+			items.Add(item);
+		}
+
+		private IDictionary<ItemKey, IList<T>> ProcessResponse<T>(Aws.BatchGetItemResponse response, IDictionary<ItemKey, DynamoDBMap> innerItems, IDictionary<ItemKey, IList<T>> batchItems)
 		{
 			foreach(var item in response.Responses[table.Name])
 			{
@@ -286,7 +299,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				return item1;
 			});
 		}
-		private static DynamoDBMap GetInnerItem<T>(KeyValuePair<ItemKey, T> batchItem, IDictionary<ItemKey, DynamoDBMap> innerItems)
+		private static DynamoDBMap GetInnerItem<T>(KeyValuePair<ItemKey, IList<T>> batchItem, IDictionary<ItemKey, DynamoDBMap> innerItems)
 		{
 			var key = batchItem.Key;
 			DynamoDBMap innerItem;
@@ -294,7 +307,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				innerItems.Add(key, null); // Add that the key was not found, for future lookups
 			return innerItem; // innerItem == null if TryGetValue returned false
 		}
-		private static void ReBatchUnprocessedKeys<T>(IDictionary<ItemKey, T> batchItems, IList<Dictionary<string, Aws.AttributeValue>> batchKeys, IDictionary<ItemKey, T> unprocessedItems)
+		private static void ReBatchUnprocessedKeys<T>(IDictionary<ItemKey, IList<T>> batchItems, IList<Dictionary<string, Aws.AttributeValue>> batchKeys, IDictionary<ItemKey, IList<T>> unprocessedItems)
 		{
 			batchItems.Clear();
 			batchKeys.Clear();

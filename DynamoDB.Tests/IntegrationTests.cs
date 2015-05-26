@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Schema;
-using Nito.AsyncEx.Synchronous;
 using NUnit.Framework;
 using Aws = Amazon.DynamoDBv2.Model;
 
@@ -442,6 +441,30 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				const int order = 1;
 				table.ForKey(id, order).Update(SetValue, Values.Of("insert"));
 				table.ForKey(id, order).Update(SetValue, Values.Of("update"));
+			});
+		}
+
+		/// <summary>
+		/// This tests for having several rows that have the same key in a BatchGetJoin().  That was supposed
+		/// to work, but there appears to be a bug where this isn't handled if the two gets are part of the same batch.
+		/// </summary>
+		[Test]
+		public void BatchGetJoinRepeated()
+		{
+			var rowId = new Guid("779F4B7B-7FF5-4E2B-9CAB-D72385A4F9C2");
+			WithTable("BatchGetJoinRepeated", table =>
+			{
+				table.Insert(new DynamoDBMap() { { "ID", rowId }, { "Order", 0 }, { "Testing", "Hello" } });
+
+				var outerRows = new List<Guid>()
+				{
+					rowId,
+					rowId
+				};
+				var results = table.BatchGetJoin(outerRows, id => ItemKey.Create(id, 0), (id, row) => row).ToList();
+				Assert.AreEqual(2, results.Count, "Result Count");
+				Assert.AreSame(results[0], results[1], "Same");
+				Assert.AreEqual((DynamoDBString)"Hello", results[0]["Testing"]);
 			});
 		}
 	}
