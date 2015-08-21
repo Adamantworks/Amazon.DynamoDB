@@ -58,7 +58,7 @@ namespace Adamantworks.Amazon.DynamoDB.Converters.Basic
 			foreach(var fromElementValue in (IEnumerable)fromValue)
 			{
 				DynamoDBValue toElementValue;
-				if(!context.TryConvert(fromElementValue, out toElementValue) || toElementValue == null)
+				if(!context.TryConvert(fromElementValue, out toElementValue))
 					return false;
 				toValue.Add(toElementValue);
 			}
