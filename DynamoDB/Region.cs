@@ -41,7 +41,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		IAsyncEnumerable<string> ListTablesAsync(ReadAhead readAhead);
 		IEnumerable<string> ListTables();
 
-		IEnumerable<string> ListTablesWithPrefix(string tableNameBegins);
+		IEnumerable<string> ListTablesWithPrefix(string tableNamePrefix);
 
 		// The overloads of these methods are in Overloads.tt and call the private implementations
 		// Task<ITable> CreateTableAsync(...);
@@ -142,9 +142,9 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region ListTablesWithPrefix
-		public IAsyncEnumerable<string> ListTablesWithPrefixAsync(string tableNameBegins, ReadAhead readAhead)
+		public IAsyncEnumerable<string> ListTablesWithPrefixAsync(string tableNamePrefix, ReadAhead readAhead)
 		{
-			CheckTableNameBegins(tableNameBegins);
+			CheckTablePrefix(tableNamePrefix);
 			return AsyncEnumerable.Defer(() =>
 			{
 				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
@@ -152,38 +152,38 @@ namespace Adamantworks.Amazon.DynamoDB
 				return AsyncEnumerableEx.GenerateChunked<Aws.ListTablesResponse, string>(null,
 					(lastResponse, cancellationToken) =>
 					{
-						request.ExclusiveStartTableName = lastResponse != null ? lastResponse.LastEvaluatedTableName : TableNameBefore(tableNameBegins);
+						request.ExclusiveStartTableName = lastResponse != null ? lastResponse.LastEvaluatedTableName : TableNameBefore(tableNamePrefix);
 						return DB.ListTablesAsync(request, cancellationToken);
 					},
-					lastResponse => lastResponse.TableNames.TakeWhile(tableName => tableName.StartsWith(tableNameBegins)),
-					lastResponse => IsComplete(lastResponse) || !lastResponse.TableNames.Last().StartsWith(tableNameBegins),
+					lastResponse => lastResponse.TableNames.TakeWhile(tableName => tableName.StartsWith(tableNamePrefix)),
+					lastResponse => IsComplete(lastResponse) || !lastResponse.TableNames.Last().StartsWith(tableNamePrefix),
 					readAhead);
 			});
 		}
 
-		public IEnumerable<string> ListTablesWithPrefix(string tableNameBegins)
+		public IEnumerable<string> ListTablesWithPrefix(string tableNamePrefix)
 		{
-			CheckTableNameBegins(tableNameBegins);
+			CheckTablePrefix(tableNamePrefix);
 			var request = new Aws.ListTablesRequest();
 			Aws.ListTablesResponse lastResponse = null;
 			do
 			{
-				request.ExclusiveStartTableName = lastResponse != null ? lastResponse.LastEvaluatedTableName : TableNameBefore(tableNameBegins);
+				request.ExclusiveStartTableName = lastResponse != null ? lastResponse.LastEvaluatedTableName : TableNameBefore(tableNamePrefix);
 				lastResponse = DB.ListTables(request);
 				foreach(var tableName in lastResponse.TableNames)
-					if(tableName.StartsWith(tableNameBegins))
+					if(tableName.StartsWith(tableNamePrefix))
 						yield return tableName;
 					else
 						yield break;
 			} while(!IsComplete(lastResponse));
 		}
 
-		private static void CheckTableNameBegins(string tableNameBegins)
+		private static void CheckTablePrefix(string tableNamePrefix)
 		{
-			if(tableNameBegins == null)
-				throw new ArgumentNullException("tableNameBegins");
-			if(!TableNamePrefix.IsMatch(tableNameBegins))
-				throw new ArgumentException("Length must be between 1 and 254 (inclusive) and all characters allowed in table names", "tableNameBegins");
+			if(tableNamePrefix == null)
+				throw new ArgumentNullException("tableNamePrefix");
+			if(!TableNamePrefix.IsMatch(tableNamePrefix))
+				throw new ArgumentException("Length must be between 1 and 254 (inclusive) and all characters allowed in table names", "tableNamePrefix");
 		}
 		internal static string TableNameBefore(string name)
 		{

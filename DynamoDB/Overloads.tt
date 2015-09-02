@@ -47,7 +47,7 @@
 	var keysAsync = Param("IAsyncEnumerable<ItemKey>", "keys");
 	var keysSyncToAsync = ParamTransform("IEnumerable<ItemKey>", "keys", "keys.ToAsyncEnumerable()");
 	var keys = Param("IEnumerable<ItemKey>", "keys");
-	var tableNameBegins = Param("string", "tableNameBegins");
+	var tableNamePrefix = Param("string", "tableNamePrefix");
 	var readAhead = Param("ReadAhead", "readAhead", "ReadAhead.Some");
 	var outerItemsAsync = Param("IAsyncEnumerable<T>", "outerItems");
 	var outerItemsSyncToAsync = ParamTransform("IEnumerable<T>", "outerItems", "outerItems.ToAsyncEnumerable()");
@@ -128,7 +128,7 @@
 
 	// Region
 	var listTablesAsync = new Method("IAsyncEnumerable<string>", "ListTablesAsync", GenOverloads(readAhead));
-	var listTablesWithPrefixAsync = new Method("IAsyncEnumerable<string>", "ListTablesWithPrefixAsync", GenOverloads(tableNameBegins, readAhead));
+	var listTablesWithPrefixAsync = new Method("IAsyncEnumerable<string>", "ListTablesWithPrefixAsync", GenOverloads(tableNamePrefix, readAhead));
 	var createTableAsync = new Method("Task<ITable>", "CreateTableAsync",
 		GenOverloads(true, tableName, schema, provisionedThroughput, indexProvisionedThroughputs, cancellationToken)
 		.Where(noIndexThroughputWithoutTableThroughput));
