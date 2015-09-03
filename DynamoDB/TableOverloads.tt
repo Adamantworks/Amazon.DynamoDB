@@ -1,0 +1,138 @@
+﻿// Copyright 2015 Adamantworks.  All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
+<#
+	// Table
+	var reloadAsync = new Method("Task", "ReloadAsync", Params.GenOverloads(Params.CancellationToken));
+	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
+		Params.GenOverloads(Params.Status, Params.CancellationToken)
+		.Concat(Params.GenOverloads(Params.Status, Params.Timeout, Params.CancellationToken)));
+	var updateTableAsync = new Method("Task", "UpdateTableAsync",
+		Params.GenOverloads(true, Params.ProvisionedThroughput, Params.IndexProvisionedThroughputs, Params.CancellationToken)
+		// must pass either provisionedThroughput or indexProvisionedThroughputs
+		.Where(overload => overload.Contains(Params.ProvisionedThroughput) || overload.Contains(Params.IndexProvisionedThroughputs)));
+	var updateTable = new Method("void", "UpdateTable",
+		Params.GenOverloads(true, Params.ProvisionedThroughput, Params.IndexProvisionedThroughputs)
+		// must pass either provisionedThroughput or indexProvisionedThroughputs
+		.Where(overload => overload.Contains(Params.ProvisionedThroughput) || overload.Contains(Params.IndexProvisionedThroughputs)));
+	var getAsyncForwards = new Method("Task<DynamoDBMap>", "GetAsync", "eventuallyConsistentContext.GetAsync",
+		Params.GenOverloads(true, Params.KeyOverloads, Params.CancellationToken));
+	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentContext.Get", Params.KeyOverloads);
+	var batchGetAsyncForwards = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync", "eventuallyConsistentContext.BatchGetAsync",
+		Params.GenOverloads(true, Params.KeysSyncToAsync, Params.ReadAhead)
+		.Concat(Params.GenOverloads(true, Params.KeysAsync, Params.ReadAhead)));
+	var batchGetForwards = new Method("IEnumerable<DynamoDBMap>", "BatchGet", "eventuallyConsistentContext.BatchGet",
+		Params.GenOverloads(true, Params.Keys));
+	var batchGetJoinAsyncForwards = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>", "eventuallyConsistentContext.BatchGetJoinAsync",
+		Params.GenOverloads(true, Params.OuterItemsSyncToAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)
+		.Concat(Params.GenOverloads(true, Params.OuterItemsAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)));
+	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
+		Params.GenOverloads(true, Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
+	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext", Params.GenOverloads(true, Params.ThisArg,  Params.KeyOverloads));
+	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
+		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem, Params.CancellationToken));
+	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
+		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem));
+	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
+		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
+	var queryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
+		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
+	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
+		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.Filter, Params.Values)
+		.Where(Params.NoValuesWithoutFilter));
+	var batchDelete = new Method("void", "Delete",
+			Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
+	var batchDeleteAsync = new Method("void", "Delete",
+			Params.GenOverloads(false, Params.BatchWriteAsync, Params.KeyOverloads));
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.Contexts;
+using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax;
+
+namespace Adamantworks.Amazon.DynamoDB
+{
+	public partial interface ITable
+	{
+<#=		reloadAsync.GenInterface() #>
+
+<#=		waitUntilNotAsync.GenInterface() #>
+
+<#=		updateTableAsync.GenInterface() #>
+<#=		updateTable.GenInterface() #>
+
+<#=		forKey.GenInterface() #>
+
+<#=		batchDeleteAsync.GenInterface() #>
+<#=		batchDelete.GenInterface() #>
+	}
+
+	internal partial class Table
+	{
+<#=		reloadAsync.GenMethods() #>
+
+<#=		waitUntilNotAsync.GenMethods() #>
+
+<#=		updateTableAsync.GenMethods() #>
+
+<#=		updateTable.GenMethods() #>
+
+<#=		getAsyncForwards.GenMethods() #>
+
+<#=		getForwards.GenMethods() #>
+
+<#=		batchGetAsyncForwards.GenMethods() #>
+
+<#=		batchGetForwards.GenMethods() #>
+
+<#=		batchGetJoinAsyncForwards.GenMethods() #>
+
+<#=		batchGetJoinForwards.GenMethods() #>
+
+<#=		forKey.GenMethods() #>
+
+<#=		putAsyncForwards.GenMethods() #>
+
+<#=		putForwards.GenMethods() #>
+
+<#=		queryForwards.GenMethods() #>
+
+<#=		queryCountForwards.GenMethods() #>
+
+<#=		scanForwards.GenMethods() #>
+
+<#=		batchDeleteAsync.GenMethods() #>
+
+<#=		batchDelete.GenMethods() #>
+	}
+}

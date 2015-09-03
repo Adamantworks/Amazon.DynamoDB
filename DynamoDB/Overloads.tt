@@ -22,326 +22,184 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 <#
-	var itemKey = Parameter.Of("ItemKey","key");
-	var projection = Parameter.Of("ProjectionExpression", "projection", "null");
-	var consistent = Parameter.Of("bool","consistent","false");
-	var hashKeyOnly = Parameter.Transform("DynamoDBKeyValue", "hashKey", "ItemKey.Create(hashKey)");
-	var hashKeyObjectOnly = Parameter.Transform("object", "hashKey", "ItemKey.Create(hashKey)");
-	var hashKeySkipped = Parameter.Transform("DynamoDBKeyValue", "hashKey", null);
-	var hashKeyObjectSkipped = Parameter.Transform("object", "hashKey", null);
-	var rangeKey = Parameter.Transform("DynamoDBKeyValue", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
-	var rangeKeyObject = Parameter.Transform("object", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
-	var rangeKeySkipped = Parameter.Transform("DynamoDBKeyValue", "rangeKey", null);
-	var rangeKeyObjectSkipped = Parameter.Transform("object", "rangeKey", null);
-	var converterHash = Parameter.Transform("IValueConverter", "converter", "ItemKey.Create(hashKey, converter)");
-	var converterHashAndRange = Parameter.Transform("IValueConverter", "converter", "ItemKey.Create(hashKey, rangeKey, converter)");
-	var status = Parameter.Of("CollectionStatus","status");
-	var timeout = Parameter.Of("TimeSpan", "timeout");
-	var keysAsync = Parameter.Of("IAsyncEnumerable<ItemKey>", "keys");
-	var keysSyncToAsync = Parameter.Transform("IEnumerable<ItemKey>", "keys", "keys.ToAsyncEnumerable()");
-	var keys = Parameter.Of("IEnumerable<ItemKey>", "keys");
-	var outerItemsAsync = Parameter.Of("IAsyncEnumerable<T>", "outerItems");
-	var outerItemsSyncToAsync = Parameter.Transform("IEnumerable<T>", "outerItems", "outerItems.ToAsyncEnumerable()");
-	var outerItemsSync = Parameter.Of("IEnumerable<T>", "outerItems");
-	var keySelector = Parameter.Of("Func<T, ItemKey>","keySelector");
-	var resultSelector = Parameter.Of("Func<T, DynamoDBMap, TResult>", "resultSelector");
-	var item = Parameter.Of("DynamoDBMap", "item");
-	var values = Parameter.Of("Values", "values", "null");
-	var returnOldItem = Parameter.Of("bool", "returnOldItem", "false");
-	var updateExp  = Parameter.Of("UpdateExpression", "update");
-	var updateReturnValue = Parameter.Of("UpdateReturnValue", "returnValue", "UpdateReturnValue.None");
-	var indexTableArg = Parameter.Argument("Table");
-	var indexNoneArg = Parameter.Argument("null");
-	var tableArg = Parameter.Argument("table");
-	var indexDotTableArg = Parameter.Argument("index.Table");
-	var indexArg = Parameter.Argument("index");
-	var projectionNoneArg = Parameter.Argument("null");
-	var projectionArg = Parameter.Argument("projection");
-	var consistentNoneArg = Parameter.Argument("false");
-	var consistentArg = Parameter.Argument("consistentRead ?? false");
-	var hashKey = Parameter.Of("DynamoDBKeyValue", "hashKey");
-	var hashKeyObject = Parameter.Transform("object", "hashKey", "DynamoDBKeyValue.Convert(hashKey)");
-	var hashKeyObjectConverter = Parameter.Transform("object", "hashKey", "DynamoDBKeyValue.Convert(hashKey, converter)");
-	var converterSkipped = Parameter.Transform("IValueConverter", "converter", null);
-	var filter = Parameter.Of("PredicateExpression", "filter", "null");
-	var thisArg = Parameter.Argument("this");
-	var rangeKeyOnly = Parameter.Of("DynamoDBKeyValue", "rangeKey");
-	var rangeKeyOnlyObject = Parameter.Transform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey)");
-	var rangeKeyOnlyObjectConverter = Parameter.Transform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey, converter)");
-	var batchWrite = Parameter.Of("IBatchWrite", "batch");
-	var batchWriteAsync = Parameter.Of("IBatchWriteAsync", "batch");
-	var segment = Parameter.Of("int", "segment");
-	var totalSegments = Parameter.Of("int", "totalSegments");
-
-	Func<IReadOnlyList<Parameter>, bool> noValuesWithoutFilter = overload => !(overload.Contains(values) && !overload.Contains(filter));
-
-	var keyOverloads = Params.GenOverloads(true, hashKeyOnly)
-		.Concat(Params.GenOverloads(true, hashKeySkipped, converterHash))
-		.Concat(Params.GenOverloads(true, hashKeyObjectOnly))
-		.Concat(Params.GenOverloads(true, hashKeyObjectSkipped, converterHash))
-		.Concat(Params.GenOverloads(true, hashKeySkipped, rangeKey))
-		.Concat(Params.GenOverloads(true, hashKeySkipped, rangeKeySkipped, converterHashAndRange))
-		.Concat(Params.GenOverloads(true, hashKeyObjectSkipped, rangeKey))
-		.Concat(Params.GenOverloads(true, hashKeyObjectSkipped, rangeKeySkipped, converterHashAndRange))
-		.Concat(Params.GenOverloads(true, hashKeySkipped, rangeKeyObject))
-		.Concat(Params.GenOverloads(true, hashKeySkipped, rangeKeyObjectSkipped, converterHashAndRange))
-		.Concat(Params.GenOverloads(true, hashKeyObjectSkipped, rangeKeyObject))
-		.Concat(Params.GenOverloads(true, hashKeyObjectSkipped, rangeKeyObjectSkipped, converterHashAndRange))
-		.Concat(Params.GenOverloads(true, itemKey))
-		.ToList();
-
-	var rangeKeyOverloads =
-		Params.GenOverloads(true, rangeKeyOnlyObjectConverter, converterSkipped)
-		.Concat(Params.GenOverloads(true, rangeKeyOnlyObject))
-		.Concat(Params.GenOverloads(true, rangeKeyOnly, converterSkipped))
-		.Concat(Params.GenOverloads(true, rangeKeyOnly))
-		.ToList();
-
-	var startInclusive = Parameter.Of("DynamoDBKeyValue", "startInclusive");
-	var startInclusiveObject = Parameter.Transform("object", "startInclusive", "DynamoDBKeyValue.Convert(startInclusive)");
-	var startInclusiveObjectConverter = Parameter.Transform("object", "startInclusive", "DynamoDBKeyValue.Convert(startInclusive, converter)");
-	var endExclusive = Parameter.Of("DynamoDBKeyValue", "endExclusive");
-	var endExclusiveObject = Parameter.Transform("object", "endExclusive", "DynamoDBKeyValue.Convert(endExclusive)");
-	var endExclusiveObjectConverter = Parameter.Transform("object", "endExclusive", "DynamoDBKeyValue.Convert(endExclusive, converter)");
-	var rangeKeyBetweenOverloads =
-		Params.GenOverloads(true, startInclusiveObjectConverter, endExclusiveObjectConverter, converterSkipped)
-		.Concat(Params.GenOverloads(true, startInclusiveObject, endExclusiveObject))
-		.Concat(Params.GenOverloads(true, startInclusiveObjectConverter, endExclusive, converterSkipped))
-		.Concat(Params.GenOverloads(true, startInclusiveObject, endExclusive))
-		.Concat(Params.GenOverloads(true, startInclusive, endExclusiveObjectConverter, converterSkipped))
-		.Concat(Params.GenOverloads(true, startInclusive, endExclusiveObject))
-		.Concat(Params.GenOverloads(true, startInclusive, endExclusive, converterSkipped))
-		.Concat(Params.GenOverloads(true, startInclusive, endExclusive))
-		.ToList();
-
-	// Table
-	var reloadAsync = new Method("Task", "ReloadAsync", Params.GenOverloads(Params.CancellationToken));
-	var waitUntilNotAsync = new Method("Task", "WaitUntilNotAsync",
-		Params.GenOverloads(status, Params.CancellationToken)
-		.Concat(Params.GenOverloads(status, timeout, Params.CancellationToken)));
-	var updateTableAsync = new Method("Task", "UpdateTableAsync",
-		Params.GenOverloads(true, Params.ProvisionedThroughput, Params.IndexProvisionedThroughputs, Params.CancellationToken)
-		// must pass either provisionedThroughput or indexProvisionedThroughputs
-		.Where(overload => overload.Contains(Params.ProvisionedThroughput) || overload.Contains(Params.IndexProvisionedThroughputs)));
-	var updateTable = new Method("void", "UpdateTable",
-		Params.GenOverloads(true, Params.ProvisionedThroughput, Params.IndexProvisionedThroughputs)
-		// must pass either provisionedThroughput or indexProvisionedThroughputs
-		.Where(overload => overload.Contains(Params.ProvisionedThroughput) || overload.Contains(Params.IndexProvisionedThroughputs)));
-	var getAsyncForwards = new Method("Task<DynamoDBMap>", "GetAsync", "eventuallyConsistentContext.GetAsync",
-		Params.GenOverloads(true, keyOverloads, Params.CancellationToken));
-	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentContext.Get", keyOverloads);
-	var batchGetAsyncForwards = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync", "eventuallyConsistentContext.BatchGetAsync",
-		Params.GenOverloads(true, keysSyncToAsync, Params.ReadAhead)
-		.Concat(Params.GenOverloads(true, keysAsync, Params.ReadAhead)));
-	var batchGetForwards = new Method("IEnumerable<DynamoDBMap>", "BatchGet", "eventuallyConsistentContext.BatchGet",
-		Params.GenOverloads(true, keys));
-	var batchGetJoinAsyncForwards = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>", "eventuallyConsistentContext.BatchGetJoinAsync",
-		Params.GenOverloads(true, outerItemsSyncToAsync, keySelector, resultSelector, Params.ReadAhead)
-		.Concat(Params.GenOverloads(true, outerItemsAsync, keySelector, resultSelector, Params.ReadAhead)));
-	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
-		Params.GenOverloads(true, outerItemsSync, keySelector, resultSelector));
-	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext", Params.GenOverloads(true, thisArg,  keyOverloads));
-	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
-		Params.GenOverloads(true, item, returnOldItem, Params.CancellationToken));
-	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
-		Params.GenOverloads(true, item, returnOldItem));
-	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
-		Params.GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
-	var queryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
-		Params.GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
-	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, filter, values)
-		.Where(noValuesWithoutFilter));
 	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
-		Params.GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, consistentNoneArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
 	var indexQueryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
-		Params.GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
 	var indexScanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, filter, values)
-		.Where(noValuesWithoutFilter));
-	var batchDelete = new Method("void", "Delete",
-			Params.GenOverloads(false, batchWrite, keyOverloads));
-	var batchDeleteAsync = new Method("void", "Delete",
-			Params.GenOverloads(false, batchWriteAsync, keyOverloads));
+		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.Filter, Params.Values)
+		.Where(Params.NoValuesWithoutFilter));
 
 	// Syntax
 	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
-		Params.GenOverloads(false, keyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.KeyOverloads, Params.CancellationToken));
 	var get = new Method("DynamoDBMap", "Get",
-		Params.GenOverloads(false, keyOverloads));
+		Params.GenOverloads(false, Params.KeyOverloads));
 	var batchGetAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync",
-		Params.GenOverloads(true, keysSyncToAsync, Params.ReadAhead)
-		.Concat(Params.GenOverloads(keysAsync, Params.ReadAhead)));
+		Params.GenOverloads(true, Params.KeysSyncToAsync, Params.ReadAhead)
+		.Concat(Params.GenOverloads(Params.KeysAsync, Params.ReadAhead)));
 	var batchGet = new Method("IEnumerable<DynamoDBMap>", "BatchGet",
-		Params.GenOverloads(keys));
+		Params.GenOverloads(Params.Keys));
 	var batchGetJoinAsync = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>",
-		Params.GenOverloads(true, outerItemsSyncToAsync, keySelector, resultSelector, Params.ReadAhead)
-		.Concat(Params.GenOverloads(outerItemsAsync, keySelector, resultSelector, Params.ReadAhead)));
+		Params.GenOverloads(true, Params.OuterItemsSyncToAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)
+		.Concat(Params.GenOverloads(Params.OuterItemsAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)));
 	var batchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
-		Params.GenOverloads(outerItemsSync, keySelector, resultSelector));
+		Params.GenOverloads(Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
 	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
-		Params.GenOverloads(item, returnOldItem, Params.CancellationToken));
+		Params.GenOverloads(Params.Item, Params.ReturnOldItem, Params.CancellationToken));
 	var put = new Method("DynamoDBMap", "Put",
-		Params.GenOverloads(item, returnOldItem));
+		Params.GenOverloads(Params.Item, Params.ReturnOldItem));
 	var updateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
-		Params.GenOverloads(updateExp, values, updateReturnValue, Params.CancellationToken));
+		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue, Params.CancellationToken));
 	var update = new Method("DynamoDBMap", "Update",
-		Params.GenOverloads(updateExp, values, updateReturnValue));
+		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
 	var tryUpdateAsync = new Method("Task<bool>", "TryUpdateAsync",
-		Params.GenOverloads(updateExp, values, Params.CancellationToken));
+		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.CancellationToken));
 	var tryUpdate = new Method("bool", "TryUpdate",
-		Params.GenOverloads(updateExp, values));
+		Params.GenOverloads(Params.UpdateExp, Params.Values));
 	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
-		Params.GenOverloads(returnOldItem, Params.CancellationToken));
+		Params.GenOverloads(Params.ReturnOldItem, Params.CancellationToken));
 	var delete = new Method("DynamoDBMap", "Delete",
-		Params.GenOverloads(returnOldItem));
+		Params.GenOverloads(Params.ReturnOldItem));
 	var query = new Method("IReverseSyntax", "Query", "new QueryContext",
-		Params.GenOverloads(true, tableArg, indexNoneArg, projectionArg, consistentArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, tableArg, indexNoneArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, tableArg, indexNoneArg, projectionArg, consistentArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, tableArg, indexNoneArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
 	var queryCount = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
-		Params.GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
 	var scanAllAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllAsync",
 		Params.GenOverloads(Params.ReadAhead));
 	var scanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
-		Params.GenOverloads(segment, totalSegments, Params.ReadAhead));
+		Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.ReadAhead));
 	var scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, tableArg, indexNoneArg, projectionArg, filter, values)
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.Filter, Params.Values)
+		.Where(Params.NoValuesWithoutFilter));
 	var indexQuery = new Method("IReverseSyntax", "Query", "new QueryContext",
-		Params.GenOverloads(true, indexDotTableArg, indexArg, projectionArg, consistentArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, indexDotTableArg, indexArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, indexDotTableArg, indexArg, projectionArg, consistentArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, indexDotTableArg, indexArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
 	var indexQueryCount = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
-		Params.GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKey, filter, values)
-		.Concat(Params.GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKey, converterSkipped, filter, values))
-		.Concat(Params.GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKeyObject, filter, values))
-		.Concat(Params.GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ConsistentArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ConsistentArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ConsistentArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ConsistentArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
 	var indexScan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, indexDotTableArg, indexArg, projectionArg, filter, values)
-		.Where(noValuesWithoutFilter));
+		Params.GenOverloads(true, Params.IndexDotTableArg, Params.IndexArg, Params.ProjectionArg, Params.Filter, Params.Values)
+		.Where(Params.NoValuesWithoutFilter));
 
 	// Query Range
 	var allKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", Params.GenOverloads(Params.ReadAhead));
 	var rangeKeyBeginsWithAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBeginsWithAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.ReadAhead));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
 	var rangeKeyBeginsWith = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBeginsWith",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyEqualsAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyEqualsAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.ReadAhead));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
 	var rangeKeyEquals = new Method("IEnumerable<DynamoDBMap>", "RangeKeyEquals",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyLessThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.ReadAhead));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
 	var rangeKeyLessThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThan",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyLessThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualToAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.ReadAhead));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
 	var rangeKeyLessThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualTo",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyGreaterThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.ReadAhead));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
 	var rangeKeyGreaterThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThan",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyGreaterThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualToAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.ReadAhead));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
 	var rangeKeyGreaterThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualTo",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyBetweenAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBetweenAsync",
-		Params.GenOverloads(false, rangeKeyBetweenOverloads, Params.ReadAhead));
+		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.ReadAhead));
 	var rangeKeyBetween = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBetween",
-		Params.GenOverloads(false, rangeKeyBetweenOverloads));
+		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
 
 	// Query Range Paged
 	var allKeysAsyncPaged = new Method("Task<ItemPage>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
 	var rangeKeyBeginsWithAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBeginsWithAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var rangeKeyBeginsWithPaged = new Method("ItemPage", "RangeKeyBeginsWith",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyEqualsAsyncPaged = new Method("Task<ItemPage>", "RangeKeyEqualsAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var rangeKeyEqualsPaged = new Method("ItemPage", "RangeKeyEquals",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyLessThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var rangeKeyLessThanPaged = new Method("ItemPage", "RangeKeyLessThan",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyLessThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanOrEqualToAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var rangeKeyLessThanOrEqualToPaged = new Method("ItemPage", "RangeKeyLessThanOrEqualTo",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyGreaterThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var rangeKeyGreaterThanPaged = new Method("ItemPage", "RangeKeyGreaterThan",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyGreaterThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanOrEqualToAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var rangeKeyGreaterThanOrEqualToPaged = new Method("ItemPage", "RangeKeyGreaterThanOrEqualTo",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var rangeKeyBetweenAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBetweenAsync",
-		Params.GenOverloads(false, rangeKeyBetweenOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.CancellationToken));
 	var rangeKeyBetweenPaged = new Method("ItemPage", "RangeKeyBetween",
-		Params.GenOverloads(false, rangeKeyBetweenOverloads));
+		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
 
 	// Query Count Range
 	var countAllKeysAsync = new Method("Task<int>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
 	var countRangeKeyBeginsWithAsync = new Method("Task<int>", "RangeKeyBeginsWithAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var countRangeKeyBeginsWith = new Method("int", "RangeKeyBeginsWith",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var countRangeKeyEqualsAsync = new Method("Task<int>", "RangeKeyEqualsAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var countRangeKeyEquals = new Method("int", "RangeKeyEquals",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var countRangeKeyLessThanAsync = new Method("Task<int>", "RangeKeyLessThanAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var countRangeKeyLessThan = new Method("int", "RangeKeyLessThan",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var countRangeKeyLessThanOrEqualToAsync = new Method("Task<int>", "RangeKeyLessThanOrEqualToAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var countRangeKeyLessThanOrEqualTo = new Method("int", "RangeKeyLessThanOrEqualTo",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var countRangeKeyGreaterThanAsync = new Method("Task<int>", "RangeKeyGreaterThanAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var countRangeKeyGreaterThan = new Method("int", "RangeKeyGreaterThan",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var countRangeKeyGreaterThanOrEqualToAsync = new Method("Task<int>", "RangeKeyGreaterThanOrEqualToAsync",
-		Params.GenOverloads(false, rangeKeyOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
 	var countRangeKeyGreaterThanOrEqualTo = new Method("int", "RangeKeyGreaterThanOrEqualTo",
-		Params.GenOverloads(false, rangeKeyOverloads));
+		Params.GenOverloads(false, Params.RangeKeyOverloads));
 	var countRangeKeyBetweenAsync = new Method("Task<int>", "RangeKeyBetweenAsync",
-		Params.GenOverloads(false, rangeKeyBetweenOverloads, Params.CancellationToken));
+		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.CancellationToken));
 	var countRangeKeyBetween = new Method("int", "RangeKeyBetween",
-		Params.GenOverloads(false, rangeKeyBetweenOverloads));
+		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
 
 	// Scan Options Paged
 	var scanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", Params.GenOverloads(Params.CancellationToken));
-	var scanSegmentAsyncPaged = new Method("Task<ItemPage>", "SegmentAsync", Params.GenOverloads(segment, totalSegments, Params.CancellationToken));
+	var scanSegmentAsyncPaged = new Method("Task<ItemPage>", "SegmentAsync", Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.CancellationToken));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
@@ -356,62 +214,6 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	
-
-	public partial interface ITable
-	{
-<#=		reloadAsync.GenInterface() #>
-
-<#=		waitUntilNotAsync.GenInterface() #>
-
-<#=		updateTableAsync.GenInterface() #>
-<#=		updateTable.GenInterface() #>
-
-<#=		forKey.GenInterface() #>
-
-<#=		batchDeleteAsync.GenInterface() #>
-<#=		batchDelete.GenInterface() #>
-	}
-
-	internal partial class Table
-	{
-<#=		reloadAsync.GenMethods() #>
-
-<#=		waitUntilNotAsync.GenMethods() #>
-
-<#=		updateTableAsync.GenMethods() #>
-
-<#=		updateTable.GenMethods() #>
-
-<#=		getAsyncForwards.GenMethods() #>
-
-<#=		getForwards.GenMethods() #>
-
-<#=		batchGetAsyncForwards.GenMethods() #>
-
-<#=		batchGetForwards.GenMethods() #>
-
-<#=		batchGetJoinAsyncForwards.GenMethods() #>
-
-<#=		batchGetJoinForwards.GenMethods() #>
-
-<#=		forKey.GenMethods() #>
-
-<#=		putAsyncForwards.GenMethods() #>
-
-<#=		putForwards.GenMethods() #>
-
-<#=		queryForwards.GenMethods() #>
-
-<#=		queryCountForwards.GenMethods() #>
-
-<#=		scanForwards.GenMethods() #>
-
-<#=		batchDeleteAsync.GenMethods() #>
-
-<#=		batchDelete.GenMethods() #>
-	}
-
 	internal partial class Index
 	{
 <#=		indexQueryForwards.GenMethods() #>

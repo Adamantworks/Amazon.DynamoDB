@@ -136,6 +136,11 @@
     <Compile Include="Syntax\ITryPutSyntax.cs" />
     <Compile Include="Syntax\ITryModifySyntax.cs" />
     <Compile Include="Syntax\NamedDynamoDBValues.cs" />
+    <Compile Include="TableOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TableOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="UpdateReturnValue.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="PredicateExpression.cs" />
@@ -186,6 +191,10 @@
     <Content Include="RegionOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RegionOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="TableOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TableOverloads.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

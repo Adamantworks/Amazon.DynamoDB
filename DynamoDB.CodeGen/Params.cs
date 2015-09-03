@@ -28,7 +28,6 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 		}
 		public static IEnumerable<IReadOnlyList<Parameter>> GenOverloads(bool includeAll, IEnumerable<IReadOnlyList<Parameter>> baseOverloads, params Parameter[] parameters)
 		{
-			var paramsList = parameters.ToList();
 			var overloads = baseOverloads.Select(overload => overload.ToList()).ToList();
 			if(overloads.Count == 0) // Empty base to start from
 				overloads.Add(new List<Parameter>());
@@ -62,6 +61,7 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 		}
 
 		public static readonly Func<IReadOnlyList<Parameter>, bool> NoIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(IndexProvisionedThroughputs) && !overload.Contains(ProvisionedThroughput));
+		public static readonly Func<IReadOnlyList<Parameter>, bool> NoValuesWithoutFilter = overload => !(overload.Contains(Params.Values) && !overload.Contains(Params.Filter));
 
 		public static readonly Parameter ReadAhead = Parameter.Of("ReadAhead", "readAhead", "ReadAhead.Some");
 		public static readonly Parameter TableNamePrefix = Parameter.Of("string", "tableNamePrefix");
@@ -70,5 +70,95 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 		public static readonly Parameter CancellationToken = Parameter.Of("CancellationToken", "cancellationToken", "CancellationToken.None");
 		public static readonly Parameter ProvisionedThroughput = Parameter.Transform("ProvisionedThroughput", "provisionedThroughput", "(ProvisionedThroughput?)provisionedThroughput", "null");
 		public static readonly Parameter IndexProvisionedThroughputs = Parameter.Of("IReadOnlyDictionary<string, ProvisionedThroughput>", "indexProvisionedThroughputs", "null");
+		public static readonly Parameter ItemKey = Parameter.Of("ItemKey", "key");
+		public static readonly Parameter Projection = Parameter.Of("ProjectionExpression", "projection", "null");
+		public static readonly Parameter Consistent = Parameter.Of("bool", "consistent", "false");
+		public static readonly Parameter HashKeyOnly = Parameter.Transform("DynamoDBKeyValue", "hashKey", "ItemKey.Create(hashKey)");
+		public static readonly Parameter HashKeyObjectOnly = Parameter.Transform("object", "hashKey", "ItemKey.Create(hashKey)");
+		public static readonly Parameter HashKeySkipped = Parameter.Transform("DynamoDBKeyValue", "hashKey", null);
+		public static readonly Parameter HashKeyObjectSkipped = Parameter.Transform("object", "hashKey", null);
+		public static readonly Parameter RangeKey = Parameter.Transform("DynamoDBKeyValue", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
+		public static readonly Parameter RangeKeyObject = Parameter.Transform("object", "rangeKey", "ItemKey.Create(hashKey, rangeKey)");
+		public static readonly Parameter RangeKeySkipped = Parameter.Transform("DynamoDBKeyValue", "rangeKey", null);
+		public static readonly Parameter RangeKeyObjectSkipped = Parameter.Transform("object", "rangeKey", null);
+		public static readonly Parameter ConverterHash = Parameter.Transform("IValueConverter", "converter", "ItemKey.Create(hashKey, converter)");
+		public static readonly Parameter ConverterHashAndRange = Parameter.Transform("IValueConverter", "converter", "ItemKey.Create(hashKey, rangeKey, converter)");
+		public static readonly Parameter Status = Parameter.Of("CollectionStatus", "status");
+		public static readonly Parameter Timeout = Parameter.Of("TimeSpan", "timeout");
+		public static readonly Parameter KeysAsync = Parameter.Of("IAsyncEnumerable<ItemKey>", "keys");
+		public static readonly Parameter KeysSyncToAsync = Parameter.Transform("IEnumerable<ItemKey>", "keys", "keys.ToAsyncEnumerable()");
+		public static readonly Parameter Keys = Parameter.Of("IEnumerable<ItemKey>", "keys");
+		public static readonly Parameter OuterItemsAsync = Parameter.Of("IAsyncEnumerable<T>", "outerItems");
+		public static readonly Parameter OuterItemsSyncToAsync = Parameter.Transform("IEnumerable<T>", "outerItems", "outerItems.ToAsyncEnumerable()");
+		public static readonly Parameter OuterItemsSync = Parameter.Of("IEnumerable<T>", "outerItems");
+		public static readonly Parameter KeySelector = Parameter.Of("Func<T, ItemKey>", "keySelector");
+		public static readonly Parameter ResultSelector = Parameter.Of("Func<T, DynamoDBMap, TResult>", "resultSelector");
+		public static readonly Parameter Item = Parameter.Of("DynamoDBMap", "item");
+		public static readonly Parameter Values = Parameter.Of("Values", "values", "null");
+		public static readonly Parameter ReturnOldItem = Parameter.Of("bool", "returnOldItem", "false");
+		public static readonly Parameter UpdateExp = Parameter.Of("UpdateExpression", "update");
+		public static readonly Parameter UpdateReturnValue = Parameter.Of("UpdateReturnValue", "returnValue", "UpdateReturnValue.None");
+		public static readonly Parameter IndexTableArg = Parameter.Argument("Table");
+		public static readonly Parameter IndexNoneArg = Parameter.Argument("null");
+		public static readonly Parameter TableArg = Parameter.Argument("table");
+		public static readonly Parameter IndexDotTableArg = Parameter.Argument("index.Table");
+		public static readonly Parameter IndexArg = Parameter.Argument("index");
+		public static readonly Parameter ProjectionNoneArg = Parameter.Argument("null");
+		public static readonly Parameter ProjectionArg = Parameter.Argument("projection");
+		public static readonly Parameter ConsistentNoneArg = Parameter.Argument("false");
+		public static readonly Parameter ConsistentArg = Parameter.Argument("consistentRead ?? false");
+		public static readonly Parameter HashKey = Parameter.Of("DynamoDBKeyValue", "hashKey");
+		public static readonly Parameter HashKeyObject = Parameter.Transform("object", "hashKey", "DynamoDBKeyValue.Convert(hashKey)");
+		public static readonly Parameter HashKeyObjectConverter = Parameter.Transform("object", "hashKey", "DynamoDBKeyValue.Convert(hashKey, converter)");
+		public static readonly Parameter ConverterSkipped = Parameter.Transform("IValueConverter", "converter", null);
+		public static readonly Parameter Filter = Parameter.Of("PredicateExpression", "filter", "null");
+		public static readonly Parameter ThisArg = Parameter.Argument("this");
+		public static readonly Parameter RangeKeyOnly = Parameter.Of("DynamoDBKeyValue", "rangeKey");
+		public static readonly Parameter RangeKeyOnlyObject = Parameter.Transform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey)");
+		public static readonly Parameter RangeKeyOnlyObjectConverter = Parameter.Transform("object", "rangeKey", "DynamoDBKeyValue.Convert(rangeKey, converter)");
+		public static readonly Parameter BatchWrite = Parameter.Of("IBatchWrite", "batch");
+		public static readonly Parameter BatchWriteAsync = Parameter.Of("IBatchWriteAsync", "batch");
+		public static readonly Parameter Segment = Parameter.Of("int", "segment");
+		public static readonly Parameter TotalSegments = Parameter.Of("int", "totalSegments");
+		public static readonly Parameter StartInclusive = Parameter.Of("DynamoDBKeyValue", "startInclusive");
+		public static readonly Parameter StartInclusiveObject = Parameter.Transform("object", "startInclusive", "DynamoDBKeyValue.Convert(startInclusive)");
+		public static readonly Parameter StartInclusiveObjectConverter = Parameter.Transform("object", "startInclusive", "DynamoDBKeyValue.Convert(startInclusive, converter)");
+		public static readonly Parameter EndExclusive = Parameter.Of("DynamoDBKeyValue", "endExclusive");
+		public static readonly Parameter EndExclusiveObject = Parameter.Transform("object", "endExclusive", "DynamoDBKeyValue.Convert(endExclusive)");
+		public static readonly Parameter EndExclusiveObjectConverter = Parameter.Transform("object", "endExclusive", "DynamoDBKeyValue.Convert(endExclusive, converter)");
+
+		public static readonly IList<IReadOnlyList<Parameter>> KeyOverloads =
+			GenOverloads(true, HashKeyOnly)
+			.Concat(GenOverloads(true, HashKeySkipped, ConverterHash))
+			.Concat(GenOverloads(true, HashKeyObjectOnly))
+			.Concat(GenOverloads(true, HashKeyObjectSkipped, ConverterHash))
+			.Concat(GenOverloads(true, HashKeySkipped, RangeKey))
+			.Concat(GenOverloads(true, HashKeySkipped, RangeKeySkipped, ConverterHashAndRange))
+			.Concat(GenOverloads(true, HashKeyObjectSkipped, RangeKey))
+			.Concat(GenOverloads(true, HashKeyObjectSkipped, RangeKeySkipped, ConverterHashAndRange))
+			.Concat(GenOverloads(true, HashKeySkipped, RangeKeyObject))
+			.Concat(GenOverloads(true, HashKeySkipped, RangeKeyObjectSkipped, ConverterHashAndRange))
+			.Concat(GenOverloads(true, HashKeyObjectSkipped, RangeKeyObject))
+			.Concat(GenOverloads(true, HashKeyObjectSkipped, RangeKeyObjectSkipped, ConverterHashAndRange))
+			.Concat(GenOverloads(true, ItemKey))
+			.ToList();
+
+		public static readonly IList<IReadOnlyList<Parameter>> RangeKeyOverloads =
+			GenOverloads(true, RangeKeyOnlyObjectConverter, ConverterSkipped)
+			.Concat(GenOverloads(true, RangeKeyOnlyObject))
+			.Concat(GenOverloads(true, RangeKeyOnly, ConverterSkipped))
+			.Concat(GenOverloads(true, RangeKeyOnly))
+			.ToList();
+
+		public static readonly IList<IReadOnlyList<Parameter>> RangeKeyBetweenOverloads =
+			GenOverloads(true, Params.StartInclusiveObjectConverter, Params.EndExclusiveObjectConverter, Params.ConverterSkipped)
+			.Concat(Params.GenOverloads(true, Params.StartInclusiveObject, Params.EndExclusiveObject))
+			.Concat(Params.GenOverloads(true, Params.StartInclusiveObjectConverter, Params.EndExclusive, Params.ConverterSkipped))
+			.Concat(Params.GenOverloads(true, Params.StartInclusiveObject, Params.EndExclusive))
+			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusiveObjectConverter, Params.ConverterSkipped))
+			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusiveObject))
+			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusive, Params.ConverterSkipped))
+			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusive))
+			.ToList();
 	}
 }
