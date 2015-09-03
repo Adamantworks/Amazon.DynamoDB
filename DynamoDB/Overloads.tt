@@ -23,20 +23,6 @@
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 <#
 	// Syntax
-	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
-		Params.GenOverloads(false, Params.KeyOverloads, Params.CancellationToken));
-	var get = new Method("DynamoDBMap", "Get",
-		Params.GenOverloads(false, Params.KeyOverloads));
-	var batchGetAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync",
-		Params.GenOverloads(true, Params.KeysSyncToAsync, Params.ReadAhead)
-		.Concat(Params.GenOverloads(Params.KeysAsync, Params.ReadAhead)));
-	var batchGet = new Method("IEnumerable<DynamoDBMap>", "BatchGet",
-		Params.GenOverloads(Params.Keys));
-	var batchGetJoinAsync = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>",
-		Params.GenOverloads(true, Params.OuterItemsSyncToAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)
-		.Concat(Params.GenOverloads(Params.OuterItemsAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)));
-	var batchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
-		Params.GenOverloads(Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
 	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
 		Params.GenOverloads(Params.Item, Params.ReturnOldItem, Params.CancellationToken));
 	var put = new Method("DynamoDBMap", "Put",
@@ -198,18 +184,6 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IGetSyntax
-	{
-<#=		getAsync.GenInterface() #>
-<#=		get.GenInterface() #>
-
-<#=		batchGetAsync.GenInterface() #>
-<#=		batchGet.GenInterface() #>
-
-<#=		batchGetJoinAsync.GenInterface() #>
-<#=		batchGetJoin.GenInterface() #>
-	}
-
 	public partial interface IModifySyntax
 	{
 <#=		updateAsync.GenInterface() #>
@@ -340,17 +314,17 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
 	internal partial class GetContext
 	{
-<#=		getAsync.GenMethods() #>
+<#=		Methods.GetAsync.GenMethods() #>
 
-<#=		get.GenMethods() #>
+<#=		Methods.Get.GenMethods() #>
 
-<#=		batchGetAsync.GenMethods() #>
+<#=		Methods.BatchGetAsync.GenMethods() #>
 
-<#=		batchGet.GenMethods() #>
+<#=		Methods.BatchGet.GenMethods() #>
 
-<#=		batchGetJoinAsync.GenMethods() #>
+<#=		Methods.BatchGetJoinAsync.GenMethods() #>
 
-<#=		batchGetJoin.GenMethods() #>
+<#=		Methods.BatchGetJoin.GenMethods() #>
 
 <#=		query.GenMethods() #>
 

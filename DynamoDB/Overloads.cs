@@ -25,57 +25,6 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IGetSyntax
-	{
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter converter);
-		Task<DynamoDBMap> GetAsync(object hashKey);
-		Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter converter);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey);
-		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter);
-		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey);
-		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter converter);
-		Task<DynamoDBMap> GetAsync(ItemKey key);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(object hashKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(object hashKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, CancellationToken cancellationToken);
-		Task<DynamoDBMap> GetAsync(object hashKey, object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, IValueConverter converter);
-		DynamoDBMap Get(object hashKey);
-		DynamoDBMap Get(object hashKey, IValueConverter converter);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey);
-		DynamoDBMap Get(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey);
-		DynamoDBMap Get(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter);
-		DynamoDBMap Get(object hashKey, object rangeKey);
-		DynamoDBMap Get(object hashKey, object rangeKey, IValueConverter converter);
-
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IEnumerable<ItemKey> keys, ReadAhead readAhead);
-		IAsyncEnumerable<DynamoDBMap> BatchGetAsync(IAsyncEnumerable<ItemKey> keys);
-
-
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector, ReadAhead readAhead);
-		IAsyncEnumerable<TResult> BatchGetJoinAsync<T, TResult>(IAsyncEnumerable<T> outerItems, Func<T, ItemKey> keySelector, Func<T, DynamoDBMap, TResult> resultSelector);
-
-	}
-
 	public partial interface IModifySyntax
 	{
 		Task<DynamoDBMap> UpdateAsync(UpdateExpression update);
