@@ -22,22 +22,6 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 <#
-	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
-		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
-		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
-		.Where(Params.NoValuesWithoutFilter));
-	var indexQueryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
-		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
-		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
-		.Where(Params.NoValuesWithoutFilter));
-	var indexScanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.Filter, Params.Values)
-		.Where(Params.NoValuesWithoutFilter));
-
 	// Syntax
 	var getAsync = new Method("Task<DynamoDBMap>", "GetAsync",
 		Params.GenOverloads(false, Params.KeyOverloads, Params.CancellationToken));
@@ -211,18 +195,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-namespace Adamantworks.Amazon.DynamoDB
-{
-	internal partial class Index
-	{
-<#=		indexQueryForwards.GenMethods() #>
-
-<#=		indexQueryCountForwards.GenMethods() #>
-
-<#=		indexScanForwards.GenMethods() #>
-	}
-}
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {

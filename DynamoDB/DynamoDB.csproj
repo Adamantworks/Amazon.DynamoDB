@@ -73,6 +73,11 @@
     <Compile Include="Converters\Composite\ViaBooleanConverter.cs" />
     <Compile Include="Converters\Composite\ViaNumberConverter.cs" />
     <Compile Include="Converters\ValueConverterExtensions.cs" />
+    <Compile Include="IndexOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IndexOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Internal\BatchWriteRequest.cs" />
     <Compile Include="Internal\ExceptionMessages.cs" />
     <Compile Include="Internal\IDynamoDBSet.cs" />
@@ -188,6 +193,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="IndexOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IndexOverloads.cs</LastGenOutput>
+    </Content>
     <Content Include="RegionOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RegionOverloads.cs</LastGenOutput>

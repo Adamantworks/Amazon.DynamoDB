@@ -1,0 +1,53 @@
+﻿// Copyright 2015 Adamantworks.  All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
+<#
+	var indexQueryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
+		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
+	var indexQueryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
+		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Where(Params.NoValuesWithoutFilter));
+	var indexScanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
+		Params.GenOverloads(true, Params.IndexTableArg, Params.ThisArg, Params.ProjectionNoneArg, Params.Filter, Params.Values)
+		.Where(Params.NoValuesWithoutFilter));
+#>
+using Adamantworks.Amazon.DynamoDB.Contexts;
+using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax;
+
+namespace Adamantworks.Amazon.DynamoDB
+{
+	internal partial class Index
+	{
+<#=		indexQueryForwards.GenMethods() #>
+
+<#=		indexQueryCountForwards.GenMethods() #>
+
+<#=		indexScanForwards.GenMethods() #>
+	}
+}
