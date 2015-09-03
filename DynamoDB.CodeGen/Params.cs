@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Adamantworks.Amazon.DynamoDB.CodeGen
 {
-	public static class Parameters
+	public static class Params
 	{
 		public static IEnumerable<IReadOnlyList<Parameter>> GenOverloads(params Parameter[] parameters)
 		{
@@ -59,5 +60,15 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 				overloads.RemoveAt(overloads.Count - 1); // The last one has no defaults
 			return overloads;
 		}
+
+		public static readonly Func<IReadOnlyList<Parameter>, bool> NoIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(IndexProvisionedThroughputs) && !overload.Contains(ProvisionedThroughput));
+
+		public static readonly Parameter ReadAhead = Parameter.Of("ReadAhead", "readAhead", "ReadAhead.Some");
+		public static readonly Parameter TableNamePrefix = Parameter.Of("string", "tableNamePrefix");
+		public static readonly Parameter TableName = Parameter.Of("string", "tableName");
+		public static readonly Parameter Schema = Parameter.Of("TableSchema", "schema");
+		public static readonly Parameter CancellationToken = Parameter.Of("CancellationToken", "cancellationToken", "CancellationToken.None");
+		public static readonly Parameter ProvisionedThroughput = Parameter.Transform("ProvisionedThroughput", "provisionedThroughput", "(ProvisionedThroughput?)provisionedThroughput", "null");
+		public static readonly Parameter IndexProvisionedThroughputs = Parameter.Of("IReadOnlyDictionary<string, ProvisionedThroughput>", "indexProvisionedThroughputs", "null");
 	}
 }

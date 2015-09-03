@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="Method.cs" />
     <Compile Include="Parameter.cs" />
-    <Compile Include="Parameters.cs" />
+    <Compile Include="Params.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
