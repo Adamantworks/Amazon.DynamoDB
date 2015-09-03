@@ -14,17 +14,15 @@
 
 <#@ template debug="true" hostSpecific="true" #>
 <#@ output extension=".cs" #>
+<#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
 <#@ Assembly Name="System.Core.dll" #>
-<#@ Assembly Name="System.Xml.dll" #>
-<#@ Assembly Name="System.Xml.Linq.dll" #>
-<#@ Assembly Name="System.Windows.Forms.dll" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Xml.Linq" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 <#
 	var itemKey = Param("ItemKey","key");
 	var projection = Param("ProjectionExpression", "projection", "null");
@@ -173,6 +171,12 @@
 		.Concat(GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
+	var queryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
+		GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, thisArg, indexNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		.Where(noValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, thisArg, indexNoneArg, projectionNoneArg, filter, values)
 		.Where(noValuesWithoutFilter));
@@ -181,6 +185,12 @@
 		.Concat(GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
 		.Concat(GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, consistentNoneArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		.Where(noValuesWithoutFilter));
+	var indexQueryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
+		GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, indexTableArg, thisArg, consistentNoneArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var indexScanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, indexTableArg, thisArg, projectionNoneArg, filter, values)
@@ -227,6 +237,12 @@
 		.Concat(GenOverloads(true, tableArg, indexNoneArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, tableArg, indexNoneArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
+	var queryCount = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
+		GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, tableArg, indexNoneArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		.Where(noValuesWithoutFilter));
 	var scanAllAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllAsync",
 		GenOverloads(readAhead));
 	var scanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
@@ -239,6 +255,12 @@
 		.Concat(GenOverloads(true, indexDotTableArg, indexArg, projectionArg, consistentArg, hashKey, converterSkipped, filter, values))
 		.Concat(GenOverloads(true, indexDotTableArg, indexArg, projectionArg, consistentArg, hashKeyObject, filter, values))
 		.Concat(GenOverloads(true, indexDotTableArg, indexArg, projectionArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
+		.Where(noValuesWithoutFilter));
+	var indexQueryCount = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
+		GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKey, filter, values)
+		.Concat(GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKey, converterSkipped, filter, values))
+		.Concat(GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKeyObject, filter, values))
+		.Concat(GenOverloads(true, indexDotTableArg, indexArg, consistentArg, hashKeyObjectConverter, converterSkipped, filter, values))
 		.Where(noValuesWithoutFilter));
 	var indexScan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		GenOverloads(true, indexDotTableArg, indexArg, projectionArg, filter, values)
@@ -304,6 +326,37 @@
 	var rangeKeyBetweenAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBetweenAsync",
 		GenOverloads(false, rangeKeyBetweenOverloads, cancellationToken));
 	var rangeKeyBetweenPaged = new Method("ItemPage", "RangeKeyBetween",
+		GenOverloads(false, rangeKeyBetweenOverloads));
+
+	// Query Count Range
+	var countAllKeysAsync = new Method("Task<int>", "AllKeysAsync", GenOverloads(cancellationToken));
+	var countRangeKeyBeginsWithAsync = new Method("Task<int>", "RangeKeyBeginsWithAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var countRangeKeyBeginsWith = new Method("int", "RangeKeyBeginsWith",
+		GenOverloads(false, rangeKeyOverloads));
+	var countRangeKeyEqualsAsync = new Method("Task<int>", "RangeKeyEqualsAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var countRangeKeyEquals = new Method("int", "RangeKeyEquals",
+		GenOverloads(false, rangeKeyOverloads));
+	var countRangeKeyLessThanAsync = new Method("Task<int>", "RangeKeyLessThanAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var countRangeKeyLessThan = new Method("int", "RangeKeyLessThan",
+		GenOverloads(false, rangeKeyOverloads));
+	var countRangeKeyLessThanOrEqualToAsync = new Method("Task<int>", "RangeKeyLessThanOrEqualToAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var countRangeKeyLessThanOrEqualTo = new Method("int", "RangeKeyLessThanOrEqualTo",
+		GenOverloads(false, rangeKeyOverloads));
+	var countRangeKeyGreaterThanAsync = new Method("Task<int>", "RangeKeyGreaterThanAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var countRangeKeyGreaterThan = new Method("int", "RangeKeyGreaterThan",
+		GenOverloads(false, rangeKeyOverloads));
+	var countRangeKeyGreaterThanOrEqualToAsync = new Method("Task<int>", "RangeKeyGreaterThanOrEqualToAsync",
+		GenOverloads(false, rangeKeyOverloads, cancellationToken));
+	var countRangeKeyGreaterThanOrEqualTo = new Method("int", "RangeKeyGreaterThanOrEqualTo",
+		GenOverloads(false, rangeKeyOverloads));
+	var countRangeKeyBetweenAsync = new Method("Task<int>", "RangeKeyBetweenAsync",
+		GenOverloads(false, rangeKeyBetweenOverloads, cancellationToken));
+	var countRangeKeyBetween = new Method("int", "RangeKeyBetween",
 		GenOverloads(false, rangeKeyBetweenOverloads));
 
 	// Scan Options Paged
@@ -389,6 +442,8 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#		GenMethods(queryForwards); #>
 
+<#		GenMethods(queryCountForwards); #>
+
 <#		GenMethods(scanForwards); #>
 
 <#		GenMethods(batchDeleteAsync); #>
@@ -399,6 +454,8 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Index
 	{
 <#		GenMethods(indexQueryForwards); #>
+
+<#		GenMethods(indexQueryCountForwards); #>
 
 <#		GenMethods(indexScanForwards); #>
 	}
@@ -466,6 +523,32 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#		GenInterface(put); #>
 	}
 
+	public partial interface IQueryCountRangeSyntax
+	{
+<#		GenInterface(countAllKeysAsync); #>
+
+<#		GenInterface(countRangeKeyBeginsWithAsync); #>
+<#		GenInterface(countRangeKeyBeginsWith); #>
+
+<#		GenInterface(countRangeKeyEqualsAsync); #>
+<#		GenInterface(countRangeKeyEquals); #>
+
+<#		GenInterface(countRangeKeyLessThanAsync); #>
+<#		GenInterface(countRangeKeyLessThan); #>
+
+<#		GenInterface(countRangeKeyLessThanOrEqualToAsync); #>
+<#		GenInterface(countRangeKeyLessThanOrEqualTo); #>
+
+<#		GenInterface(countRangeKeyGreaterThanAsync); #>
+<#		GenInterface(countRangeKeyGreaterThan); #>
+
+<#		GenInterface(countRangeKeyGreaterThanOrEqualToAsync); #>
+<#		GenInterface(countRangeKeyGreaterThanOrEqualTo); #>
+
+<#		GenInterface(countRangeKeyBetweenAsync); #>
+<#		GenInterface(countRangeKeyBetween); #>
+	}
+
 	public partial interface IQueryRangeSyntax
 	{
 <#		GenInterface(allKeysAsync); #>
@@ -495,6 +578,8 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	public partial interface IQuerySyntax
 	{
 <#		GenInterface(query); #>
+
+<#		GenInterface(queryCount); #>
 	}
 
 	public partial interface IScanOptionsSyntax
@@ -534,12 +619,16 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 <#		GenMethods(query); #>
 
+<#		GenMethods(queryCount); #>
+
 <#		GenMethods(scan); #>
 	}
 
 	internal partial class IndexContext
 	{
 <#		GenMethods(indexQuery); #>
+
+<#		GenMethods(indexQueryCount); #>
 
 <#		GenMethods(indexScan); #>
 	}
@@ -627,6 +716,39 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#		GenExplicitImplementations(rangeKeyBetweenAsyncPaged, "IPagedQueryRangeSyntax"); #>
 
 <#		GenExplicitImplementations(rangeKeyBetweenPaged, "IPagedQueryRangeSyntax"); #>
+	}
+
+	internal partial class QueryCountContext
+	{
+<#		GenMethods(countAllKeysAsync); #>
+
+<#		GenMethods(countRangeKeyBeginsWithAsync); #>
+
+<#		GenMethods(countRangeKeyBeginsWith); #>
+
+<#		GenMethods(countRangeKeyEqualsAsync); #>
+
+<#		GenMethods(countRangeKeyEquals); #>
+
+<#		GenMethods(countRangeKeyLessThanAsync); #>
+
+<#		GenMethods(countRangeKeyLessThan); #>
+
+<#		GenMethods(countRangeKeyLessThanOrEqualToAsync); #>
+
+<#		GenMethods(countRangeKeyLessThanOrEqualTo); #>
+
+<#		GenMethods(countRangeKeyGreaterThanAsync); #>
+
+<#		GenMethods(countRangeKeyGreaterThan); #>
+
+<#		GenMethods(countRangeKeyGreaterThanOrEqualToAsync); #>
+
+<#		GenMethods(countRangeKeyGreaterThanOrEqualTo); #>
+
+<#		GenMethods(countRangeKeyBetweenAsync); #>
+
+<#		GenMethods(countRangeKeyBetween); #>
 	}
 
 	internal partial class ScanContext

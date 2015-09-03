@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Admantworks.Amazon.DynamoDB")]
+[assembly: AssemblyTitle("Adamantworks.Amazon.DynamoDB")]
 [assembly: AssemblyDescription("An alternate SDK for Amazon DynamoDB with a cleaner API and advanced operations. Support async and sync.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adamantworks")]

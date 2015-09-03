@@ -57,6 +57,8 @@
     <Compile Include="Composite.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Contexts\IndexContext.cs" />
+    <Compile Include="Contexts\QueryCountContext.cs" />
+    <Compile Include="Contexts\ScanCountContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
     <Compile Include="Converters\Basic\ArrayConverter.cs" />
     <Compile Include="Converters\Basic\CastConverter.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="ProvisionedThroughput.cs" />
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Schema\IndexProjectionType.cs" />
+    <Compile Include="Syntax\IQueryCountRangeSyntax.cs" />
     <Compile Include="Syntax\IQueryExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IQueryLimitToOrPagedSyntax.cs" />
     <Compile Include="Syntax\IQueryRangeSyntax.cs" />

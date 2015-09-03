@@ -126,12 +126,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region RangeKeyBeginsWith
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
 			return QueryAsync(keyConditions, readAhead);
 		}
 		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
 			return QueryPagedAsync(keyConditions, cancellationToken);
@@ -139,12 +141,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IEnumerable<DynamoDBMap> RangeKeyBeginsWith(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
 			return Query(keyConditions);
 		}
 		ItemPage IPagedQueryRangeSyntax.RangeKeyBeginsWith(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
 			return QueryPaged(keyConditions);
@@ -154,12 +158,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region RangeKeyEquals
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
 			return QueryAsync(keyConditions, readAhead);
 		}
 		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
 			return QueryPagedAsync(keyConditions, cancellationToken);
@@ -167,12 +173,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IEnumerable<DynamoDBMap> RangeKeyEquals(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
 			return Query(keyConditions);
 		}
 		ItemPage IPagedQueryRangeSyntax.RangeKeyEquals(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
 			return QueryPaged(keyConditions);
@@ -182,12 +190,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region RangeKeyLessThan(OrEqualTo)
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LT");
 			return QueryAsync(keyConditions, readAhead);
 		}
 		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LT");
 			return QueryPagedAsync(keyConditions, cancellationToken);
@@ -195,12 +205,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IEnumerable<DynamoDBMap> RangeKeyLessThan(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return Query(keyConditions);
 		}
 		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThan(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return QueryPaged(keyConditions);
@@ -208,12 +220,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return QueryAsync(keyConditions, readAhead);
 		}
 		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return QueryPagedAsync(keyConditions, cancellationToken);
@@ -221,12 +235,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IEnumerable<DynamoDBMap> RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return Query(keyConditions);
 		}
 		ItemPage IPagedQueryRangeSyntax.RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
 			return QueryPaged(keyConditions);
@@ -236,12 +252,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region RangeKeyGreaterThan(OrEqualTo)
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
 			return QueryAsync(keyConditions, readAhead);
 		}
 		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
 			return QueryPagedAsync(keyConditions, cancellationToken);
@@ -249,12 +267,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IEnumerable<DynamoDBMap> RangeKeyGreaterThan(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
 			return Query(keyConditions);
 		}
 		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThan(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
 			return QueryPaged(keyConditions);
@@ -262,12 +282,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IAsyncEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, ReadAhead readAhead)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
 			return QueryAsync(keyConditions, readAhead);
 		}
 		Task<ItemPage> IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
 			return QueryPagedAsync(keyConditions, cancellationToken);
@@ -275,12 +297,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IEnumerable<DynamoDBMap> RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
 			return Query(keyConditions);
 		}
 		ItemPage IPagedQueryRangeSyntax.RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
+			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
 			return QueryPaged(keyConditions);
