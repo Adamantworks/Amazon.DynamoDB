@@ -22,7 +22,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
 	// See Overloads.tt and Overloads.cs for more methods of this class
-	internal partial class ScanCountContext : IScanCountOptions
+	internal partial class ScanCountContext : IScanCountOptionsSyntax
 	{
 		private readonly Table table;
 		private readonly Index index;

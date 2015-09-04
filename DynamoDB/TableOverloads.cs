@@ -578,6 +578,21 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
+		#region ScanCount
+		public IScanCountOptionsSyntax ScanCount()
+		{
+			return new ScanCountContext(this, null, null, null);
+		}
+		public IScanCountOptionsSyntax ScanCount(PredicateExpression filter)
+		{
+			return new ScanCountContext(this, null, filter, null);
+		}
+		public IScanCountOptionsSyntax ScanCount(PredicateExpression filter, Values values)
+		{
+			return new ScanCountContext(this, null, filter, values);
+		}
+		#endregion
+
 		#region Delete
 		public void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey)
 		{

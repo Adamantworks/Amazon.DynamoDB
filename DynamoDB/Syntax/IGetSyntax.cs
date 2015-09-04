@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface IGetSyntax : IQuerySyntax
 	{
 		Task<DynamoDBMap> GetAsync(ItemKey key, CancellationToken cancellationToken);

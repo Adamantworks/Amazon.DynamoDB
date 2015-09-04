@@ -19,5 +19,9 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IScanLimitToOrPagedSyntax Scan();
 		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter);
 		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values);
+
+		IScanCountOptionsSyntax ScanCount();
+		IScanCountOptionsSyntax ScanCount(PredicateExpression filter);
+		IScanCountOptionsSyntax ScanCount(PredicateExpression filter, Values values);
 	}
 }

@@ -26,7 +26,6 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	// See Overloads.tt and Overloads.cs for more method overloads of this interface
 	public partial interface IDynamoDBRegion
 	{
 		TimeSpan WaitStatusPollingInterval { get; set; }
@@ -43,7 +42,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		IEnumerable<string> ListTablesWithPrefix(string tableNamePrefix);
 
-		// The overloads of these methods are in Overloads.tt and call the private implementations
+		// The overloads of these methods are in RegionOverloads.tt and call the private implementations
 		// Task<ITable> CreateTableAsync(...);
 		// ITable CreateTable();
 
@@ -58,7 +57,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		void DeleteTable(string tableName);
 	}
 
-	// See Overloads.tt and Overloads.cs for more method overloads of this class
 	internal partial class Region : IDynamoDBRegion
 	{
 		private static readonly Regex TableNamePrefix = new Regex("^[-A-Za-z._0-9]{1,254}$");

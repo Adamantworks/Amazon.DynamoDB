@@ -14,7 +14,6 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface IScanSyntax
 	{
 	}

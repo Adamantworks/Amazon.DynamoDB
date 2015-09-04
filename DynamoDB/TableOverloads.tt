@@ -66,6 +66,9 @@
 	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
 		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
+	var scanCountForwards = new Method("IScanCountOptionsSyntax", "ScanCount", "new ScanCountContext",
+		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.Filter, Params.Values)
+		.Where(Params.NoValuesWithoutFilter));
 	var batchDelete = new Method("void", "Delete",
 			Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
 	var batchDeleteAsync = new Method("void", "Delete",
@@ -133,6 +136,8 @@ namespace Adamantworks.Amazon.DynamoDB
 <#=		queryCountForwards.GenMethods() #>
 
 <#=		scanForwards.GenMethods() #>
+
+<#=		scanCountForwards.GenMethods() #>
 
 <#=		batchDeleteAsync.GenMethods() #>
 

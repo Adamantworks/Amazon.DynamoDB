@@ -2,7 +2,7 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public interface IScanCountOptions
+	public interface IScanCountOptionsSyntax
 	{
 		Task<long> AllAsync();
 		long All();

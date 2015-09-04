@@ -56,7 +56,17 @@
     <Compile Include="BatchWrite.cs" />
     <Compile Include="Composite.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Contexts\GetContextOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetContextOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\IndexContext.cs" />
+    <Compile Include="Contexts\IndexContextOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IndexContextOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\QueryCountContext.cs" />
     <Compile Include="Contexts\ScanCountContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
@@ -139,7 +149,7 @@
     <Compile Include="Contexts\QueryContext.cs" />
     <Compile Include="Syntax\IConsistentGetSyntax.cs" />
     <Compile Include="Syntax\IGetSyntax.cs" />
-    <Compile Include="Syntax\IScanCountOptions.cs" />
+    <Compile Include="Syntax\IScanCountOptionsSyntax.cs" />
     <Compile Include="Syntax\IScanOptionsSyntax.cs" />
     <Compile Include="Contexts\ModifyContext.cs" />
     <Compile Include="Contexts\PutContext.cs" />
@@ -206,6 +216,14 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Contexts\GetContextOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GetContextOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Contexts\IndexContextOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IndexContextOverloads.cs</LastGenOutput>
+    </Content>
     <Content Include="IndexOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IndexOverloads.cs</LastGenOutput>

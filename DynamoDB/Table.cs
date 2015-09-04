@@ -28,7 +28,6 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface ITable : IConsistentGetSyntax, IPutSyntax
 	{
 		string Name { get; }
@@ -48,7 +47,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		void WaitUntilNot(CollectionStatus status);
 		void WaitUntilNot(CollectionStatus status, TimeSpan timeout);
 
-		// The overloads of these methods are in Overloads.tt and call the private implementations
+		// The overloads of these methods are in TableOverloads.tt and call the private implementations
 		// Task UpdateTableAsync(...);
 		// void UpdateTable(...);
 
@@ -74,7 +73,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		void Delete(IBatchWrite batch, ItemKey key);
 	}
 
-	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class Table : ITable
 	{
 		internal readonly Region Region;
