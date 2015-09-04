@@ -137,7 +137,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			{
 				TableName = table.Name,
 				IndexName = index != null ? index.Name : null,
-				ExpressionAttributeNames = AwsAttributeNames.Get(filter),
+				ExpressionAttributeNames = filter != null ? AwsAttributeNames.Get(filter) : null,
 				Select = AwsEnums.Select.COUNT,
 			};
 			// No need to set Limit or ExclusiveStartKey, that will be handled by the first QueryResponse

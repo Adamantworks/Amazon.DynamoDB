@@ -224,7 +224,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				TableName = table.Name,
 				IndexName = index != null ? index.Name : null,
 				KeyConditions = keyConditions,
-				ExpressionAttributeNames = AwsAttributeNames.Get(filter),
+				ExpressionAttributeNames = filter != null ? AwsAttributeNames.Get(filter) : null,
 				ConsistentRead = consistent,
 				Select = Select.COUNT,
 			};
