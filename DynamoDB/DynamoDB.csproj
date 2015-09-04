@@ -137,6 +137,7 @@
     <Compile Include="Contexts\QueryContext.cs" />
     <Compile Include="Syntax\IConsistentGetSyntax.cs" />
     <Compile Include="Syntax\IGetSyntax.cs" />
+    <Compile Include="Syntax\IScanCountOptions.cs" />
     <Compile Include="Syntax\IScanOptionsSyntax.cs" />
     <Compile Include="Contexts\ModifyContext.cs" />
     <Compile Include="Contexts\PutContext.cs" />

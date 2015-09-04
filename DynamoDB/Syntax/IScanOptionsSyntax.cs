@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -62,16 +63,24 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// </summary>
 		IEnumerable<DynamoDBMap> InParallel();
 
+		[Obsolete("Use ScanCount().AllAsync() instead")]
 		Task<long> CountAllAsync();
+		[Obsolete("Use ScanCount().All() instead")]
 		long CountAll();
 
+		[Obsolete("Use ScanCount().SegmentAsync() instead")]
 		Task<long> CountSegmentAsync(int segment, int totalSegments);
+		[Obsolete("Use ScanCount().Segment() instead")]
 		long CountSegment(int segment, int totalSegments);
 
+		[Obsolete("Use ScanCount().InParallelAsync() instead")]
 		Task<long> CountInParallelAsync(int totalSegments);
+		[Obsolete("Use ScanCount().InParallel() instead")]
 		long CountInParallel(int totalSegments);
 
+		[Obsolete("Use ScanCount().InParallelAsync() instead")]
 		Task<long> CountInParallelAsync();
+		[Obsolete("Use ScanCount().InParallel() instead")]
 		long CountInParallel();
 	}
 }

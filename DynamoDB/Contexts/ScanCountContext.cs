@@ -15,13 +15,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Syntax;
 using Aws = Amazon.DynamoDBv2.Model;
 using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
 	// See Overloads.tt and Overloads.cs for more methods of this class
-	internal partial class ScanCountContext
+	internal partial class ScanCountContext : IScanCountOptions
 	{
 		private readonly Table table;
 		private readonly Index index;
@@ -40,8 +41,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.values = values;
 		}
 
-		#region CountAll
-		public async Task<long> CountAllAsync()
+		#region All
+		public async Task<long> AllAsync()
 		{
 			var request = BuildScanCountRequest();
 			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
@@ -55,7 +56,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return lastResponse.Count;
 		}
 
-		public long CountAll()
+		public long All()
 		{
 			var request = BuildScanCountRequest();
 			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
@@ -70,8 +71,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region CountSegment
-		public async Task<long> CountSegmentAsync(int segment, int totalSegments)
+		#region Segment
+		public async Task<long> SegmentAsync(int segment, int totalSegments)
 		{
 			var request = BuildScanCountRequest(segment, totalSegments);
 			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
@@ -85,7 +86,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			return lastResponse.Count;
 		}
 
-		public long CountSegment(int segment, int totalSegments)
+		public long Segment(int segment, int totalSegments)
 		{
 			var request = BuildScanCountRequest(segment, totalSegments);
 			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
@@ -100,33 +101,33 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region CountInParallel
-		public async Task<long> CountInParallelAsync(int totalSegments)
+		#region InParallel
+		public async Task<long> InParallelAsync(int totalSegments)
 		{
-			if(totalSegments == 1) return await CountAllAsync();
+			if(totalSegments == 1) return await AllAsync();
 
 			var segmentCountTasks = Enumerable.Range(0, totalSegments)
-				.Select(segment => CountSegmentAsync(segment, totalSegments));
+				.Select(segment => SegmentAsync(segment, totalSegments));
 			var segmentCounts = await Task.WhenAll(segmentCountTasks).ConfigureAwait(false);
 			return segmentCounts.Sum();
 		}
-		public long CountInParallel(int totalSegments)
+		public long InParallel(int totalSegments)
 		{
-			if(totalSegments == 1) return CountAll();
+			if(totalSegments == 1) return All();
 
 			var segmentCountTasks = Enumerable.Range(0, totalSegments)
-				.Select(segment => CountSegmentAsync(segment, totalSegments));
+				.Select(segment => SegmentAsync(segment, totalSegments));
 			var segmentCounts = Task.WhenAll(segmentCountTasks).WaitAndUnwrapException();
 			return segmentCounts.Sum();
 		}
 
-		public Task<long> CountInParallelAsync()
+		public Task<long> InParallelAsync()
 		{
-			return CountInParallelAsync(EstimateScanSegments());
+			return InParallelAsync(EstimateScanSegments());
 		}
-		public long CountInParallel()
+		public long InParallel()
 		{
-			return CountInParallel(EstimateScanSegments());
+			return InParallel(EstimateScanSegments());
 		}
 		#endregion
 
