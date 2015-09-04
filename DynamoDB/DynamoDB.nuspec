@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>Adamantworks.Amazon.DynamoDB</id>
-		<version>0.3.0</version>
+		<version>0.3.1</version>
 		<title>Adamantworks Amazon DynamoDB Alternate SDK</title>
 		<authors>Adamantworks LLC</authors>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
 		<projectUrl>https://github.com/Adamantworks/Amazon.DynamoDB</projectUrl>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>An alternate SDK for Amazon DynamoDB with a cleaner API and advanced operations. Supports async and sync.</description>
-		<releaseNotes>Upgrade to AWS SDK v3, fix bug in converting lists containing null</releaseNotes>
+		<releaseNotes>Implement QueryCount, start on revised fluent syntax</releaseNotes>
 		<copyright>Copyright © 2015 Adamantworks.  All Rights Reserved.</copyright>
 		<tags>AWS Amazon cloud DynamoDB</tags>
 		<dependencies>
