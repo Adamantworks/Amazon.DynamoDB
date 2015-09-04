@@ -375,13 +375,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments);
 	}
 
-	public partial interface IScanSyntax
-	{
-		IScanLimitToOrPagedSyntax Scan();
-		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter);
-		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values);
-	}
-
 	public partial interface ITryModifySyntax
 	{
 		Task<bool> TryUpdateAsync(UpdateExpression update);

@@ -55,9 +55,6 @@
 		Params.GenOverloads(Params.ReadAhead));
 	var scanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
 		Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.ReadAhead));
-	var scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.Filter, Params.Values)
-		.Where(Params.NoValuesWithoutFilter));
 	var scanCount = new Method("IScanLimitToOrPagedSyntax", "ScanCount", "new ScanCountContext",
 		Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
@@ -299,11 +296,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#=		scanSegmentAsync.GenInterface() #>
 	}
 
-	public partial interface IScanSyntax
-	{
-<#=		scan.GenInterface() #>
-	}
-
 	public partial interface ITryModifySyntax
 	{
 <#=		tryUpdateAsync.GenInterface() #>
@@ -331,7 +323,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 <#=		queryCount.GenMethods() #>
 
-<#=		scan.GenMethods() #>
+<#=		Methods.Scan.GenMethods() #>
 	}
 
 	internal partial class IndexContext

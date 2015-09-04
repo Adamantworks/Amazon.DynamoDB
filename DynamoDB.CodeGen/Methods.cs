@@ -18,5 +18,8 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			.Concat(Params.GenOverloads(Params.OuterItemsAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)));
 		public static readonly Method BatchGetJoin = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>",
 			Params.GenOverloads(Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
+		public static readonly Method Scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
+			Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.Filter, Params.Values)
+			.Where(Params.NoValuesWithoutFilter));
 	}
 }
