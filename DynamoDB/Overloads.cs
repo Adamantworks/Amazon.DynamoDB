@@ -155,96 +155,96 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 	public partial interface IQueryCountRangeSyntax
 	{
-		Task<int> AllKeysAsync();
+		Task<long> AllKeysAsync();
 
-		Task<int> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter);
-		Task<int> RangeKeyBeginsWithAsync(object rangeKey);
-		Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyBeginsWithAsync(object rangeKey, CancellationToken cancellationToken);
-		Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		int RangeKeyBeginsWith(object rangeKey, IValueConverter converter);
-		int RangeKeyBeginsWith(object rangeKey);
-		int RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter);
+		Task<long> RangeKeyBeginsWithAsync(object rangeKey);
+		Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyBeginsWithAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		long RangeKeyBeginsWith(object rangeKey, IValueConverter converter);
+		long RangeKeyBeginsWith(object rangeKey);
+		long RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter);
 
-		Task<int> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter);
-		Task<int> RangeKeyEqualsAsync(object rangeKey);
-		Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyEqualsAsync(object rangeKey, CancellationToken cancellationToken);
-		Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		int RangeKeyEquals(object rangeKey, IValueConverter converter);
-		int RangeKeyEquals(object rangeKey);
-		int RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter);
+		Task<long> RangeKeyEqualsAsync(object rangeKey);
+		Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyEqualsAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		long RangeKeyEquals(object rangeKey, IValueConverter converter);
+		long RangeKeyEquals(object rangeKey);
+		long RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter);
 
-		Task<int> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter);
-		Task<int> RangeKeyLessThanAsync(object rangeKey);
-		Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyLessThanAsync(object rangeKey, CancellationToken cancellationToken);
-		Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		int RangeKeyLessThan(object rangeKey, IValueConverter converter);
-		int RangeKeyLessThan(object rangeKey);
-		int RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter);
+		Task<long> RangeKeyLessThanAsync(object rangeKey);
+		Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyLessThanAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		long RangeKeyLessThan(object rangeKey, IValueConverter converter);
+		long RangeKeyLessThan(object rangeKey);
+		long RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
 
-		Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter);
-		Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey);
-		Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken);
-		Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		int RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter);
-		int RangeKeyLessThanOrEqualTo(object rangeKey);
-		int RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter);
+		Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey);
+		Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		long RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter);
+		long RangeKeyLessThanOrEqualTo(object rangeKey);
+		long RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
 
-		Task<int> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter);
-		Task<int> RangeKeyGreaterThanAsync(object rangeKey);
-		Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyGreaterThanAsync(object rangeKey, CancellationToken cancellationToken);
-		Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		int RangeKeyGreaterThan(object rangeKey, IValueConverter converter);
-		int RangeKeyGreaterThan(object rangeKey);
-		int RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter);
+		Task<long> RangeKeyGreaterThanAsync(object rangeKey);
+		Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyGreaterThanAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		long RangeKeyGreaterThan(object rangeKey, IValueConverter converter);
+		long RangeKeyGreaterThan(object rangeKey);
+		long RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter);
 
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter);
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey);
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken);
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
-		int RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter);
-		int RangeKeyGreaterThanOrEqualTo(object rangeKey);
-		int RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken);
+		long RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter);
+		long RangeKeyGreaterThanOrEqualTo(object rangeKey);
+		long RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter);
 
-		Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter);
-		Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive);
-		Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
-		Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive);
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive);
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
-		Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive, CancellationToken cancellationToken);
-		Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken);
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken);
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, CancellationToken cancellationToken);
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken);
-		int RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter);
-		int RangeKeyBetween(object startInclusive, object endExclusive);
-		int RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
-		int RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive);
-		int RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
-		int RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive);
-		int RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive, CancellationToken cancellationToken);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, CancellationToken cancellationToken);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken);
+		long RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter);
+		long RangeKeyBetween(object startInclusive, object endExclusive);
+		long RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
+		long RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive);
+		long RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter);
+		long RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive);
+		long RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
 	}
 
 	public partial interface IQueryRangeSyntax
@@ -1703,377 +1703,377 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 	internal partial class QueryCountContext
 	{
 		#region AllKeysAsync
-		public Task<int> AllKeysAsync()
+		public Task<long> AllKeysAsync()
 		{
 			return AllKeysAsync(CancellationToken.None);
 		}
 		#endregion
 
 		#region RangeKeyBeginsWithAsync
-		public Task<int> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyBeginsWithAsync(object rangeKey)
+		public Task<long> RangeKeyBeginsWithAsync(object rangeKey)
 		{
 			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
 		}
-		public Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyBeginsWithAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey)
+		public Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey)
 		{
 			return RangeKeyBeginsWithAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBeginsWithAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyBeginsWithAsync(object rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBeginsWithAsync(object rangeKey, CancellationToken cancellationToken)
 		{
 			return RangeKeyBeginsWithAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
 		}
-		public Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyBeginsWithAsync(rangeKey, cancellationToken);
 		}
 		#endregion
 
 		#region RangeKeyBeginsWith
-		public int RangeKeyBeginsWith(object rangeKey, IValueConverter converter)
+		public long RangeKeyBeginsWith(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyBeginsWith(DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
-		public int RangeKeyBeginsWith(object rangeKey)
+		public long RangeKeyBeginsWith(object rangeKey)
 		{
 			return RangeKeyBeginsWith(DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public int RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public long RangeKeyBeginsWith(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyBeginsWith(rangeKey);
 		}
 		#endregion
 
 		#region RangeKeyEqualsAsync
-		public Task<int> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyEqualsAsync(object rangeKey)
+		public Task<long> RangeKeyEqualsAsync(object rangeKey)
 		{
 			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
 		}
-		public Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyEqualsAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey)
+		public Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey)
 		{
 			return RangeKeyEqualsAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyEqualsAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyEqualsAsync(object rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyEqualsAsync(object rangeKey, CancellationToken cancellationToken)
 		{
 			return RangeKeyEqualsAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
 		}
-		public Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyEqualsAsync(rangeKey, cancellationToken);
 		}
 		#endregion
 
 		#region RangeKeyEquals
-		public int RangeKeyEquals(object rangeKey, IValueConverter converter)
+		public long RangeKeyEquals(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyEquals(DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
-		public int RangeKeyEquals(object rangeKey)
+		public long RangeKeyEquals(object rangeKey)
 		{
 			return RangeKeyEquals(DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public int RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public long RangeKeyEquals(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyEquals(rangeKey);
 		}
 		#endregion
 
 		#region RangeKeyLessThanAsync
-		public Task<int> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanAsync(object rangeKey)
+		public Task<long> RangeKeyLessThanAsync(object rangeKey)
 		{
 			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThanAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey)
+		public Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey)
 		{
 			return RangeKeyLessThanAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyLessThanAsync(object rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanAsync(object rangeKey, CancellationToken cancellationToken)
 		{
 			return RangeKeyLessThanAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
 		}
-		public Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyLessThanAsync(rangeKey, cancellationToken);
 		}
 		#endregion
 
 		#region RangeKeyLessThan
-		public int RangeKeyLessThan(object rangeKey, IValueConverter converter)
+		public long RangeKeyLessThan(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThan(DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
-		public int RangeKeyLessThan(object rangeKey)
+		public long RangeKeyLessThan(object rangeKey)
 		{
 			return RangeKeyLessThan(DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public int RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public long RangeKeyLessThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThan(rangeKey);
 		}
 		#endregion
 
 		#region RangeKeyLessThanOrEqualToAsync
-		public Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey)
 		{
 			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThanOrEqualToAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
 		{
 			return RangeKeyLessThanOrEqualToAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyLessThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken)
 		{
 			return RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
 		}
-		public Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyLessThanOrEqualToAsync(rangeKey, cancellationToken);
 		}
 		#endregion
 
 		#region RangeKeyLessThanOrEqualTo
-		public int RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter)
+		public long RangeKeyLessThanOrEqualTo(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
-		public int RangeKeyLessThanOrEqualTo(object rangeKey)
+		public long RangeKeyLessThanOrEqualTo(object rangeKey)
 		{
 			return RangeKeyLessThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public int RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public long RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyLessThanOrEqualTo(rangeKey);
 		}
 		#endregion
 
 		#region RangeKeyGreaterThanAsync
-		public Task<int> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanAsync(object rangeKey)
+		public Task<long> RangeKeyGreaterThanAsync(object rangeKey)
 		{
 			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThanAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey)
+		public Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey)
 		{
 			return RangeKeyGreaterThanAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyGreaterThanAsync(object rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanAsync(object rangeKey, CancellationToken cancellationToken)
 		{
 			return RangeKeyGreaterThanAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
 		}
-		public Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyGreaterThanAsync(rangeKey, cancellationToken);
 		}
 		#endregion
 
 		#region RangeKeyGreaterThan
-		public int RangeKeyGreaterThan(object rangeKey, IValueConverter converter)
+		public long RangeKeyGreaterThan(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThan(DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
-		public int RangeKeyGreaterThan(object rangeKey)
+		public long RangeKeyGreaterThan(object rangeKey)
 		{
 			return RangeKeyGreaterThan(DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public int RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public long RangeKeyGreaterThan(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThan(rangeKey);
 		}
 		#endregion
 
 		#region RangeKeyGreaterThanOrEqualToAsync
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey)
 		{
 			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThanOrEqualToAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey)
 		{
 			return RangeKeyGreaterThanOrEqualToAsync(rangeKey, CancellationToken.None);
 		}
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(object rangeKey, CancellationToken cancellationToken)
 		{
 			return RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue.Convert(rangeKey), cancellationToken);
 		}
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyGreaterThanOrEqualToAsync(rangeKey, cancellationToken);
 		}
 		#endregion
 
 		#region RangeKeyGreaterThanOrEqualTo
-		public int RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter)
+		public long RangeKeyGreaterThanOrEqualTo(object rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey, converter));
 		}
-		public int RangeKeyGreaterThanOrEqualTo(object rangeKey)
+		public long RangeKeyGreaterThanOrEqualTo(object rangeKey)
 		{
 			return RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue.Convert(rangeKey));
 		}
-		public int RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public long RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
 			return RangeKeyGreaterThanOrEqualTo(rangeKey);
 		}
 		#endregion
 
 		#region RangeKeyBetweenAsync
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive), CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive, CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), endExclusive, CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter), CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive)
 		{
 			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive), CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetweenAsync(startInclusive, endExclusive, CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
 		{
 			return RangeKeyBetweenAsync(startInclusive, endExclusive, CancellationToken.None);
 		}
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, object endExclusive, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, object endExclusive, CancellationToken cancellationToken)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive), cancellationToken);
 		}
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive, cancellationToken);
 		}
-		public Task<int> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(object startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken)
 		{
 			return RangeKeyBetweenAsync(DynamoDBKeyValue.Convert(startInclusive), endExclusive, cancellationToken);
 		}
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter), cancellationToken);
 		}
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, object endExclusive, CancellationToken cancellationToken)
 		{
 			return RangeKeyBetweenAsync(startInclusive, DynamoDBKeyValue.Convert(endExclusive), cancellationToken);
 		}
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter, CancellationToken cancellationToken)
 		{
 			return RangeKeyBetweenAsync(startInclusive, endExclusive, cancellationToken);
 		}
 		#endregion
 
 		#region RangeKeyBetween
-		public int RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter)
+		public long RangeKeyBetween(object startInclusive, object endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive, converter), DynamoDBKeyValue.Convert(endExclusive, converter));
 		}
-		public int RangeKeyBetween(object startInclusive, object endExclusive)
+		public long RangeKeyBetween(object startInclusive, object endExclusive)
 		{
 			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive), DynamoDBKeyValue.Convert(endExclusive));
 		}
-		public int RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		public long RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive, converter), endExclusive);
 		}
-		public int RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive)
+		public long RangeKeyBetween(object startInclusive, DynamoDBKeyValue endExclusive)
 		{
 			return RangeKeyBetween(DynamoDBKeyValue.Convert(startInclusive), endExclusive);
 		}
-		public int RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
+		public long RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetween(startInclusive, DynamoDBKeyValue.Convert(endExclusive, converter));
 		}
-		public int RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive)
+		public long RangeKeyBetween(DynamoDBKeyValue startInclusive, object endExclusive)
 		{
 			return RangeKeyBetween(startInclusive, DynamoDBKeyValue.Convert(endExclusive));
 		}
-		public int RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
+		public long RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
 		{
 			return RangeKeyBetween(startInclusive, endExclusive);
 		}

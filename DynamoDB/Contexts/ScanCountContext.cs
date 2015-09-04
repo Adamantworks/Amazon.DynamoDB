@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Aws = Amazon.DynamoDBv2.Model;
 using AwsEnums = Amazon.DynamoDBv2;
@@ -29,9 +27,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private readonly Index index;
 		private readonly PredicateExpression filter;
 		private readonly Values values;
-		private bool limitSet;
-		private int? limit;
-		private LastKey? exclusiveStartKey;
 
 		public ScanCountContext(
 			Table table,
@@ -45,130 +40,15 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.values = values;
 		}
 
-		#region All
-		public IAsyncEnumerable<DynamoDBMap> AllAsync(ReadAhead readAhead)
-		{
-			return AsyncEnumerable.Defer(() =>
-			{
-				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
-				var request = BuildScanRequest();
-				return AsyncEnumerableEx.GenerateChunked(new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null),
-					async (lastResponse, cancellationToken) =>
-					{
-						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-						if(limit != null)
-							request.Limit = lastResponse.CurrentLimit;
-						return new QueryResponse(lastResponse, await table.Region.DB.ScanAsync(request, cancellationToken).ConfigureAwait(false));
-					},
-					lastResponse => lastResponse.Items.Select(item => item.ToMap()),
-					lastResponse => lastResponse.IsComplete(),
-					readAhead);
-			});
-		}
-
-		public IEnumerable<DynamoDBMap> All()
-		{
-			var request = BuildScanRequest();
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
-			do
-			{
-				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
-					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Scan(request));
-				foreach(var item in lastResponse.Items)
-					yield return item.ToMap();
-			} while(!lastResponse.IsComplete());
-		}
-		#endregion
-
-		#region Segment
-		public IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments, ReadAhead readAhead)
-		{
-			return AsyncEnumerable.Defer(() =>
-			{
-				// This must be in here so it is deferred until GetEnumerator() is called on us (need one per enumerator)
-				var request = BuildScanRequest(segment, totalSegments);
-				return AsyncEnumerableEx.GenerateChunked(new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null),
-					async (lastResponse, cancellationToken) =>
-					{
-						request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-						if(limit != null)
-							request.Limit = lastResponse.CurrentLimit;
-						return new QueryResponse(lastResponse, await table.Region.DB.ScanAsync(request, cancellationToken).ConfigureAwait(false));
-					},
-					lastResponse => lastResponse.Items.Select(item => item.ToMap()),
-					lastResponse => lastResponse.IsComplete(),
-					readAhead);
-			});
-		}
-
-		public IEnumerable<DynamoDBMap> Segment(int segment, int totalSegments)
-		{
-			var request = BuildScanRequest(segment, totalSegments);
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
-			do
-			{
-				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
-					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Scan(request));
-				foreach(var item in lastResponse.Items)
-					yield return item.ToMap();
-			} while(!lastResponse.IsComplete());
-		}
-		#endregion
-
-		#region InParallel
-		public IAsyncEnumerable<DynamoDBMap> InParallelAsync(int totalSegments)
-		{
-			if(totalSegments == 1) return AllAsync(ReadAhead.All);
-
-			return AsyncEnumerable.Defer(() =>
-			{
-				var segments = Enumerable.Range(0, totalSegments).Select(segment => SegmentAsync(segment, totalSegments, ReadAhead.All).GetEnumerator()).ToList();
-
-				return AsyncEnumerableEx.GenerateChunked(new List<DynamoDBMap>(),
-					async (lastResult, token) =>
-					{
-						var moveNext = await Task.WhenAll(segments.Select(e => e.MoveNext(token))).ConfigureAwait(false);
-						var result = new List<DynamoDBMap>(segments.Count);
-						for(var i = segments.Count - 1; i >= 0; i--)
-							if(moveNext[i])
-								result.Add(segments[i].Current);
-							else
-								segments.RemoveAt(i);
-						return result;
-					},
-					state => state,
-					state => state.Count == 0,
-					ReadAhead.All);
-			});
-		}
-		public IAsyncEnumerable<DynamoDBMap> InParallelAsync()
-		{
-			return InParallelAsync(EstimateScanSegments());
-		}
-
-		public IEnumerable<DynamoDBMap> InParallel(int totalSegments)
-		{
-			return InParallelAsync(totalSegments).ToEnumerable();
-		}
-		public IEnumerable<DynamoDBMap> InParallel()
-		{
-			return InParallelAsync().ToEnumerable();
-		}
-		#endregion
-
 		#region CountAll
 		public async Task<long> CountAllAsync()
 		{
-			var request = BuildCountRequest();
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
+			var request = BuildScanCountRequest();
+			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
 			do
 			{
 				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
+				if((int?)null != null)
 					request.Limit = lastResponse.CurrentLimit;
 				lastResponse = new QueryResponse(lastResponse, await table.Region.DB.ScanAsync(request).ConfigureAwait(false));
 			} while(!lastResponse.IsComplete());
@@ -177,12 +57,12 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public long CountAll()
 		{
-			var request = BuildCountRequest();
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
+			var request = BuildScanCountRequest();
+			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
 			do
 			{
 				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
+				if((int?)null != null)
 					request.Limit = lastResponse.CurrentLimit;
 				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Scan(request));
 			} while(!lastResponse.IsComplete());
@@ -193,12 +73,12 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region CountSegment
 		public async Task<long> CountSegmentAsync(int segment, int totalSegments)
 		{
-			var request = BuildCountRequest(segment, totalSegments);
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
+			var request = BuildScanCountRequest(segment, totalSegments);
+			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
 			do
 			{
 				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
+				if((int?)null != null)
 					request.Limit = lastResponse.CurrentLimit;
 				lastResponse = new QueryResponse(lastResponse, await table.Region.DB.ScanAsync(request).ConfigureAwait(false));
 			} while(!lastResponse.IsComplete());
@@ -207,12 +87,12 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public long CountSegment(int segment, int totalSegments)
 		{
-			var request = BuildCountRequest(segment, totalSegments);
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
+			var request = BuildScanCountRequest(segment, totalSegments);
+			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
 			do
 			{
 				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
+				if((int?)null != null)
 					request.Limit = lastResponse.CurrentLimit;
 				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Scan(request));
 			} while(!lastResponse.IsComplete());
@@ -250,13 +130,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		private Aws.ScanRequest BuildScanRequest()
+		private Aws.ScanRequest BuildScanCountRequest()
 		{
 			var request = new Aws.ScanRequest()
 			{
 				TableName = table.Name,
 				IndexName = index != null ? index.Name : null,
 				ExpressionAttributeNames = AwsAttributeNames.Get(filter),
+				Select = AwsEnums.Select.COUNT,
 			};
 			// No need to set Limit or ExclusiveStartKey, that will be handled by the first QueryResponse
 			if(filter != null)
@@ -264,22 +145,9 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(filter, values);
 			return request;
 		}
-		private Aws.ScanRequest BuildScanRequest(int segment, int totalSegments)
+		private Aws.ScanRequest BuildScanCountRequest(int segment, int totalSegments)
 		{
-			var request = BuildScanRequest();
-			request.Segment = segment;
-			request.TotalSegments = totalSegments;
-			return request;
-		}
-		private Aws.ScanRequest BuildCountRequest()
-		{
-			var request = BuildScanRequest();
-			request.Select = AwsEnums.Select.COUNT;
-			return request;
-		}
-		private Aws.ScanRequest BuildCountRequest(int segment, int totalSegments)
-		{
-			var request = BuildCountRequest();
+			var request = BuildScanCountRequest();
 			request.Segment = segment;
 			request.TotalSegments = totalSegments;
 			return request;

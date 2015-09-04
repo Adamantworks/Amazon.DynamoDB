@@ -21,26 +21,26 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface IQueryCountRangeSyntax
 	{
-		Task<int> AllKeysAsync(CancellationToken cancellationToken);
-		int AllKeys();
+		Task<long> AllKeysAsync(CancellationToken cancellationToken);
+		long AllKeys();
 
-		Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		int RangeKeyBeginsWith(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		long RangeKeyBeginsWith(DynamoDBKeyValue rangeKey);
 
-		Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		int RangeKeyEquals(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		long RangeKeyEquals(DynamoDBKeyValue rangeKey);
 
-		Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		int RangeKeyLessThan(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		int RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		long RangeKeyLessThan(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		long RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey);
 
-		Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		int RangeKeyGreaterThan(DynamoDBKeyValue rangeKey);
-		Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
-		int RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		long RangeKeyGreaterThan(DynamoDBKeyValue rangeKey);
+		Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken);
+		long RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey);
 
-		Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken);
-		int RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
+		Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken);
+		long RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive);
 	}
 }

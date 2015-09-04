@@ -55,138 +55,138 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 
 		#region AllKeys
-		public Task<int> AllKeysAsync(CancellationToken cancellationToken)
+		public Task<long> AllKeysAsync(CancellationToken cancellationToken)
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int AllKeys()
+		public long AllKeys()
 		{
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 		#endregion
 
 		#region RangeKeyBeginsWith
-		public Task<int> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBeginsWithAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int RangeKeyBeginsWith(DynamoDBKeyValue rangeKey)
+		public long RangeKeyBeginsWith(DynamoDBKeyValue rangeKey)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "BEGINS_WITH");
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 		#endregion
 
 		#region RangeKeyEquals
-		public Task<int> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyEqualsAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int RangeKeyEquals(DynamoDBKeyValue rangeKey)
+		public long RangeKeyEquals(DynamoDBKeyValue rangeKey)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "EQ");
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 		#endregion
 
 		#region RangeKeyLessThan(OrEqualTo)
-		public Task<int> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LT");
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int RangeKeyLessThan(DynamoDBKeyValue rangeKey)
+		public long RangeKeyLessThan(DynamoDBKeyValue rangeKey)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 
-		public Task<int> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyLessThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey)
+		public long RangeKeyLessThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "LE");
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 		#endregion
 
 		#region RangeKeyGreaterThan(OrEqualTo)
-		public Task<int> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int RangeKeyGreaterThan(DynamoDBKeyValue rangeKey)
+		public long RangeKeyGreaterThan(DynamoDBKeyValue rangeKey)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GT");
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 
-		public Task<int> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
+		public Task<long> RangeKeyGreaterThanOrEqualToAsync(DynamoDBKeyValue rangeKey, CancellationToken cancellationToken)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey)
+		public long RangeKeyGreaterThanOrEqualTo(DynamoDBKeyValue rangeKey)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			rangeKey.ToAws(keySchema.RangeKey, keyConditions, "GE");
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 		#endregion
 
 		#region RangeKeyBetween
-		public Task<int> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken)
+		public Task<long> RangeKeyBetweenAsync(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, CancellationToken cancellationToken)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			keySchema.RangeKey.Between(startInclusive, endExclusive, keyConditions);
-			return QueryAsync(keyConditions, cancellationToken);
+			return QueryCountAsync(keyConditions, cancellationToken);
 		}
 
-		public int RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
+		public long RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive)
 		{
 			CheckHasRangeKey();
 			var keyConditions = hashKey.ToAws(keySchema.HashKey);
 			keySchema.RangeKey.Between(startInclusive, endExclusive, keyConditions);
-			return Query(keyConditions);
+			return QueryCount(keyConditions);
 		}
 		#endregion
 
@@ -195,19 +195,29 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			if(keySchema.RangeKey == null)
 				throw new NotSupportedException("Can't specify range key condition for table or index without a range key");
 		}
-		private async Task<int> QueryAsync(Dictionary<string, Aws.Condition> keyConditions, CancellationToken cancellationToken)
+		private async Task<long> QueryCountAsync(Dictionary<string, Aws.Condition> keyConditions, CancellationToken cancellationToken)
 		{
-			var request = BuildQueryRequest(keyConditions);
-			var response = await table.Region.DB.QueryAsync(request, cancellationToken);
-			return response.Count;
+			var request = BuildQueryCountRequest(keyConditions);
+			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				lastResponse = new QueryResponse(lastResponse, await table.Region.DB.QueryAsync(request, cancellationToken).ConfigureAwait(false));
+			} while(!lastResponse.IsComplete());
+			return lastResponse.Count;
 		}
-		private int Query(Dictionary<string, Aws.Condition> keyConditions)
+		private long QueryCount(Dictionary<string, Aws.Condition> keyConditions)
 		{
-			var request = BuildQueryRequest(keyConditions);
-			var response = table.Region.DB.Query(request);
-			return response.Count;
+			var request = BuildQueryCountRequest(keyConditions);
+			var lastResponse = new QueryResponse(null, null, table.Schema.Key, index != null ? index.Schema.Key : null);
+			do
+			{
+				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
+				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Query(request));
+			} while(!lastResponse.IsComplete());
+			return lastResponse.Count;
 		}
-		private Aws.QueryRequest BuildQueryRequest(Dictionary<string, Aws.Condition> keyConditions)
+		private Aws.QueryRequest BuildQueryCountRequest(Dictionary<string, Aws.Condition> keyConditions)
 		{
 			var request = new Aws.QueryRequest()
 			{
