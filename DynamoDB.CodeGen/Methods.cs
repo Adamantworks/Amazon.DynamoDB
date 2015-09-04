@@ -25,25 +25,25 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			Params.GenOverloads(Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
 
 		public static readonly Method Scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-			Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.Filter, Params.Values)
+			Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.Projection, Params.Filter, Params.Values)
 			.Where(Params.NoValuesWithoutFilter));
 
 		public static readonly Method ScanCount = new Method("IScanCountOptionsSyntax", "ScanCount", "new ScanCountContext",
-			Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.Filter, Params.Values)
+			Params.GenOverloads(true, Args.Table, Args.IndexNone, Params.Filter, Params.Values)
 			.Where(Params.NoValuesWithoutFilter));
 
 		public static readonly Method Query = new Method("IReverseSyntax", "Query", "new QueryContext",
-			Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKey, Params.Filter, Params.Values)
-			.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
-			.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKeyObject, Params.Filter, Params.Values))
-			.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ProjectionArg, Params.ConsistentArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+			Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.Projection, Args.ConsistentRead, Params.HashKey, Params.Filter, Params.Values)
+			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.Projection, Args.ConsistentRead, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.Projection, Args.ConsistentRead, Params.HashKeyObject, Params.Filter, Params.Values))
+			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.Projection, Args.ConsistentRead, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 			.Where(Params.NoValuesWithoutFilter));
 
 		public static readonly Method QueryCount = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
-			Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKey, Params.Filter, Params.Values)
-			.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
-			.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKeyObject, Params.Filter, Params.Values))
-			.Concat(Params.GenOverloads(true, Params.TableArg, Params.IndexNoneArg, Params.ConsistentArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+			Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.HashKey, Params.Filter, Params.Values)
+			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.HashKeyObject, Params.Filter, Params.Values))
+			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 			.Where(Params.NoValuesWithoutFilter));
 	}
 }

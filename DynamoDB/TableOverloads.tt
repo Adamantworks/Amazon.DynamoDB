@@ -45,29 +45,29 @@
 		.Concat(Params.GenOverloads(true, Params.OuterItemsAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)));
 	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
 		Params.GenOverloads(true, Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
-	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext", Params.GenOverloads(true, Params.ThisArg,  Params.KeyOverloads));
+	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext", Params.GenOverloads(true, Args.This,  Params.KeyOverloads));
 	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
 		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem, Params.CancellationToken));
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
 		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem));
-	var update = new Method("IForKeySyntax", "Update", "new UpdateContext", Params.GenOverloads(true, Params.ThisArg, Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
+	var update = new Method("IForKeySyntax", "Update", "new UpdateContext", Params.GenOverloads(true, Args.This, Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
-		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
-		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Args.ConsistentNone, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Args.ConsistentNone, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Args.ConsistentNone, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Args.ConsistentNone, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 		.Where(Params.NoValuesWithoutFilter));
 	var queryCountForwards = new Method("IQueryCountRangeSyntax", "QueryCount", "new QueryCountContext",
-		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
-		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKeyObject, Params.Filter, Params.Values))
-		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ConsistentNoneArg, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
+		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ConsistentNone, Params.HashKey, Params.Filter, Params.Values)
+		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ConsistentNone, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ConsistentNone, Params.HashKeyObject, Params.Filter, Params.Values))
+		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ConsistentNone, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 		.Where(Params.NoValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.Filter, Params.Values)
+		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
 	var scanCountForwards = new Method("IScanCountOptionsSyntax", "ScanCount", "new ScanCountContext",
-		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.Filter, Params.Values)
+		Params.GenOverloads(true, Args.This, Args.IndexNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
 	var batchDelete = new Method("void", "Delete",
 			Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
