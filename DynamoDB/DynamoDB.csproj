@@ -60,6 +60,7 @@
     <Compile Include="Contexts\QueryCountContext.cs" />
     <Compile Include="Contexts\ScanCountContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
+    <Compile Include="Contexts\UpdateContext.cs" />
     <Compile Include="Converters\Basic\ArrayConverter.cs" />
     <Compile Include="Converters\Basic\CastConverter.cs" />
     <Compile Include="Converters\Basic\ImmutableByteArrayBinaryConverter.cs" />
@@ -91,6 +92,7 @@
       <DependentUpon>RegionOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Syntax\IConsistentQuerySyntax.cs" />
+    <Compile Include="Syntax\IForKeySyntax.cs" />
     <Compile Include="Syntax\IGetSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

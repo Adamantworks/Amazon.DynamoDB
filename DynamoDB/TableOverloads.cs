@@ -442,6 +442,25 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
+		#region Update
+		public IForKeySyntax Update(UpdateExpression update)
+		{
+			return new UpdateContext(this, update, null, UpdateReturnValue.None);
+		}
+		public IForKeySyntax Update(UpdateExpression update, Values values)
+		{
+			return new UpdateContext(this, update, values, UpdateReturnValue.None);
+		}
+		public IForKeySyntax Update(UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return new UpdateContext(this, update, null, returnValue);
+		}
+		public IForKeySyntax Update(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return new UpdateContext(this, update, values, returnValue);
+		}
+		#endregion
+
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{

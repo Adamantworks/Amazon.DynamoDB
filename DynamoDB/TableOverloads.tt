@@ -50,6 +50,7 @@
 		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem, Params.CancellationToken));
 	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
 		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem));
+	var update = new Method("IForKeySyntax", "Update", "new UpdateContext", Params.GenOverloads(true, Params.ThisArg, Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
 		Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.Filter, Params.Values)
 		.Concat(Params.GenOverloads(true, Params.ThisArg, Params.IndexNoneArg, Params.ProjectionNoneArg, Params.ConsistentNoneArg, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
@@ -124,6 +125,8 @@ namespace Adamantworks.Amazon.DynamoDB
 <#=		putAsyncForwards.GenMethods() #>
 
 <#=		putForwards.GenMethods() #>
+
+<#=		update.GenMethods() #>
 
 <#=		queryForwards.GenMethods() #>
 
