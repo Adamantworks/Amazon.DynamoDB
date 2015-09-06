@@ -45,5 +45,36 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.HashKeyObject, Params.Filter, Params.Values))
 			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 			.Where(Params.NoValuesWithoutFilter));
+
+		// Query Count Range
+		public static readonly Method CountAllKeysAsync = new Method("Task<long>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
+		public static readonly Method CountRangeKeyBeginsWithAsync = new Method("Task<long>", "RangeKeyBeginsWithAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method CountRangeKeyBeginsWith = new Method("long", "RangeKeyBeginsWith",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method CountRangeKeyEqualsAsync = new Method("Task<long>", "RangeKeyEqualsAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method CountRangeKeyEquals = new Method("long", "RangeKeyEquals",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method CountRangeKeyLessThanAsync = new Method("Task<long>", "RangeKeyLessThanAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method CountRangeKeyLessThan = new Method("long", "RangeKeyLessThan",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method CountRangeKeyLessThanOrEqualToAsync = new Method("Task<long>", "RangeKeyLessThanOrEqualToAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method CountRangeKeyLessThanOrEqualTo = new Method("long", "RangeKeyLessThanOrEqualTo",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method CountRangeKeyGreaterThanAsync = new Method("Task<long>", "RangeKeyGreaterThanAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method CountRangeKeyGreaterThan = new Method("long", "RangeKeyGreaterThan",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method CountRangeKeyGreaterThanOrEqualToAsync = new Method("Task<long>", "RangeKeyGreaterThanOrEqualToAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method CountRangeKeyGreaterThanOrEqualTo = new Method("long", "RangeKeyGreaterThanOrEqualTo",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method CountRangeKeyBetweenAsync = new Method("Task<long>", "RangeKeyBetweenAsync",
+			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.CancellationToken));
+		public static readonly Method CountRangeKeyBetween = new Method("long", "RangeKeyBetween",
+			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
 	}
 }

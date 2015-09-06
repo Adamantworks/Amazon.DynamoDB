@@ -106,37 +106,6 @@
 	var rangeKeyBetweenPaged = new Method("ItemPage", "RangeKeyBetween",
 		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
 
-	// Query Count Range
-	var countAllKeysAsync = new Method("Task<long>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
-	var countRangeKeyBeginsWithAsync = new Method("Task<long>", "RangeKeyBeginsWithAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var countRangeKeyBeginsWith = new Method("long", "RangeKeyBeginsWith",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var countRangeKeyEqualsAsync = new Method("Task<long>", "RangeKeyEqualsAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var countRangeKeyEquals = new Method("long", "RangeKeyEquals",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var countRangeKeyLessThanAsync = new Method("Task<long>", "RangeKeyLessThanAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var countRangeKeyLessThan = new Method("long", "RangeKeyLessThan",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var countRangeKeyLessThanOrEqualToAsync = new Method("Task<long>", "RangeKeyLessThanOrEqualToAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var countRangeKeyLessThanOrEqualTo = new Method("long", "RangeKeyLessThanOrEqualTo",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var countRangeKeyGreaterThanAsync = new Method("Task<long>", "RangeKeyGreaterThanAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var countRangeKeyGreaterThan = new Method("long", "RangeKeyGreaterThan",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var countRangeKeyGreaterThanOrEqualToAsync = new Method("Task<long>", "RangeKeyGreaterThanOrEqualToAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var countRangeKeyGreaterThanOrEqualTo = new Method("long", "RangeKeyGreaterThanOrEqualTo",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var countRangeKeyBetweenAsync = new Method("Task<long>", "RangeKeyBetweenAsync",
-		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.CancellationToken));
-	var countRangeKeyBetween = new Method("long", "RangeKeyBetween",
-		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
-
 	// Scan Options Paged
 	var scanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", Params.GenOverloads(Params.CancellationToken));
 	var scanSegmentAsyncPaged = new Method("Task<ItemPage>", "SegmentAsync", Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.CancellationToken));
@@ -200,31 +169,7 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#=		put.GenInterface() #>
 	}
 
-	public partial interface IQueryCountRangeSyntax
-	{
-<#=		countAllKeysAsync.GenInterface() #>
 
-<#=		countRangeKeyBeginsWithAsync.GenInterface() #>
-<#=		countRangeKeyBeginsWith.GenInterface() #>
-
-<#=		countRangeKeyEqualsAsync.GenInterface() #>
-<#=		countRangeKeyEquals.GenInterface() #>
-
-<#=		countRangeKeyLessThanAsync.GenInterface() #>
-<#=		countRangeKeyLessThan.GenInterface() #>
-
-<#=		countRangeKeyLessThanOrEqualToAsync.GenInterface() #>
-<#=		countRangeKeyLessThanOrEqualTo.GenInterface() #>
-
-<#=		countRangeKeyGreaterThanAsync.GenInterface() #>
-<#=		countRangeKeyGreaterThan.GenInterface() #>
-
-<#=		countRangeKeyGreaterThanOrEqualToAsync.GenInterface() #>
-<#=		countRangeKeyGreaterThanOrEqualTo.GenInterface() #>
-
-<#=		countRangeKeyBetweenAsync.GenInterface() #>
-<#=		countRangeKeyBetween.GenInterface() #>
-	}
 
 	public partial interface IQueryRangeSyntax
 	{
@@ -362,35 +307,35 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 	internal partial class QueryCountContext
 	{
-<#=		countAllKeysAsync.GenMethods() #>
+<#=		Methods.CountAllKeysAsync.GenMethods() #>
 
-<#=		countRangeKeyBeginsWithAsync.GenMethods() #>
+<#=		Methods.CountRangeKeyBeginsWithAsync.GenMethods() #>
 
-<#=		countRangeKeyBeginsWith.GenMethods() #>
+<#=		Methods.CountRangeKeyBeginsWith.GenMethods() #>
 
-<#=		countRangeKeyEqualsAsync.GenMethods() #>
+<#=		Methods.CountRangeKeyEqualsAsync.GenMethods() #>
 
-<#=		countRangeKeyEquals.GenMethods() #>
+<#=		Methods.CountRangeKeyEquals.GenMethods() #>
 
-<#=		countRangeKeyLessThanAsync.GenMethods() #>
+<#=		Methods.CountRangeKeyLessThanAsync.GenMethods() #>
 
-<#=		countRangeKeyLessThan.GenMethods() #>
+<#=		Methods.CountRangeKeyLessThan.GenMethods() #>
 
-<#=		countRangeKeyLessThanOrEqualToAsync.GenMethods() #>
+<#=		Methods.CountRangeKeyLessThanOrEqualToAsync.GenMethods() #>
 
-<#=		countRangeKeyLessThanOrEqualTo.GenMethods() #>
+<#=		Methods.CountRangeKeyLessThanOrEqualTo.GenMethods() #>
 
-<#=		countRangeKeyGreaterThanAsync.GenMethods() #>
+<#=		Methods.CountRangeKeyGreaterThanAsync.GenMethods() #>
 
-<#=		countRangeKeyGreaterThan.GenMethods() #>
+<#=		Methods.CountRangeKeyGreaterThan.GenMethods() #>
 
-<#=		countRangeKeyGreaterThanOrEqualToAsync.GenMethods() #>
+<#=		Methods.CountRangeKeyGreaterThanOrEqualToAsync.GenMethods() #>
 
-<#=		countRangeKeyGreaterThanOrEqualTo.GenMethods() #>
+<#=		Methods.CountRangeKeyGreaterThanOrEqualTo.GenMethods() #>
 
-<#=		countRangeKeyBetweenAsync.GenMethods() #>
+<#=		Methods.CountRangeKeyBetweenAsync.GenMethods() #>
 
-<#=		countRangeKeyBetween.GenMethods() #>
+<#=		Methods.CountRangeKeyBetween.GenMethods() #>
 	}
 
 	internal partial class ScanContext
