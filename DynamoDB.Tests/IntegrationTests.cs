@@ -120,7 +120,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				await PagedScanAsync(table, 52).ConfigureAwait(false);
 
 				Thread.Sleep(TimeSpan.FromSeconds(1));
-				var count = await table.Scan().CountAllAsync().ConfigureAwait(false);
+				var count = await table.ScanCount().AllAsync().ConfigureAwait(false);
 				Assert.AreEqual(513, count);
 
 				var globalIndex = table.Indexes["global"];
@@ -217,7 +217,7 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				PagedScan(table, 52);
 
 				Thread.Sleep(TimeSpan.FromSeconds(1));
-				var count = table.Scan().CountAll();
+				var count = table.ScanCount().All();
 				Assert.AreEqual(513, count);
 
 				var globalIndex = table.Indexes["global"];

@@ -122,6 +122,11 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 		public static readonly Method ScanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", Params.GenOverloads(Params.CancellationToken));
 		public static readonly Method ScanSegmentAsyncPaged = new Method("Task<ItemPage>", "SegmentAsync", Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.CancellationToken));
 
+		public static readonly Method ScanAllAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllAsync",
+			Params.GenOverloads(Params.ReadAhead));
+		public static readonly Method ScanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
+			Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.ReadAhead));
+
 		public static readonly Method PutAsync = new Method("Task<DynamoDBMap>", "PutAsync",
 		Params.GenOverloads(Params.Item, Params.ReturnOldItem, Params.CancellationToken));
 		public static readonly Method Put = new Method("DynamoDBMap", "Put",

@@ -27,10 +27,6 @@
 		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.CancellationToken));
 	var tryUpdate = new Method("bool", "TryUpdate",
 		Params.GenOverloads(Params.UpdateExp, Params.Values));
-	var scanAllAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllAsync",
-		Params.GenOverloads(Params.ReadAhead));
-	var scanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
-		Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.ReadAhead));
 
 	// Query Range
 	var allKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", Params.GenOverloads(Params.ReadAhead));
@@ -98,13 +94,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 
 <#=		rangeKeyBetweenAsync.GenInterface() #>
 <#=		rangeKeyBetween.GenInterface() #>
-	}
-
-	public partial interface IScanOptionsSyntax
-	{
-<#=		scanAllAsync.GenInterface() #>
-
-<#=		scanSegmentAsync.GenInterface() #>
 	}
 
 	public partial interface ITryModifySyntax
@@ -192,16 +181,5 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#=		Methods.RangeKeyBetweenAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
 <#=		Methods.RangeKeyBetweenPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
-	}
-
-	internal partial class ScanContext
-	{
-<#=		scanAllAsync.GenMethods() #>
-
-<#=		Methods.ScanAllAsyncPaged.GenExplicitImplementations("IPagedScanOptionsSyntax") #>
-
-<#=		scanSegmentAsync.GenMethods() #>
-
-<#=		Methods.ScanSegmentAsyncPaged.GenExplicitImplementations("IPagedScanOptionsSyntax") #>
 	}
 }

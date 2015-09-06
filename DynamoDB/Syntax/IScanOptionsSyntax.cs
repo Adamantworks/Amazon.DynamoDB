@@ -62,25 +62,5 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		/// Note: this method is always ReadAhead.All and doesn't return results in order
 		/// </summary>
 		IEnumerable<DynamoDBMap> InParallel();
-
-		[Obsolete("Use ScanCount().AllAsync() instead")]
-		Task<long> CountAllAsync();
-		[Obsolete("Use ScanCount().All() instead")]
-		long CountAll();
-
-		[Obsolete("Use ScanCount().SegmentAsync() instead")]
-		Task<long> CountSegmentAsync(int segment, int totalSegments);
-		[Obsolete("Use ScanCount().Segment() instead")]
-		long CountSegment(int segment, int totalSegments);
-
-		[Obsolete("Use ScanCount().InParallelAsync() instead")]
-		Task<long> CountInParallelAsync(int totalSegments);
-		[Obsolete("Use ScanCount().InParallel() instead")]
-		long CountInParallel(int totalSegments);
-
-		[Obsolete("Use ScanCount().InParallelAsync() instead")]
-		Task<long> CountInParallelAsync();
-		[Obsolete("Use ScanCount().InParallel() instead")]
-		long CountInParallel();
 	}
 }

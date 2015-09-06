@@ -56,6 +56,11 @@
     <Compile Include="BatchWrite.cs" />
     <Compile Include="Composite.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Contexts\ScanContextOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ScanContextOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\TableReadContextOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -119,6 +124,11 @@
     <Compile Include="Syntax\IIndexConsistentSyntax.cs" />
     <Compile Include="Syntax\IForKeySyntax.cs" />
     <Compile Include="Syntax\IIndexReadSyntax.cs" />
+    <Compile Include="Syntax\IScanOptionsSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IScanOptionsSyntaxOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Syntax\ITableFromSyntax.cs" />
     <Compile Include="Syntax\ITableReadSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
@@ -253,6 +263,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Contexts\ScanContextOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ScanContextOverloads.cs</LastGenOutput>
+    </Content>
     <Content Include="Contexts\TableReadContextOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TableReadContextOverloads.cs</LastGenOutput>
@@ -276,6 +290,10 @@
     <Content Include="RegionOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RegionOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\IScanOptionsSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IScanOptionsSyntaxOverloads.cs</LastGenOutput>
     </Content>
     <Content Include="Syntax\ITableReadSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

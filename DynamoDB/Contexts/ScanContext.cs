@@ -262,96 +262,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region CountAll
-		public async Task<long> CountAllAsync()
-		{
-			var request = BuildCountRequest();
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
-			do
-			{
-				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
-					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, await table.Region.DB.ScanAsync(request).ConfigureAwait(false));
-			} while(!lastResponse.IsComplete());
-			return lastResponse.Count;
-		}
-
-		public long CountAll()
-		{
-			var request = BuildCountRequest();
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
-			do
-			{
-				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
-					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Scan(request));
-			} while(!lastResponse.IsComplete());
-			return lastResponse.Count;
-		}
-		#endregion
-
-		#region CountSegment
-		public async Task<long> CountSegmentAsync(int segment, int totalSegments)
-		{
-			var request = BuildCountRequest(segment, totalSegments);
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
-			do
-			{
-				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
-					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, await table.Region.DB.ScanAsync(request).ConfigureAwait(false));
-			} while(!lastResponse.IsComplete());
-			return lastResponse.Count;
-		}
-
-		public long CountSegment(int segment, int totalSegments)
-		{
-			var request = BuildCountRequest(segment, totalSegments);
-			var lastResponse = new QueryResponse(limit, exclusiveStartKey, table.Schema.Key, index != null ? index.Schema.Key : null);
-			do
-			{
-				request.ExclusiveStartKey = lastResponse.LastEvaluatedKey;
-				if(limit != null)
-					request.Limit = lastResponse.CurrentLimit;
-				lastResponse = new QueryResponse(lastResponse, table.Region.DB.Scan(request));
-			} while(!lastResponse.IsComplete());
-			return lastResponse.Count;
-		}
-		#endregion
-
-		#region CountInParallel
-		public async Task<long> CountInParallelAsync(int totalSegments)
-		{
-			if(totalSegments == 1) return await CountAllAsync();
-
-			var segmentCountTasks = Enumerable.Range(0, totalSegments)
-				.Select(segment => CountSegmentAsync(segment, totalSegments));
-			var segmentCounts = await Task.WhenAll(segmentCountTasks).ConfigureAwait(false);
-			return segmentCounts.Sum();
-		}
-		public long CountInParallel(int totalSegments)
-		{
-			if(totalSegments == 1) return CountAll();
-
-			var segmentCountTasks = Enumerable.Range(0, totalSegments)
-				.Select(segment => CountSegmentAsync(segment, totalSegments));
-			var segmentCounts = Task.WhenAll(segmentCountTasks).WaitAndUnwrapException();
-			return segmentCounts.Sum();
-		}
-
-		public Task<long> CountInParallelAsync()
-		{
-			return CountInParallelAsync(EstimateScanSegments());
-		}
-		public long CountInParallel()
-		{
-			return CountInParallel(EstimateScanSegments());
-		}
-		#endregion
-
 		private Aws.ScanRequest BuildScanRequest()
 		{
 			var request = new Aws.ScanRequest()
@@ -372,19 +282,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private Aws.ScanRequest BuildScanRequest(int segment, int totalSegments)
 		{
 			var request = BuildScanRequest();
-			request.Segment = segment;
-			request.TotalSegments = totalSegments;
-			return request;
-		}
-		private Aws.ScanRequest BuildCountRequest()
-		{
-			var request = BuildScanRequest();
-			request.Select = AwsEnums.Select.COUNT;
-			return request;
-		}
-		private Aws.ScanRequest BuildCountRequest(int segment, int totalSegments)
-		{
-			var request = BuildCountRequest();
 			request.Segment = segment;
 			request.TotalSegments = totalSegments;
 			return request;

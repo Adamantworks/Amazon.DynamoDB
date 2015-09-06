@@ -117,13 +117,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
 	}
 
-	public partial interface IScanOptionsSyntax
-	{
-		IAsyncEnumerable<DynamoDBMap> AllAsync();
-
-		IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments);
-	}
-
 	public partial interface ITryModifySyntax
 	{
 		Task<bool> TryUpdateAsync(UpdateExpression update);
@@ -981,37 +974,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		ItemPage IPagedQueryRangeSyntax.RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter)
 		{
 			return ((IPagedQueryRangeSyntax)this).RangeKeyBetween(startInclusive, endExclusive);
-		}
-		#endregion
-	}
-
-	internal partial class ScanContext
-	{
-		#region AllAsync
-		public IAsyncEnumerable<DynamoDBMap> AllAsync()
-		{
-			return AllAsync(ReadAhead.Some);
-		}
-		#endregion
-
-		#region IPagedScanOptionsSyntax.AllAsync
-		Task<ItemPage> IPagedScanOptionsSyntax.AllAsync()
-		{
-			return ((IPagedScanOptionsSyntax)this).AllAsync(CancellationToken.None);
-		}
-		#endregion
-
-		#region SegmentAsync
-		public IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments)
-		{
-			return SegmentAsync(segment, totalSegments, ReadAhead.Some);
-		}
-		#endregion
-
-		#region IPagedScanOptionsSyntax.SegmentAsync
-		Task<ItemPage> IPagedScanOptionsSyntax.SegmentAsync(int segment, int totalSegments)
-		{
-			return ((IPagedScanOptionsSyntax)this).SegmentAsync(segment, totalSegments, CancellationToken.None);
 		}
 		#endregion
 	}
