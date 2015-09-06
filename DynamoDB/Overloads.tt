@@ -23,22 +23,10 @@
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 <#
 	// Syntax
-	var putAsync = new Method("Task<DynamoDBMap>", "PutAsync",
-		Params.GenOverloads(Params.Item, Params.ReturnOldItem, Params.CancellationToken));
-	var put = new Method("DynamoDBMap", "Put",
-		Params.GenOverloads(Params.Item, Params.ReturnOldItem));
-	var updateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
-		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue, Params.CancellationToken));
-	var update = new Method("DynamoDBMap", "Update",
-		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
 	var tryUpdateAsync = new Method("Task<bool>", "TryUpdateAsync",
 		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.CancellationToken));
 	var tryUpdate = new Method("bool", "TryUpdate",
 		Params.GenOverloads(Params.UpdateExp, Params.Values));
-	var deleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
-		Params.GenOverloads(Params.ReturnOldItem, Params.CancellationToken));
-	var delete = new Method("DynamoDBMap", "Delete",
-		Params.GenOverloads(Params.ReturnOldItem));
 	var scanAllAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllAsync",
 		Params.GenOverloads(Params.ReadAhead));
 	var scanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
@@ -74,41 +62,6 @@
 		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.ReadAhead));
 	var rangeKeyBetween = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBetween",
 		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
-
-	// Query Range Paged
-	var allKeysAsyncPaged = new Method("Task<ItemPage>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
-	var rangeKeyBeginsWithAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBeginsWithAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var rangeKeyBeginsWithPaged = new Method("ItemPage", "RangeKeyBeginsWith",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyEqualsAsyncPaged = new Method("Task<ItemPage>", "RangeKeyEqualsAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var rangeKeyEqualsPaged = new Method("ItemPage", "RangeKeyEquals",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyLessThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var rangeKeyLessThanPaged = new Method("ItemPage", "RangeKeyLessThan",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyLessThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanOrEqualToAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var rangeKeyLessThanOrEqualToPaged = new Method("ItemPage", "RangeKeyLessThanOrEqualTo",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyGreaterThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var rangeKeyGreaterThanPaged = new Method("ItemPage", "RangeKeyGreaterThan",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyGreaterThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanOrEqualToAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
-	var rangeKeyGreaterThanOrEqualToPaged = new Method("ItemPage", "RangeKeyGreaterThanOrEqualTo",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyBetweenAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBetweenAsync",
-		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.CancellationToken));
-	var rangeKeyBetweenPaged = new Method("ItemPage", "RangeKeyBetween",
-		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
-
-	// Scan Options Paged
-	var scanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", Params.GenOverloads(Params.CancellationToken));
-	var scanSegmentAsyncPaged = new Method("Task<ItemPage>", "SegmentAsync", Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.CancellationToken));
 #>
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
@@ -121,56 +74,6 @@ using System.Threading.Tasks;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IModifySyntax
-	{
-<#=		updateAsync.GenInterface() #>
-<#=		update.GenInterface() #>
-
-<#=		deleteAsync.GenInterface() #>
-<#=		delete.GenInterface() #>
-	}
-
-	public partial interface IPagedQueryRangeSyntax
-	{
-<#=		allKeysAsyncPaged.GenInterface() #>
-
-<#=		rangeKeyBeginsWithAsyncPaged.GenInterface() #>
-<#=		rangeKeyBeginsWithPaged.GenInterface() #>
-
-<#=		rangeKeyEqualsAsyncPaged.GenInterface() #>
-<#=		rangeKeyEqualsPaged.GenInterface() #>
-
-<#=		rangeKeyLessThanAsyncPaged.GenInterface() #>
-<#=		rangeKeyLessThanPaged.GenInterface() #>
-
-<#=		rangeKeyLessThanOrEqualToAsyncPaged.GenInterface() #>
-<#=		rangeKeyLessThanOrEqualToPaged.GenInterface() #>
-
-<#=		rangeKeyGreaterThanAsyncPaged.GenInterface() #>
-<#=		rangeKeyGreaterThanPaged.GenInterface() #>
-
-<#=		rangeKeyGreaterThanOrEqualToAsyncPaged.GenInterface() #>
-<#=		rangeKeyGreaterThanOrEqualToPaged.GenInterface() #>
-
-<#=		rangeKeyBetweenAsyncPaged.GenInterface() #>
-<#=		rangeKeyBetweenPaged.GenInterface() #>
-	}
-
-	public partial interface IPagedScanOptionsSyntax
-	{
-<#=		scanAllAsyncPaged.GenInterface() #>
-
-<#=		scanSegmentAsyncPaged.GenInterface() #>
-	}
-
-	public partial interface IPutSyntax
-	{
-<#=		putAsync.GenInterface() #>
-<#=		put.GenInterface() #>
-	}
-
-
-
 	public partial interface IQueryRangeSyntax
 	{
 <#=		allKeysAsync.GenInterface() #>
@@ -222,24 +125,24 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
 	internal partial class ModifyContext
 	{
-<#=		updateAsync.GenMethods() #>
+<#=		Methods.UpdateAsync.GenMethods() #>
 
-<#=		update.GenMethods() #>
+<#=		Methods.Update.GenMethods() #>
 
 <#=		tryUpdateAsync.GenMethods() #>
 
 <#=		tryUpdate.GenMethods() #>
 
-<#=		deleteAsync.GenMethods() #>
+<#=		Methods.DeleteAsync.GenMethods() #>
 
-<#=		delete.GenMethods() #>
+<#=		Methods.Delete.GenMethods() #>
 	}
 
 	internal partial class PutContext
 	{
-<#=		putAsync.GenMethods() #>
+<#=		Methods.PutAsync.GenMethods() #>
 
-<#=		put.GenMethods() #>
+<#=		Methods.Put.GenMethods() #>
 	}
 
 	internal partial class QueryContext
@@ -274,45 +177,45 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 <#=		rangeKeyBetween.GenMethods() #>
 
-<#=		allKeysAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.AllKeysAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyBeginsWithAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyBeginsWithAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyBeginsWithPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyBeginsWithPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyEqualsAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyEqualsAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyEqualsPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyEqualsPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyLessThanAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyLessThanAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyLessThanPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyLessThanPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyLessThanOrEqualToAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyLessThanOrEqualToAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyLessThanOrEqualToPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyLessThanOrEqualToPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyGreaterThanAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyGreaterThanAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyGreaterThanPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyGreaterThanPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyGreaterThanOrEqualToAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyGreaterThanOrEqualToAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyGreaterThanOrEqualToPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyGreaterThanOrEqualToPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyBetweenAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyBetweenAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 
-<#=		rangeKeyBetweenPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
+<#=		Methods.RangeKeyBetweenPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 	}
 
 	internal partial class ScanContext
 	{
 <#=		scanAllAsync.GenMethods() #>
 
-<#=		scanAllAsyncPaged.GenExplicitImplementations("IPagedScanOptionsSyntax") #>
+<#=		Methods.ScanAllAsyncPaged.GenExplicitImplementations("IPagedScanOptionsSyntax") #>
 
 <#=		scanSegmentAsync.GenMethods() #>
 
-<#=		scanSegmentAsyncPaged.GenExplicitImplementations("IPagedScanOptionsSyntax") #>
+<#=		Methods.ScanSegmentAsyncPaged.GenExplicitImplementations("IPagedScanOptionsSyntax") #>
 	}
 }

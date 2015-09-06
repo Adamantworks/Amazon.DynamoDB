@@ -76,5 +76,55 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.CancellationToken));
 		public static readonly Method CountRangeKeyBetween = new Method("long", "RangeKeyBetween",
 			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
+
+		public static readonly Method UpdateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
+			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue, Params.CancellationToken));
+		public static readonly Method Update = new Method("DynamoDBMap", "Update",
+			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
+
+		public static readonly Method DeleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
+			Params.GenOverloads(Params.ReturnOldItem, Params.CancellationToken));
+		public static readonly Method Delete = new Method("DynamoDBMap", "Delete",
+			Params.GenOverloads(Params.ReturnOldItem));
+
+		// Query Range Paged
+		public static readonly Method AllKeysAsyncPaged = new Method("Task<ItemPage>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
+		public static readonly Method RangeKeyBeginsWithAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBeginsWithAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method RangeKeyBeginsWithPaged = new Method("ItemPage", "RangeKeyBeginsWith",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyEqualsAsyncPaged = new Method("Task<ItemPage>", "RangeKeyEqualsAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method RangeKeyEqualsPaged = new Method("ItemPage", "RangeKeyEquals",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyLessThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method RangeKeyLessThanPaged = new Method("ItemPage", "RangeKeyLessThan",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyLessThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyLessThanOrEqualToAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method RangeKeyLessThanOrEqualToPaged = new Method("ItemPage", "RangeKeyLessThanOrEqualTo",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyGreaterThanAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method RangeKeyGreaterThanPaged = new Method("ItemPage", "RangeKeyGreaterThan",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyGreaterThanOrEqualToAsyncPaged = new Method("Task<ItemPage>", "RangeKeyGreaterThanOrEqualToAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.CancellationToken));
+		public static readonly Method RangeKeyGreaterThanOrEqualToPaged = new Method("ItemPage", "RangeKeyGreaterThanOrEqualTo",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyBetweenAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBetweenAsync",
+			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.CancellationToken));
+		public static readonly Method RangeKeyBetweenPaged = new Method("ItemPage", "RangeKeyBetween",
+			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
+
+		// Scan Options Paged
+		public static readonly Method ScanAllAsyncPaged = new Method("Task<ItemPage>", "AllAsync", Params.GenOverloads(Params.CancellationToken));
+		public static readonly Method ScanSegmentAsyncPaged = new Method("Task<ItemPage>", "SegmentAsync", Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.CancellationToken));
+
+		public static readonly Method PutAsync = new Method("Task<DynamoDBMap>", "PutAsync",
+		Params.GenOverloads(Params.Item, Params.ReturnOldItem, Params.CancellationToken));
+		public static readonly Method Put = new Method("DynamoDBMap", "Put",
+			Params.GenOverloads(Params.Item, Params.ReturnOldItem));
 	}
 }

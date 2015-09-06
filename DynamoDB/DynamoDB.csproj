@@ -120,7 +120,22 @@
     </Compile>
     <Compile Include="Syntax\IIfSyntax.cs" />
     <Compile Include="Syntax\IModifySyntax.cs" />
+    <Compile Include="Syntax\IModifySyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IModifySyntaxOverloads.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Syntax\IPagedQueryRangeSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IPagedQueryRangeSyntaxOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Syntax\IPagedScanOptionsSyntax.cs" />
+    <Compile Include="Syntax\IPagedScanOptionsSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IPagedScanOptionsSyntaxOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Syntax\IPutSyntax.cs" />
     <Compile Include="Contexts\GetContext.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
@@ -144,6 +159,11 @@
     <Compile Include="ProvisionedThroughput.cs" />
     <Compile Include="ReadAhead.cs" />
     <Compile Include="Schema\IndexProjectionType.cs" />
+    <Compile Include="Syntax\IPutSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IPutSyntaxOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Syntax\IQueryCountRangeSyntax.cs" />
     <Compile Include="Syntax\IQueryCountRangeSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
@@ -251,6 +271,22 @@
     <Content Include="Syntax\IGetSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IGetSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\IModifySyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IModifySyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\IPagedQueryRangeSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IPagedQueryRangeSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\IPagedScanOptionsSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IPagedScanOptionsSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\IPutSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IPutSyntaxOverloads.cs</LastGenOutput>
     </Content>
     <Content Include="Syntax\IQueryCountRangeSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
