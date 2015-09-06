@@ -68,6 +68,11 @@
       <DependentUpon>IndexContextOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\QueryCountContext.cs" />
+    <Compile Include="Contexts\QueryCountContextOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QueryCountContextOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\ScanCountContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
     <Compile Include="Contexts\UpdateContext.cs" />
@@ -230,6 +235,10 @@
     <Content Include="Contexts\IndexContextOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IndexContextOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Contexts\QueryCountContextOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QueryCountContextOverloads.cs</LastGenOutput>
     </Content>
     <Content Include="IndexOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

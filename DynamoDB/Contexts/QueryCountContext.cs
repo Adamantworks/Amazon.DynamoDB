@@ -26,7 +26,6 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class QueryCountContext : IQueryCountRangeSyntax
 	{
 		private readonly Table table;

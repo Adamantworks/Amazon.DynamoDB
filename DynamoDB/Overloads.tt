@@ -305,39 +305,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#=		rangeKeyBetweenPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 	}
 
-	internal partial class QueryCountContext
-	{
-<#=		Methods.CountAllKeysAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyBeginsWithAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyBeginsWith.GenMethods() #>
-
-<#=		Methods.CountRangeKeyEqualsAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyEquals.GenMethods() #>
-
-<#=		Methods.CountRangeKeyLessThanAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyLessThan.GenMethods() #>
-
-<#=		Methods.CountRangeKeyLessThanOrEqualToAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyLessThanOrEqualTo.GenMethods() #>
-
-<#=		Methods.CountRangeKeyGreaterThanAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyGreaterThan.GenMethods() #>
-
-<#=		Methods.CountRangeKeyGreaterThanOrEqualToAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyGreaterThanOrEqualTo.GenMethods() #>
-
-<#=		Methods.CountRangeKeyBetweenAsync.GenMethods() #>
-
-<#=		Methods.CountRangeKeyBetween.GenMethods() #>
-	}
-
 	internal partial class ScanContext
 	{
 <#=		scanAllAsync.GenMethods() #>
