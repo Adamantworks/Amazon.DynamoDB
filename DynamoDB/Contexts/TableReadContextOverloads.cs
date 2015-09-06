@@ -320,30 +320,30 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(table, null, projection, null, null);
+			return new ScanContext(table, null, projection, consistentRead ?? false, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(table, null, projection, filter, null);
+			return new ScanContext(table, null, projection, consistentRead ?? false, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(table, null, projection, filter, values);
+			return new ScanContext(table, null, projection, consistentRead ?? false, filter, values);
 		}
 		#endregion
 
 		#region ScanCount
 		public IScanCountOptionsSyntax ScanCount()
 		{
-			return new ScanCountContext(table, null, null, null);
+			return new ScanCountContext(table, null, consistentRead ?? false, null, null);
 		}
 		public IScanCountOptionsSyntax ScanCount(PredicateExpression filter)
 		{
-			return new ScanCountContext(table, null, filter, null);
+			return new ScanCountContext(table, null, consistentRead ?? false, filter, null);
 		}
 		public IScanCountOptionsSyntax ScanCount(PredicateExpression filter, Values values)
 		{
-			return new ScanCountContext(table, null, filter, values);
+			return new ScanCountContext(table, null, consistentRead ?? false, filter, values);
 		}
 		#endregion
 	}

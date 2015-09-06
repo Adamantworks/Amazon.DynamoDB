@@ -24,7 +24,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class TableReadContext : IConsistentGetSyntax
+	internal partial class TableReadContext : ITableFromSyntax, ITableConsistentSyntax
 	{
 		private readonly Table table;
 		private readonly ProjectionExpression projection;
@@ -42,8 +42,10 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.consistentRead = consistentRead;
 		}
 
-		public IGetSyntax Consistent { get { return ConsistentIf(true); } }
-		public IGetSyntax ConsistentIf(bool consistent)
+		public ITableConsistentSyntax From { get { return this; } }
+
+		public ITableReadSyntax Consistent { get { return ConsistentIf(true); } }
+		public ITableReadSyntax ConsistentIf(bool consistent)
 		{
 			if(consistentRead != null)
 				throw new InvalidOperationException("Can't set Consistent twice");

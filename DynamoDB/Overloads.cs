@@ -117,35 +117,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		IEnumerable<DynamoDBMap> RangeKeyBetween(DynamoDBKeyValue startInclusive, DynamoDBKeyValue endExclusive, IValueConverter converter);
 	}
 
-	public partial interface IQuerySyntax
-	{
-		IReverseSyntax Query(DynamoDBKeyValue hashKey);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter);
-		IReverseSyntax Query(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter, Values values);
-		IReverseSyntax Query(object hashKey);
-		IReverseSyntax Query(object hashKey, PredicateExpression filter);
-		IReverseSyntax Query(object hashKey, PredicateExpression filter, Values values);
-		IReverseSyntax Query(object hashKey, IValueConverter converter);
-		IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter);
-		IReverseSyntax Query(object hashKey, IValueConverter converter, PredicateExpression filter, Values values);
-
-		IQueryCountRangeSyntax QueryCount(DynamoDBKeyValue hashKey);
-		IQueryCountRangeSyntax QueryCount(DynamoDBKeyValue hashKey, PredicateExpression filter);
-		IQueryCountRangeSyntax QueryCount(DynamoDBKeyValue hashKey, PredicateExpression filter, Values values);
-		IQueryCountRangeSyntax QueryCount(DynamoDBKeyValue hashKey, IValueConverter converter);
-		IQueryCountRangeSyntax QueryCount(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter);
-		IQueryCountRangeSyntax QueryCount(DynamoDBKeyValue hashKey, IValueConverter converter, PredicateExpression filter, Values values);
-		IQueryCountRangeSyntax QueryCount(object hashKey);
-		IQueryCountRangeSyntax QueryCount(object hashKey, PredicateExpression filter);
-		IQueryCountRangeSyntax QueryCount(object hashKey, PredicateExpression filter, Values values);
-		IQueryCountRangeSyntax QueryCount(object hashKey, IValueConverter converter);
-		IQueryCountRangeSyntax QueryCount(object hashKey, IValueConverter converter, PredicateExpression filter);
-		IQueryCountRangeSyntax QueryCount(object hashKey, IValueConverter converter, PredicateExpression filter, Values values);
-	}
-
 	public partial interface IScanOptionsSyntax
 	{
 		IAsyncEnumerable<DynamoDBMap> AllAsync();

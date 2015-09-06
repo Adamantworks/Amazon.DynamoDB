@@ -21,7 +21,7 @@ using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public interface IIndex : IConsistentQuerySyntax
+	public interface IIndex : IIndexConsistentSyntax
 	{
 		ITable Table { get; }
 		string Name { get; }
@@ -33,7 +33,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		IConsistentQuerySyntax With(ProjectionExpression projection);
+		IIndexConsistentSyntax With(ProjectionExpression projection);
 	}
 
 	internal partial class Index : IIndex
@@ -82,16 +82,16 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Schema.Key.GetKey(item);
 		}
 
-		public IConsistentQuerySyntax With(ProjectionExpression projection)
+		public IIndexConsistentSyntax With(ProjectionExpression projection)
 		{
 			return new IndexReadContext(this, projection);
 		}
 
-		public IQuerySyntax Consistent
+		public IIndexReadSyntax Consistent
 		{
 			get { return consistentReadContext; }
 		}
-		public IQuerySyntax ConsistentIf(bool consistent)
+		public IIndexReadSyntax ConsistentIf(bool consistent)
 		{
 			return consistent ? consistentReadContext : eventuallyConsistentReadContext;
 		}

@@ -21,7 +21,7 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IGetSyntax
+	public partial interface ITableReadSyntax
 	{
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey);
 		Task<DynamoDBMap> GetAsync(DynamoDBKeyValue hashKey, IValueConverter converter);

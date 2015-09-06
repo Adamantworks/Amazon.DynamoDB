@@ -17,10 +17,17 @@
 <#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
+using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IScanSyntax
+	public partial interface IIndexReadSyntax
 	{
+<#=		Methods.Query.GenInterface() #>
+
+<#=		Methods.QueryCount.GenInterface() #>
+
 <#=		Methods.Scan.GenInterface() #>
 
 <#=		Methods.ScanCount.GenInterface() #>

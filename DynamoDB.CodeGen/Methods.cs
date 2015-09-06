@@ -25,11 +25,11 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			Params.GenOverloads(Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
 
 		public static readonly Method Scan = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-			Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.Projection, Params.Filter, Params.Values)
+			Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.Projection, Args.ConsistentRead, Params.Filter, Params.Values)
 			.Where(Params.NoValuesWithoutFilter));
 
 		public static readonly Method ScanCount = new Method("IScanCountOptionsSyntax", "ScanCount", "new ScanCountContext",
-			Params.GenOverloads(true, Args.Table, Args.IndexNone, Params.Filter, Params.Values)
+			Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.Filter, Params.Values)
 			.Where(Params.NoValuesWithoutFilter));
 
 		public static readonly Method Query = new Method("IReverseSyntax", "Query", "new QueryContext",

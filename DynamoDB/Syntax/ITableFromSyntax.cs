@@ -14,7 +14,8 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IScanSyntax
+	public interface ITableFromSyntax
 	{
+		ITableConsistentSyntax From { get; }
 	}
 }

@@ -566,30 +566,30 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region Scan
 		public IScanLimitToOrPagedSyntax Scan()
 		{
-			return new ScanContext(this, null, null, null, null);
+			return new ScanContext(this, null, null, false, null, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter)
 		{
-			return new ScanContext(this, null, null, filter, null);
+			return new ScanContext(this, null, null, false, filter, null);
 		}
 		public IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values)
 		{
-			return new ScanContext(this, null, null, filter, values);
+			return new ScanContext(this, null, null, false, filter, values);
 		}
 		#endregion
 
 		#region ScanCount
 		public IScanCountOptionsSyntax ScanCount()
 		{
-			return new ScanCountContext(this, null, null, null);
+			return new ScanCountContext(this, null, false, null, null);
 		}
 		public IScanCountOptionsSyntax ScanCount(PredicateExpression filter)
 		{
-			return new ScanCountContext(this, null, filter, null);
+			return new ScanCountContext(this, null, false, filter, null);
 		}
 		public IScanCountOptionsSyntax ScanCount(PredicateExpression filter, Values values)
 		{
-			return new ScanCountContext(this, null, filter, values);
+			return new ScanCountContext(this, null, false, filter, values);
 		}
 		#endregion
 

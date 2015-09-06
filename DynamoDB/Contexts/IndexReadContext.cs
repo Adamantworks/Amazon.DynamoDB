@@ -17,7 +17,7 @@ using Adamantworks.Amazon.DynamoDB.Syntax;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class IndexReadContext : IConsistentQuerySyntax
+	internal partial class IndexReadContext : IIndexConsistentSyntax
 	{
 		private readonly Index index;
 		private readonly ProjectionExpression projection;
@@ -35,8 +35,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.consistentRead = consistentRead;
 		}
 
-		public IQuerySyntax Consistent { get { return ConsistentIf(true); } }
-		public IQuerySyntax ConsistentIf(bool consistent)
+		public IIndexReadSyntax Consistent { get { return ConsistentIf(true); } }
+		public IIndexReadSyntax ConsistentIf(bool consistent)
 		{
 			if(consistentRead != null)
 				throw new InvalidOperationException("Can't set Consistent twice");

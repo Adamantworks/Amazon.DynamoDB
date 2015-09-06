@@ -64,10 +64,10 @@
 		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ConsistentNone, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 		.Where(Params.NoValuesWithoutFilter));
 	var scanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Params.Filter, Params.Values)
+		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Args.ConsistentNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
 	var scanCountForwards = new Method("IScanCountOptionsSyntax", "ScanCount", "new ScanCountContext",
-		Params.GenOverloads(true, Args.This, Args.IndexNone, Params.Filter, Params.Values)
+		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ConsistentNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
 	var batchDelete = new Method("void", "Delete",
 		Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));

@@ -31,11 +31,12 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private readonly Table table;
 		private readonly Index index;
 		private readonly KeySchema keySchema;
-		private readonly DynamoDBKeyValue hashKey;
 		private readonly ProjectionExpression projection;
+		private readonly bool consistent;
+		private readonly DynamoDBKeyValue hashKey;
 		private readonly PredicateExpression filter;
 		private readonly Values values;
-		private readonly bool consistent;
+
 		private bool scanIndexForward = true;
 		private bool limitSet;
 		private int? limit;

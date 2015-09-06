@@ -100,13 +100,6 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 <#=		rangeKeyBetween.GenInterface() #>
 	}
 
-	public partial interface IQuerySyntax
-	{
-<#=		Methods.Query.GenInterface() #>
-
-<#=		Methods.QueryCount.GenInterface() #>
-	}
-
 	public partial interface IScanOptionsSyntax
 	{
 <#=		scanAllAsync.GenInterface() #>

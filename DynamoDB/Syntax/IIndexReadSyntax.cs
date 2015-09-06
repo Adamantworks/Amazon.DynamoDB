@@ -14,9 +14,7 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	// See Overloads.tt and Overloads.cs for more methods of this interface
-	public partial interface IQuerySyntax
+	public partial interface IIndexReadSyntax
 	{
-		// IReverseSyntax Query(DynamoDBKeyValue hashKey...);
 	}
 }

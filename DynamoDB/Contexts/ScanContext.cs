@@ -31,6 +31,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		private readonly Table table;
 		private readonly Index index;
 		private readonly ProjectionExpression projection;
+		private readonly bool consistent;
 		private readonly PredicateExpression filter;
 		private readonly Values values;
 		private bool limitSet;
@@ -41,12 +42,14 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			Table table,
 			Index index,
 			ProjectionExpression projection,
+			bool consistent,
 			PredicateExpression filter,
 			Values values)
 		{
 			this.table = table;
 			this.index = index;
 			this.projection = projection;
+			this.consistent = consistent;
 			this.filter = filter;
 			this.values = values;
 		}
@@ -356,6 +359,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				TableName = table.Name,
 				IndexName = index != null ? index.Name : null,
 				ExpressionAttributeNames = AwsAttributeNames.GetCombined(projection, filter),
+				ConsistentRead = consistent,
 			};
 			// No need to set Limit or ExclusiveStartKey, that will be handled by the first QueryResponse
 			if(projection != null)

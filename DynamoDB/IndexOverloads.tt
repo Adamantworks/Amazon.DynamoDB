@@ -32,10 +32,10 @@
 		.Concat(Params.GenOverloads(true, Args.IndexTable, Args.This, Args.ConsistentNone, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 		.Where(Params.NoValuesWithoutFilter));
 	var indexScanForwards = new Method("IScanLimitToOrPagedSyntax", "Scan", "new ScanContext",
-		Params.GenOverloads(true, Args.IndexTable, Args.This, Args.ProjectionNone, Params.Filter, Params.Values)
+		Params.GenOverloads(true, Args.IndexTable, Args.This, Args.ProjectionNone, Args.ConsistentNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
 	var indexScanCountForwards = new Method("IScanCountOptionsSyntax", "ScanCount", "new ScanCountContext",
-		Params.GenOverloads(true, Args.IndexTable, Args.This, Params.Filter, Params.Values)
+		Params.GenOverloads(true, Args.IndexTable, Args.This, Args.ConsistentNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
 #>
 using Adamantworks.Amazon.DynamoDB.Contexts;

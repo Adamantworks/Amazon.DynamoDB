@@ -14,14 +14,9 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IScanSyntax
+	public interface ITableConsistentSyntax : ITableReadSyntax
 	{
-		IScanLimitToOrPagedSyntax Scan();
-		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter);
-		IScanLimitToOrPagedSyntax Scan(PredicateExpression filter, Values values);
-
-		IScanCountOptionsSyntax ScanCount();
-		IScanCountOptionsSyntax ScanCount(PredicateExpression filter);
-		IScanCountOptionsSyntax ScanCount(PredicateExpression filter, Values values);
+		ITableReadSyntax Consistent { get; }
+		ITableReadSyntax ConsistentIf(bool consistentRead);
 	}
 }

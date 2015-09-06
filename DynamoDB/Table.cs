@@ -28,7 +28,7 @@ using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public partial interface ITable : IConsistentGetSyntax, IPutSyntax
+	public partial interface ITable : ITableConsistentSyntax, IPutSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -53,7 +53,7 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ItemKey GetKey(DynamoDBMap item);
 
-		IConsistentGetSyntax With(ProjectionExpression projection);
+		ITableFromSyntax Select(ProjectionExpression projection);
 
 		ITryPutSyntax If(PredicateExpression condition);
 		ITryPutSyntax If(PredicateExpression condition, Values values);
@@ -265,16 +265,16 @@ namespace Adamantworks.Amazon.DynamoDB
 			return Schema.Key.GetKey(item);
 		}
 
-		public IConsistentGetSyntax With(ProjectionExpression projection)
+		public ITableFromSyntax Select(ProjectionExpression projection)
 		{
 			return new TableReadContext(this, projection);
 		}
 
-		public IGetSyntax Consistent
+		public ITableReadSyntax Consistent
 		{
 			get { return consistentReadContext; }
 		}
-		public IGetSyntax ConsistentIf(bool consistent)
+		public ITableReadSyntax ConsistentIf(bool consistent)
 		{
 			return consistent ? consistentReadContext : eventuallyConsistentReadContext;
 		}

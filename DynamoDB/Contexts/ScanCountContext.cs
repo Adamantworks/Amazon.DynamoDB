@@ -26,17 +26,20 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 	{
 		private readonly Table table;
 		private readonly Index index;
+		private readonly bool consistent;
 		private readonly PredicateExpression filter;
 		private readonly Values values;
 
 		public ScanCountContext(
 			Table table,
 			Index index,
+			bool consistent,
 			PredicateExpression filter,
 			Values values)
 		{
 			this.table = table;
 			this.index = index;
+			this.consistent = consistent;
 			this.filter = filter;
 			this.values = values;
 		}
@@ -138,6 +141,7 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 				TableName = table.Name,
 				IndexName = index != null ? index.Name : null,
 				ExpressionAttributeNames = filter != null ? AwsAttributeNames.Get(filter) : null,
+				ConsistentRead = consistent,
 				Select = AwsEnums.Select.COUNT,
 			};
 			// No need to set Limit or ExclusiveStartKey, that will be handled by the first QueryResponse

@@ -368,8 +368,8 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 
 				Assert.IsNull(getItem["Null"]);
 
-				var projection = new ProjectionExpression("Foo");
-				var projectedItem = table.With(projection).Get(id, 1);
+				var foo = new ProjectionExpression("Foo");
+				var projectedItem = table.Select(foo).From.Get(id, 1);
 				Assert.IsNotNull(projectedItem, "projectedItem");
 				Assert.AreEqual(0, projectedItem.Count, "projectedItem Count");
 			});
