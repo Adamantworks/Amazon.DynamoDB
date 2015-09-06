@@ -39,15 +39,15 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Index : IIndex
 	{
 		internal readonly Table Table;
-		private readonly IndexContext consistentContext;
-		private readonly IndexContext eventuallyConsistentContext;
+		private readonly IndexReadContext consistentReadContext;
+		private readonly IndexReadContext eventuallyConsistentReadContext;
 
 		public Index(Table table, string name)
 		{
 			Table = table;
 			Name = name;
-			consistentContext = new IndexContext(this, null, true);
-			eventuallyConsistentContext = new IndexContext(this, null, false);
+			consistentReadContext = new IndexReadContext(this, null, true);
+			eventuallyConsistentReadContext = new IndexReadContext(this, null, false);
 		}
 
 		internal void UpdateDescription(Aws.GlobalSecondaryIndexDescription description, IndexSchema schema)
@@ -84,16 +84,16 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public IConsistentQuerySyntax With(ProjectionExpression projection)
 		{
-			return new IndexContext(this, projection);
+			return new IndexReadContext(this, projection);
 		}
 
 		public IQuerySyntax Consistent
 		{
-			get { return consistentContext; }
+			get { return consistentReadContext; }
 		}
 		public IQuerySyntax ConsistentIf(bool consistent)
 		{
-			return consistent ? consistentContext : eventuallyConsistentContext;
+			return consistent ? consistentReadContext : eventuallyConsistentReadContext;
 		}
 	}
 }

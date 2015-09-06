@@ -138,13 +138,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#=		Methods.Delete.GenMethods() #>
 	}
 
-	internal partial class PutContext
-	{
-<#=		Methods.PutAsync.GenMethods() #>
-
-<#=		Methods.Put.GenMethods() #>
-	}
-
 	internal partial class QueryContext
 	{
 <#=		allKeysAsync.GenMethods() #>

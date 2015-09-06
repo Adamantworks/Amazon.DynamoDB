@@ -32,23 +32,23 @@
 		Params.GenOverloads(true, Params.ProvisionedThroughput, Params.IndexProvisionedThroughputs)
 		// must pass either provisionedThroughput or indexProvisionedThroughputs
 		.Where(overload => overload.Contains(Params.ProvisionedThroughput) || overload.Contains(Params.IndexProvisionedThroughputs)));
-	var getAsyncForwards = new Method("Task<DynamoDBMap>", "GetAsync", "eventuallyConsistentContext.GetAsync",
+	var getAsyncForwards = new Method("Task<DynamoDBMap>", "GetAsync", "eventuallyConsistentReadContext.GetAsync",
 		Params.GenOverloads(true, Params.KeyOverloads, Params.CancellationToken));
-	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentContext.Get", Params.KeyOverloads);
-	var batchGetAsyncForwards = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync", "eventuallyConsistentContext.BatchGetAsync",
+	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentReadContext.Get", Params.KeyOverloads);
+	var batchGetAsyncForwards = new Method("IAsyncEnumerable<DynamoDBMap>", "BatchGetAsync", "eventuallyConsistentReadContext.BatchGetAsync",
 		Params.GenOverloads(true, Params.KeysSyncToAsync, Params.ReadAhead)
 		.Concat(Params.GenOverloads(true, Params.KeysAsync, Params.ReadAhead)));
-	var batchGetForwards = new Method("IEnumerable<DynamoDBMap>", "BatchGet", "eventuallyConsistentContext.BatchGet",
+	var batchGetForwards = new Method("IEnumerable<DynamoDBMap>", "BatchGet", "eventuallyConsistentReadContext.BatchGet",
 		Params.GenOverloads(true, Params.Keys));
-	var batchGetJoinAsyncForwards = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>", "eventuallyConsistentContext.BatchGetJoinAsync",
+	var batchGetJoinAsyncForwards = new Method("IAsyncEnumerable<TResult>", "BatchGetJoinAsync<T, TResult>", "eventuallyConsistentReadContext.BatchGetJoinAsync",
 		Params.GenOverloads(true, Params.OuterItemsSyncToAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)
 		.Concat(Params.GenOverloads(true, Params.OuterItemsAsync, Params.KeySelector, Params.ResultSelector, Params.ReadAhead)));
-	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentContext.BatchGetJoin",
+	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentReadContext.BatchGetJoin",
 		Params.GenOverloads(true, Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
 	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext", Params.GenOverloads(true, Args.This,  Params.KeyOverloads));
-	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
+	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "writeContext.PutAsync",
 		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem, Params.CancellationToken));
-	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
+	var putForwards = new Method("DynamoDBMap", "Put", "writeContext.Put",
 		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem));
 	var update = new Method("IForKeySyntax", "Update", "new UpdateContext", Params.GenOverloads(true, Args.This, Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
@@ -70,9 +70,9 @@
 		Params.GenOverloads(true, Args.This, Args.IndexNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
 	var batchDelete = new Method("void", "Delete",
-			Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
+		Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
 	var batchDeleteAsync = new Method("void", "Delete",
-			Params.GenOverloads(false, Params.BatchWriteAsync, Params.KeyOverloads));
+		Params.GenOverloads(false, Params.BatchWriteAsync, Params.KeyOverloads));
 #>
 using System;
 using System.Collections.Generic;

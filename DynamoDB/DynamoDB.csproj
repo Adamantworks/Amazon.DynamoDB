@@ -56,16 +56,16 @@
     <Compile Include="BatchWrite.cs" />
     <Compile Include="Composite.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Contexts\GetContextOverloads.cs">
+    <Compile Include="Contexts\TableReadContextOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>GetContextOverloads.tt</DependentUpon>
+      <DependentUpon>TableReadContextOverloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\IndexContext.cs" />
-    <Compile Include="Contexts\IndexContextOverloads.cs">
+    <Compile Include="Contexts\IndexReadContext.cs" />
+    <Compile Include="Contexts\IndexReadContextOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>IndexContextOverloads.tt</DependentUpon>
+      <DependentUpon>IndexReadContextOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\QueryCountContext.cs" />
     <Compile Include="Contexts\QueryCountContextOverloads.cs">
@@ -76,6 +76,11 @@
     <Compile Include="Contexts\ScanCountContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
     <Compile Include="Contexts\UpdateContext.cs" />
+    <Compile Include="Contexts\WriteContextOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WriteContextOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Converters\Basic\ArrayConverter.cs" />
     <Compile Include="Converters\Basic\CastConverter.cs" />
     <Compile Include="Converters\Basic\ImmutableByteArrayBinaryConverter.cs" />
@@ -137,7 +142,7 @@
       <DependentUpon>IPagedScanOptionsSyntaxOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Syntax\IPutSyntax.cs" />
-    <Compile Include="Contexts\GetContext.cs" />
+    <Compile Include="Contexts\TableReadContext.cs" />
     <Compile Include="Internal\AwsAttributeValues.cs" />
     <Compile Include="Internal\AwsExtensions.cs" />
     <Compile Include="BatchGetAsync.cs" />
@@ -182,7 +187,7 @@
     <Compile Include="Syntax\IScanCountOptionsSyntax.cs" />
     <Compile Include="Syntax\IScanOptionsSyntax.cs" />
     <Compile Include="Contexts\ModifyContext.cs" />
-    <Compile Include="Contexts\PutContext.cs" />
+    <Compile Include="Contexts\WriteContext.cs" />
     <Compile Include="Syntax\IScanExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\IScanLimitToOrPagedSyntax.cs" />
     <Compile Include="Syntax\IScanSyntax.cs" />
@@ -248,17 +253,21 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Contexts\GetContextOverloads.tt">
+    <Content Include="Contexts\TableReadContextOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GetContextOverloads.cs</LastGenOutput>
+      <LastGenOutput>TableReadContextOverloads.cs</LastGenOutput>
     </Content>
-    <Content Include="Contexts\IndexContextOverloads.tt">
+    <Content Include="Contexts\IndexReadContextOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>IndexContextOverloads.cs</LastGenOutput>
+      <LastGenOutput>IndexReadContextOverloads.cs</LastGenOutput>
     </Content>
     <Content Include="Contexts\QueryCountContextOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>QueryCountContextOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Contexts\WriteContextOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>WriteContextOverloads.cs</LastGenOutput>
     </Content>
     <Content Include="IndexOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

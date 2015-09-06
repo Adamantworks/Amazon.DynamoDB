@@ -257,31 +257,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#endregion
 	}
 
-	internal partial class PutContext
-	{
-		#region PutAsync
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
-		{
-			return PutAsync(item, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
-		{
-			return PutAsync(item, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
-		{
-			return PutAsync(item, false, cancellationToken);
-		}
-		#endregion
-
-		#region Put
-		public DynamoDBMap Put(DynamoDBMap item)
-		{
-			return Put(item, false);
-		}
-		#endregion
-	}
-
 	internal partial class QueryContext
 	{
 		#region AllKeysAsync

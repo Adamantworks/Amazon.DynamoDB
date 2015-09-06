@@ -18,7 +18,7 @@ using Adamantworks.Amazon.DynamoDB.Syntax;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class IndexContext
+	internal partial class IndexReadContext
 	{
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)

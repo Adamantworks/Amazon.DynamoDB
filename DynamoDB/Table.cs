@@ -76,19 +76,19 @@ namespace Adamantworks.Amazon.DynamoDB
 	internal partial class Table : ITable
 	{
 		internal readonly Region Region;
-		private readonly GetContext consistentContext;
-		private readonly GetContext eventuallyConsistentContext;
-		private readonly PutContext putContext;
-		private readonly PutContext insertContext;
+		private readonly TableReadContext consistentReadContext;
+		private readonly TableReadContext eventuallyConsistentReadContext;
+		private readonly WriteContext writeContext;
+		private readonly WriteContext insertContext;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
 		{
 			Region = region;
 			UpdateTableDescription(tableDescription);
-			consistentContext = new GetContext(this, null, true);
-			eventuallyConsistentContext = new GetContext(this, null, false);
-			putContext = new PutContext(this, null, null);
-			insertContext = new PutContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
+			consistentReadContext = new TableReadContext(this, null, true);
+			eventuallyConsistentReadContext = new TableReadContext(this, null, false);
+			writeContext = new WriteContext(this, null, null);
+			insertContext = new WriteContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
 		}
 
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
@@ -267,25 +267,25 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		public IConsistentGetSyntax With(ProjectionExpression projection)
 		{
-			return new GetContext(this, projection);
+			return new TableReadContext(this, projection);
 		}
 
 		public IGetSyntax Consistent
 		{
-			get { return consistentContext; }
+			get { return consistentReadContext; }
 		}
 		public IGetSyntax ConsistentIf(bool consistent)
 		{
-			return consistent ? consistentContext : eventuallyConsistentContext;
+			return consistent ? consistentReadContext : eventuallyConsistentReadContext;
 		}
 
 		public ITryPutSyntax If(PredicateExpression condition)
 		{
-			return new PutContext(this, condition, null);
+			return new WriteContext(this, condition, null);
 		}
 		public ITryPutSyntax If(PredicateExpression condition, Values values)
 		{
-			return new PutContext(this, condition, values);
+			return new WriteContext(this, condition, values);
 		}
 
 		#region Put
