@@ -17,7 +17,6 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax.Query
 {
-	// See Overloads.tt and Overloads.cs for more methods of this interface
 	public partial interface IQueryRangeSyntax
 	{
 		IAsyncEnumerable<DynamoDBMap> AllKeysAsync(ReadAhead readAhead);

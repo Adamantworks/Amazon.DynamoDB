@@ -16,17 +16,14 @@
 <#@ output extension=".cs" #>
 <#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
 <#@ Assembly Name="System.Core.dll" #>
-<#@ import namespace="System" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Collections" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts

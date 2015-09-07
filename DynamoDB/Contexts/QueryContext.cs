@@ -20,13 +20,11 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
-using Adamantworks.Amazon.DynamoDB.Syntax;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class QueryContext : IReverseSyntax, IPagedQueryRangeSyntax
 	{
 		private readonly Table table;

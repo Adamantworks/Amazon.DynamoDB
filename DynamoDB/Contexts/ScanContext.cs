@@ -19,14 +19,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
-using Adamantworks.Amazon.DynamoDB.Syntax;
 using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
 using Aws = Amazon.DynamoDBv2.Model;
-using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	// See Overloads.tt and Overloads.cs for more methods of this class
 	internal partial class ScanContext : IScanLimitToOrPagedSyntax, IPagedScanOptionsSyntax
 	{
 		private readonly Table table;

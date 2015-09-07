@@ -56,6 +56,11 @@
     <Compile Include="BatchWrite.cs" />
     <Compile Include="Composite.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Contexts\QueryContextOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QueryContextOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\ScanContextOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -110,11 +115,6 @@
     <Compile Include="Internal\TypeExtensions.cs" />
     <Compile Include="ItemPage.cs" />
     <Compile Include="LastKey.cs" />
-    <Compile Include="Overloads.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Overloads.tt</DependentUpon>
-    </Compile>
     <Compile Include="RegionOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -299,18 +299,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DynamoDB.nuspec" />
-    <None Include="Overloads.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Overloads.cs</LastGenOutput>
-      <Parameters>&lt;%3fxml version="1.0" encoding="utf-16"%3f&gt;
-&lt;ArrayOfParameterStorage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Parameters>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Contexts\QueryContextOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QueryContextOverloads.cs</LastGenOutput>
+    </Content>
     <Content Include="Contexts\ScanContextOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ScanContextOverloads.cs</LastGenOutput>

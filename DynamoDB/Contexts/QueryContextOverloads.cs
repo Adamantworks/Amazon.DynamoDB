@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
