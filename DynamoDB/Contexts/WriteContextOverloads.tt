@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -31,6 +32,22 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#=		Methods.PutAsync.GenMethods() #>
 
 <#=		Methods.Put.GenMethods() #>
+
+<#=		Methods.UpdateAsync.GenMethods() #>
+
+<#=		Methods.UpdateOnItemAsync.GenExplicitImplementations("IUpdateOnItemAsyncSyntax") #>
+
+<#=		Methods.Update.GenMethods() #>
+
+<#=		Methods.UpdateOnItem.GenExplicitImplementations("IUpdateOnItemSyntax") #>
+
+<#=		Methods.TryUpdateAsync.GenMethods() #>
+
+<#=		Methods.TryUpdateOnItemAsync.GenExplicitImplementations("ITryUpdateOnItemAsyncSyntax") #>
+
+<#=		Methods.TryUpdate.GenMethods() #>
+
+<#=		Methods.TryUpdateOnItem.GenExplicitImplementations("ITryUpdateOnItemSyntax") #>
 
 <#=		Methods.DeleteAsync.GenMethods() #>
 

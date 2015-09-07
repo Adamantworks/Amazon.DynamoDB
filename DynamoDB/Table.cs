@@ -77,7 +77,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		private readonly TableReadContext consistentReadContext;
 		private readonly TableReadContext eventuallyConsistentReadContext;
 		private readonly WriteContext putContext;
-		private readonly WriteContext insertContext;
+		private readonly PredicateExpression insertCondition;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
 		{
@@ -85,9 +85,8 @@ namespace Adamantworks.Amazon.DynamoDB
 			UpdateTableDescription(tableDescription);
 			consistentReadContext = new TableReadContext(this, null, true);
 			eventuallyConsistentReadContext = new TableReadContext(this, null, false);
-			putContext = new WriteContext(this, null, null, false, CancellationToken.None);
-			var insertCondition = new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name);
-			insertContext = new WriteContext(this, insertCondition, null, false, CancellationToken.None);
+			putContext = new WriteContext(this, false, CancellationToken.None);
+			insertCondition = new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name);
 		}
 
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
@@ -304,7 +303,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			try
 			{
-				return insertContext.PutAsync(item, false, CancellationToken.None);
+				return If(insertCondition).PutAsync(item, false, CancellationToken.None);
 			}
 			catch(Aws.ConditionalCheckFailedException ex)
 			{
@@ -315,7 +314,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			try
 			{
-				return insertContext.PutAsync(item, false, cancellationToken);
+				return If(insertCondition).PutAsync(item, false, cancellationToken);
 			}
 			catch(Aws.ConditionalCheckFailedException ex)
 			{
@@ -327,7 +326,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			try
 			{
-				insertContext.Put(item, false);
+				If(insertCondition).Put(item, false);
 			}
 			catch(Aws.ConditionalCheckFailedException ex)
 			{
@@ -344,16 +343,16 @@ namespace Adamantworks.Amazon.DynamoDB
 		#region TryInsert
 		public Task<bool> TryInsertAsync(DynamoDBMap item)
 		{
-			return insertContext.TryPutAsync(item, CancellationToken.None);
+			return If(insertCondition).TryPutAsync(item, CancellationToken.None);
 		}
 		public Task<bool> TryInsertAsync(DynamoDBMap item, CancellationToken cancellationToken)
 		{
-			return insertContext.TryPutAsync(item, cancellationToken);
+			return If(insertCondition).TryPutAsync(item, cancellationToken);
 		}
 
 		public bool TryInsert(DynamoDBMap item)
 		{
-			return insertContext.TryPut(item);
+			return If(insertCondition).TryPut(item);
 		}
 		#endregion
 

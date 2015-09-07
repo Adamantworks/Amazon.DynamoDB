@@ -384,27 +384,27 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 				var id = new Guid("3A7A929F-C779-48B7-B3B6-8D5243D787CC");
 				table.Insert(new DynamoDBMap() { { "ID", id }, { "Order", 1 }, { "Value", 5 } });
 
-				var oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(6), UpdateReturnValue.AllOld);
+				var oldItem = table.Update(SetValue, Values.Of(6), UpdateReturnValue.AllOld).OnItem(id, 1);
 				Assert.AreEqual(3, oldItem.Count, "AllOld");
 				Assert.AreEqual(5, oldItem["Value"].To<int>(), "AllOld");
 
-				oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(7), UpdateReturnValue.UpdatedOld);
+				oldItem = table.Update(SetValue, Values.Of(7), UpdateReturnValue.UpdatedOld).OnItem(id, 1);
 				Assert.AreEqual(1, oldItem.Count, "UpdatedOld");
 				Assert.AreEqual(6, oldItem["Value"].To<int>(), "UpdatedOld");
 
-				oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(8), UpdateReturnValue.AllNew);
+				oldItem = table.Update(SetValue, Values.Of(8), UpdateReturnValue.AllNew).OnItem(id, 1);
 				Assert.AreEqual(3, oldItem.Count, "AllNew");
 				Assert.AreEqual(8, oldItem["Value"].To<int>(), "AllNew");
 
-				oldItem = table.ForKey(id, 1).Update(SetValue, Values.Of(9), UpdateReturnValue.UpdatedNew);
+				oldItem = table.Update(SetValue, Values.Of(9), UpdateReturnValue.UpdatedNew).OnItem(id, 1);
 				Assert.AreEqual(1, oldItem.Count, "UpdatedNew");
 				Assert.AreEqual(9, oldItem["Value"].To<int>(), "UpdatedNew");
 
-				oldItem = table.ForKey(id, 1).Update(RemoveValue, UpdateReturnValue.UpdatedOld);
+				oldItem = table.Update(RemoveValue, UpdateReturnValue.UpdatedOld).OnItem(id, 1);
 				Assert.AreEqual(1, oldItem.Count, "RemoveValue");
 				Assert.AreEqual(9, oldItem["Value"].To<int>(), "UpdatedNew");
 
-				oldItem = table.ForKey(id, 1).Update(RemoveValue, UpdateReturnValue.UpdatedNew);
+				oldItem = table.Update(RemoveValue, UpdateReturnValue.UpdatedNew).OnItem(id, 1);
 				Assert.AreEqual(0, oldItem.Count, "RemoveValue");
 			});
 		}
@@ -438,8 +438,8 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 			{
 				const string id = "Hello";
 				const int order = 1;
-				table.ForKey(id, order).Update(SetValue, Values.Of("insert"));
-				table.ForKey(id, order).Update(SetValue, Values.Of("update"));
+				table.Update(SetValue, Values.Of("insert")).OnItem(id, order);
+				table.Update(SetValue, Values.Of("update")).OnItem(id, order);
 			});
 		}
 

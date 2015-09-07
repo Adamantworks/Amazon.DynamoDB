@@ -13,6 +13,8 @@
 		public static readonly Parameter ConsistentRead = Parameter.Argument("consistentRead ?? false");
 		public static readonly Parameter ConditionNone = Parameter.Argument("null");
 		public static readonly Parameter ConditionValuesNone = Parameter.Argument("null");
+		public static readonly Parameter UpdateReturnValueNone = Parameter.Argument("UpdateReturnValue.None");
+		public static readonly Parameter ReturnOldItemFalse = Parameter.Argument("false");
 		public static readonly Parameter This = Parameter.Argument("this");
 	}
 }

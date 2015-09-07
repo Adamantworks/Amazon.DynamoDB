@@ -20,10 +20,10 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
@@ -43,20 +43,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		void UpdateTable(ProvisionedThroughput provisionedThroughput);
 		void UpdateTable(IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		void UpdateTable(ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
-
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter converter);
-		IIfSyntax ForKey(object hashKey);
-		IIfSyntax ForKey(object hashKey, IValueConverter converter);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey);
-		IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey);
-		IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter);
-		IIfSyntax ForKey(object hashKey, object rangeKey);
-		IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter converter);
-		IIfSyntax ForKey(ItemKey key);
 
 		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey);
 		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, IValueConverter converter);
@@ -360,61 +346,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
-		#region ForKey
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, IValueConverter converter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, converter));
-		}
-		public IIfSyntax ForKey(object hashKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey));
-		}
-		public IIfSyntax ForKey(object hashKey, IValueConverter converter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, converter));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, converter));
-		}
-		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, converter));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, converter));
-		}
-		public IIfSyntax ForKey(object hashKey, object rangeKey)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey));
-		}
-		public IIfSyntax ForKey(object hashKey, object rangeKey, IValueConverter converter)
-		{
-			return new ModifyContext(this, ItemKey.Create(hashKey, rangeKey, converter));
-		}
-		public IIfSyntax ForKey(ItemKey key)
-		{
-			return new ModifyContext(this, key);
-		}
-		#endregion
-
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
@@ -577,82 +508,135 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
+		#region UpdateAsync
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update)
+		{
+			return new WriteContext(this, update, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values)
+		{
+			return new WriteContext(this, update, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return new WriteContext(this, update, null, returnValue, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return new WriteContext(this, update, values, returnValue, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, update, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, update, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, update, null, returnValue, cancellationToken);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, update, values, returnValue, cancellationToken);
+		}
+		#endregion
+
 		#region Update
-		public ISetSyntax Update(UpdateExpression update)
+		public IUpdateOnItemSyntax Update(UpdateExpression update)
 		{
-			return new UpdateContext(this, update, null, UpdateReturnValue.None);
+			return new WriteContext(this, update, null, UpdateReturnValue.None);
 		}
-		public ISetSyntax Update(UpdateExpression update, Values values)
+		public IUpdateOnItemSyntax Update(UpdateExpression update, Values values)
 		{
-			return new UpdateContext(this, update, values, UpdateReturnValue.None);
+			return new WriteContext(this, update, values, UpdateReturnValue.None);
 		}
-		public ISetSyntax Update(UpdateExpression update, UpdateReturnValue returnValue)
+		public IUpdateOnItemSyntax Update(UpdateExpression update, UpdateReturnValue returnValue)
 		{
-			return new UpdateContext(this, update, null, returnValue);
+			return new WriteContext(this, update, null, returnValue);
 		}
-		public ISetSyntax Update(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		public IUpdateOnItemSyntax Update(UpdateExpression update, Values values, UpdateReturnValue returnValue)
 		{
-			return new UpdateContext(this, update, values, returnValue);
+			return new WriteContext(this, update, values, returnValue);
+		}
+		#endregion
+
+		#region TryUpdateAsync
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update)
+		{
+			return new WriteContext(this, update, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, Values values)
+		{
+			return new WriteContext(this, update, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, update, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, update, values, UpdateReturnValue.None, cancellationToken);
+		}
+		#endregion
+
+		#region TryUpdate
+		public ITryUpdateOnItemSyntax TryUpdate(UpdateExpression update)
+		{
+			return new WriteContext(this, update, null, UpdateReturnValue.None);
+		}
+		public ITryUpdateOnItemSyntax TryUpdate(UpdateExpression update, Values values)
+		{
+			return new WriteContext(this, update, values, UpdateReturnValue.None);
 		}
 		#endregion
 
 		#region DeleteAsync
 		public IDeleteItemAsyncSyntax DeleteAsync()
 		{
-			return new WriteContext(this, null, null, false, CancellationToken.None);
+			return new WriteContext(this, false, CancellationToken.None);
 		}
 		public IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem)
 		{
-			return new WriteContext(this, null, null, returnOldItem, CancellationToken.None);
+			return new WriteContext(this, returnOldItem, CancellationToken.None);
 		}
 		public IDeleteItemAsyncSyntax DeleteAsync(CancellationToken cancellationToken)
 		{
-			return new WriteContext(this, null, null, false, cancellationToken);
+			return new WriteContext(this, false, cancellationToken);
 		}
 		public IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
 		{
-			return new WriteContext(this, null, null, returnOldItem, cancellationToken);
+			return new WriteContext(this, returnOldItem, cancellationToken);
 		}
 		#endregion
 
 		#region Delete
 		public IDeleteItemSyntax Delete()
 		{
-			return new WriteContext(this, null, null, false);
+			return new WriteContext(this, false);
 		}
 		public IDeleteItemSyntax Delete(bool returnOldItem)
 		{
-			return new WriteContext(this, null, null, returnOldItem);
+			return new WriteContext(this, returnOldItem);
 		}
 		#endregion
 
 		#region TryDeleteAsync
 		public ITryDeleteItemAsyncSyntax TryDeleteAsync()
 		{
-			return new WriteContext(this, null, null, false, CancellationToken.None);
-		}
-		public ITryDeleteItemAsyncSyntax TryDeleteAsync(bool returnOldItem)
-		{
-			return new WriteContext(this, null, null, returnOldItem, CancellationToken.None);
+			return new WriteContext(this, false, CancellationToken.None);
 		}
 		public ITryDeleteItemAsyncSyntax TryDeleteAsync(CancellationToken cancellationToken)
 		{
-			return new WriteContext(this, null, null, false, cancellationToken);
-		}
-		public ITryDeleteItemAsyncSyntax TryDeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return new WriteContext(this, null, null, returnOldItem, cancellationToken);
+			return new WriteContext(this, false, cancellationToken);
 		}
 		#endregion
 
 		#region TryDelete
 		public ITryDeleteItemSyntax TryDelete()
 		{
-			return new WriteContext(this, null, null, false);
-		}
-		public ITryDeleteItemSyntax TryDelete(bool returnOldItem)
-		{
-			return new WriteContext(this, null, null, returnOldItem);
+			return new WriteContext(this, false);
 		}
 		#endregion
 

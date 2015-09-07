@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -41,6 +42,278 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public DynamoDBMap Put(DynamoDBMap item)
 		{
 			return Put(item, false);
+		}
+		#endregion
+
+		#region UpdateAsync
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update)
+		{
+			return UpdateAsync(update, null, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values)
+		{
+			return UpdateAsync(update, values, UpdateReturnValue.None, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(update, null, returnValue, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return UpdateAsync(update, values, returnValue, CancellationToken.None);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(update, null, UpdateReturnValue.None, cancellationToken);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(update, values, UpdateReturnValue.None, cancellationToken);
+		}
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			return UpdateAsync(update, null, returnValue, cancellationToken);
+		}
+		#endregion
+
+		#region IUpdateOnItemAsyncSyntax.OnItem
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(object hashKey)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(object hashKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(object hashKey, object rangeKey)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		#endregion
+
+		#region Update
+		public IUpdateOnItemSyntax Update(UpdateExpression update)
+		{
+			return Update(update, null, UpdateReturnValue.None);
+		}
+		public IUpdateOnItemSyntax Update(UpdateExpression update, Values values)
+		{
+			return Update(update, values, UpdateReturnValue.None);
+		}
+		public IUpdateOnItemSyntax Update(UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return Update(update, null, returnValue);
+		}
+		#endregion
+
+		#region IUpdateOnItemSyntax.OnItem
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(object hashKey)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(object hashKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(object hashKey, object rangeKey)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		#endregion
+
+		#region TryUpdateAsync
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update)
+		{
+			return TryUpdateAsync(update, null, CancellationToken.None);
+		}
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, Values values)
+		{
+			return TryUpdateAsync(update, values, CancellationToken.None);
+		}
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken)
+		{
+			return TryUpdateAsync(update, null, cancellationToken);
+		}
+		#endregion
+
+		#region ITryUpdateOnItemAsyncSyntax.OnItem
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(object hashKey)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(object hashKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(object hashKey, object rangeKey)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemAsyncSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		#endregion
+
+		#region TryUpdate
+		public ITryUpdateOnItemSyntax TryUpdate(UpdateExpression update)
+		{
+			return TryUpdate(update, null);
+		}
+		#endregion
+
+		#region ITryUpdateOnItemSyntax.OnItem
+		bool ITryUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(object hashKey)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(object hashKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, converter));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(object hashKey, object rangeKey)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryUpdateOnItemSyntax)this).OnItem(ItemKey.Create(hashKey, rangeKey, converter));
 		}
 		#endregion
 

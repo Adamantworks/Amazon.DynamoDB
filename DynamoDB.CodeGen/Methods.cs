@@ -155,10 +155,22 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			Params.GenOverloads(Params.Item, Params.ReturnOldItem));
 
 		// Update Methods
-		public static readonly Method UpdateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
+		public static readonly Method UpdateAsync = new Method("IUpdateOnItemAsyncSyntax", "UpdateAsync",
 			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue, Params.CancellationToken));
-		public static readonly Method Update = new Method("DynamoDBMap", "Update",
+		public static readonly Method UpdateOnItemAsync = new Method("Task<DynamoDBMap>", "OnItem",
+			Params.GenOverloads(false, Params.KeyOverloads));
+		public static readonly Method Update = new Method("IUpdateOnItemSyntax", "Update",
 			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
+		public static readonly Method UpdateOnItem = new Method("DynamoDBMap", "OnItem",
+			Params.GenOverloads(false, Params.KeyOverloads));
+		public static readonly Method TryUpdateAsync = new Method("ITryUpdateOnItemAsyncSyntax", "TryUpdateAsync",
+			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.CancellationToken));
+		public static readonly Method TryUpdateOnItemAsync = new Method("Task<bool>", "OnItem",
+			Params.GenOverloads(false, Params.KeyOverloads));
+		public static readonly Method TryUpdate = new Method("ITryUpdateOnItemSyntax", "TryUpdate",
+			Params.GenOverloads(Params.UpdateExp, Params.Values));
+		public static readonly Method TryUpdateOnItem = new Method("bool", "OnItem",
+			Params.GenOverloads(false, Params.KeyOverloads));
 
 		// Delete Methods
 		public static readonly Method DeleteAsync = new Method("IDeleteItemAsyncSyntax", "DeleteAsync",

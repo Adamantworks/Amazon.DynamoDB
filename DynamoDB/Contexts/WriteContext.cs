@@ -19,48 +19,96 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Syntax;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 using Aws = Amazon.DynamoDBv2.Model;
 using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class WriteContext : IWriteConditionallySyntax, IDeleteItemAsyncSyntax, IDeleteItemSyntax, ITryDeleteItemAsyncSyntax, ITryDeleteItemSyntax
+	internal partial class WriteContext
+		: IWriteConditionallySyntax,
+		IUpdateOnItemAsyncSyntax, IUpdateOnItemSyntax, ITryUpdateOnItemAsyncSyntax, ITryUpdateOnItemSyntax,
+		IDeleteItemAsyncSyntax, IDeleteItemSyntax, ITryDeleteItemAsyncSyntax, ITryDeleteItemSyntax
 	{
 		private readonly Table table;
 		private readonly PredicateExpression condition;
 		private readonly Values conditionValues;
+		private UpdateExpression update;
+		private Values values;
 		private AwsEnums.ReturnValue returnValue;
 		private CancellationToken? cancellationToken;
 
+		// Called from If() and for Insert()
 		public WriteContext(
 			Table table,
 			PredicateExpression condition,
-			Values conditionValues,
-			bool? returnOldItem = null,
-			CancellationToken? cancellationToken = null)
+			Values conditionValues)
 		{
 			this.table = table;
 
 			this.condition = condition;
 			this.conditionValues = conditionValues;
-			if(returnOldItem != null)
-				returnValue = returnOldItem.Value ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE;
-			if(cancellationToken != null)
-				this.cancellationToken = cancellationToken;
 		}
 
-		private void SetReturnValue(bool returnOldItem)
+		// Called from Put() and Delete()
+		public WriteContext(
+			Table table,
+			bool returnOldItem,
+			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			SetReturnValue(returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE);
+			this.table = table;
+			returnValue = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE;
+			this.cancellationToken = cancellationToken;
 		}
-		private void SetReturnValue(AwsEnums.ReturnValue returnValue)
+
+		// Called from Update()
+		public WriteContext(
+			Table table,
+			UpdateExpression update,
+			Values values,
+			UpdateReturnValue returnValue,
+			CancellationToken cancellationToken = default(CancellationToken))
+		{
+			this.table = table;
+			this.update = update;
+			this.values = values;
+			this.returnValue = returnValue.ToAws();
+			this.cancellationToken = cancellationToken;
+		}
+
+		private void SafeSet(UpdateExpression update)
+		{
+			if(this.update != null)
+				throw new NotSupportedException("Can't set update expression twice");
+
+			this.update = update;
+		}
+		private void SafeSet(Values values)
+		{
+			if(this.values != null)
+				throw new NotSupportedException("Can't set update values twice");
+
+			this.values = values;
+		}
+		private void SafeSet(UpdateReturnValue returnValue)
+		{
+			if(this.returnValue != null)
+				throw new NotSupportedException("Can't set return value twice");
+
+			this.returnValue = returnValue.ToAws();
+		}
+		private void SafeSet(bool returnOldItem)
+		{
+			SafeSet(returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE);
+		}
+		private void SafeSet(AwsEnums.ReturnValue returnValue)
 		{
 			if(this.returnValue != null)
 				throw new NotSupportedException("Can't set return value twice");
 
 			this.returnValue = returnValue;
 		}
-		private void SetCancellationToken(CancellationToken cancellationToken)
+		private void SafeSet(CancellationToken cancellationToken)
 		{
 			if(this.cancellationToken != null)
 				throw new NotSupportedException("Can't set cancellation token twice");
@@ -143,11 +191,106 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
+		#region Update
+		public IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue, CancellationToken cancellationToken)
+		{
+			SafeSet(update);
+			SafeSet(values);
+			SafeSet(returnValue);
+			SafeSet(cancellationToken);
+			return this;
+		}
+		async Task<DynamoDBMap> IUpdateOnItemAsyncSyntax.OnItem(ItemKey key)
+		{
+			var request = BuildUpdateRequest(key);
+			var response = await table.Region.DB.UpdateItemAsync(request, cancellationToken.Value).ConfigureAwait(false);
+			if(returnValue == AwsEnums.ReturnValue.NONE) return null;
+			return response.Attributes.ToMap();
+		}
+
+		public IUpdateOnItemSyntax Update(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			SafeSet(update);
+			SafeSet(values);
+			SafeSet(returnValue);
+			SafeSet(CancellationToken.None);
+			return this;
+		}
+		DynamoDBMap IUpdateOnItemSyntax.OnItem(ItemKey key)
+		{
+			var request = BuildUpdateRequest(key);
+			var response = table.Region.DB.UpdateItem(request);
+			if(returnValue == AwsEnums.ReturnValue.NONE) return null;
+			return response.Attributes.ToMap();
+		}
+
+		private Aws.UpdateItemRequest BuildUpdateRequest(ItemKey key)
+		{
+			var request = new Aws.UpdateItemRequest()
+			{
+				TableName = table.Name,
+				Key = key.ToAws(table.Schema.Key),
+				UpdateExpression = update.Expression,
+				ExpressionAttributeNames = AwsAttributeNames.GetCombined(update, condition),
+				ReturnValues = returnValue,
+			};
+			if(condition != null)
+				request.ConditionExpression = condition.Expression;
+			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(update, condition, conditionValues, values);
+
+			return request;
+		}
+		#endregion
+
+		#region TryUpdate
+		public ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken)
+		{
+			SafeSet(update);
+			SafeSet(values);
+			SafeSet(UpdateReturnValue.None);
+			SafeSet(cancellationToken);
+			return this;
+		}
+		async Task<bool> ITryUpdateOnItemAsyncSyntax.OnItem(ItemKey key)
+		{
+			try
+			{
+				await ((IUpdateOnItemAsyncSyntax)this).OnItem(key).ConfigureAwait(false);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
+		}
+
+		public ITryUpdateOnItemSyntax TryUpdate(UpdateExpression update, Values values)
+		{
+			SafeSet(update);
+			SafeSet(values);
+			SafeSet(UpdateReturnValue.None);
+			SafeSet(CancellationToken.None);
+			return this;
+		}
+		bool ITryUpdateOnItemSyntax.OnItem(ItemKey key)
+		{
+			try
+			{
+				((IUpdateOnItemSyntax)this).OnItem(key);
+				return true;
+			}
+			catch(Aws.ConditionalCheckFailedException)
+			{
+				return false;
+			}
+		}
+		#endregion
+
 		#region Delete
 		public IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
 		{
-			SetReturnValue(returnOldItem);
-			SetCancellationToken(cancellationToken);
+			SafeSet(returnOldItem);
+			SafeSet(cancellationToken);
 			return this;
 		}
 		async Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(ItemKey key)
@@ -160,8 +303,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public IDeleteItemSyntax Delete(bool returnOldItem)
 		{
-			SetReturnValue(returnOldItem);
-			SetCancellationToken(CancellationToken.None);
+			SafeSet(returnOldItem);
+			SafeSet(CancellationToken.None);
 			return this;
 		}
 		DynamoDBMap IDeleteItemSyntax.Item(ItemKey key)
@@ -190,8 +333,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		#region TryDelete
 		public ITryDeleteItemAsyncSyntax TryDeleteAsync(CancellationToken cancellationToken)
 		{
-			SetReturnValue(false);
-			SetCancellationToken(cancellationToken);
+			SafeSet(false);
+			SafeSet(cancellationToken);
 			return this;
 		}
 		async Task<bool> ITryDeleteItemAsyncSyntax.Item(ItemKey key)
@@ -209,8 +352,8 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 		public ITryDeleteItemSyntax TryDelete()
 		{
-			SetReturnValue(false);
-			SetCancellationToken(CancellationToken.None);
+			SafeSet(false);
+			SafeSet(CancellationToken.None);
 			return this;
 		}
 		bool ITryDeleteItemSyntax.Item(ItemKey key)

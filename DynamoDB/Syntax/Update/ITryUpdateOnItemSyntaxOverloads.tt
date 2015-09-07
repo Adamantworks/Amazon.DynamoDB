@@ -17,18 +17,13 @@
 <#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
-using System.Threading;
-using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
-using Adamantworks.Amazon.DynamoDB.Syntax.Update;
+using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Update
 {
-	public partial interface IWriteConditionallySyntax
+	public partial interface ITryUpdateOnItemSyntax
 	{
-<#=		Methods.TryUpdateAsync.GenInterface() #>
-<#=		Methods.TryUpdate.GenInterface() #>
-
-<#=		Methods.TryDeleteAsync.GenInterface() #>
-<#=		Methods.TryDelete.GenInterface() #>
+<#=		Methods.TryUpdateOnItem.GenInterface() #>
 	}
 }

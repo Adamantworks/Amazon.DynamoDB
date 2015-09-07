@@ -80,7 +80,6 @@
     </Compile>
     <Compile Include="Contexts\ScanCountContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
-    <Compile Include="Contexts\UpdateContext.cs" />
     <Compile Include="Contexts\WriteContextOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -146,7 +145,6 @@
       <DependentUpon>ITryDeleteItemSyntaxOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Syntax\IIndexConsistentSyntax.cs" />
-    <Compile Include="Syntax\ISetSyntax.cs" />
     <Compile Include="Syntax\IIndexReadSyntax.cs" />
     <Compile Include="Syntax\IWriteConditionallySyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
@@ -170,12 +168,6 @@
       <DependentUpon>ITableReadSyntaxOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Syntax\IIfSyntax.cs" />
-    <Compile Include="Syntax\IModifySyntax.cs" />
-    <Compile Include="Syntax\IModifySyntaxOverloads.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>IModifySyntaxOverloads.tt</DependentUpon>
-    </Compile>
     <Compile Include="Syntax\Query\IPagedQueryRangeSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -231,7 +223,6 @@
     <Compile Include="Syntax\ITableReadSyntax.cs" />
     <Compile Include="Syntax\Scan\IScanCountOptionsSyntax.cs" />
     <Compile Include="Syntax\Scan\IScanOptionsSyntax.cs" />
-    <Compile Include="Contexts\ModifyContext.cs" />
     <Compile Include="Contexts\WriteContext.cs" />
     <Compile Include="Syntax\Scan\IScanExclusiveStartKeySyntax.cs" />
     <Compile Include="Syntax\Scan\IScanLimitToOrPagedSyntax.cs" />
@@ -241,8 +232,31 @@
       <DependentUpon>IIndexReadSyntaxOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Syntax\IWriteConditionallySyntax.cs" />
-    <Compile Include="Syntax\ITryModifySyntax.cs" />
     <Compile Include="Syntax\NamedDynamoDBValues.cs" />
+    <Compile Include="Syntax\Update\ITryUpdateOnItemAsyncSyntax.cs" />
+    <Compile Include="Syntax\Update\ITryUpdateOnItemAsyncSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ITryUpdateOnItemAsyncSyntaxOverloads.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Syntax\Update\ITryUpdateOnItemSyntax.cs" />
+    <Compile Include="Syntax\Update\ITryUpdateOnItemSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ITryUpdateOnItemSyntaxOverloads.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Syntax\Update\IUpdateOnItemAsyncSyntax.cs" />
+    <Compile Include="Syntax\Update\IUpdateOnItemAsyncSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IUpdateOnItemAsyncSyntaxOverloads.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Syntax\Update\IUpdateOnItemSyntax.cs" />
+    <Compile Include="Syntax\Update\IUpdateOnItemSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IUpdateOnItemSyntaxOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="TableOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -357,10 +371,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ITableReadSyntaxOverloads.cs</LastGenOutput>
     </Content>
-    <Content Include="Syntax\IModifySyntaxOverloads.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>IModifySyntaxOverloads.cs</LastGenOutput>
-    </Content>
     <Content Include="Syntax\Query\IPagedQueryRangeSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IPagedQueryRangeSyntaxOverloads.cs</LastGenOutput>
@@ -380,6 +390,22 @@
     <Content Include="Syntax\IIndexReadSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IIndexReadSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\Update\ITryUpdateOnItemAsyncSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ITryUpdateOnItemAsyncSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\Update\ITryUpdateOnItemSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ITryUpdateOnItemSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\Update\IUpdateOnItemAsyncSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IUpdateOnItemAsyncSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\Update\IUpdateOnItemSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IUpdateOnItemSyntaxOverloads.cs</LastGenOutput>
     </Content>
     <Content Include="TableOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

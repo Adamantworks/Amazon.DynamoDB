@@ -14,11 +14,17 @@
 
 using System.Threading;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
 	public partial interface IWriteConditionallySyntax
 	{
+		ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update);
+		ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, Values values);
+		ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
+		ITryUpdateOnItemSyntax TryUpdate(UpdateExpression update);
+
 		ITryDeleteItemAsyncSyntax TryDeleteAsync();
 
 	}

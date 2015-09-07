@@ -21,13 +21,6 @@
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
-<#
-	// Syntax
-	var tryUpdateAsync = new Method("Task<bool>", "TryUpdateAsync",
-		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.CancellationToken));
-	var tryUpdate = new Method("bool", "TryUpdate",
-		Params.GenOverloads(Params.UpdateExp, Params.Values));
-#>
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,28 +29,8 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
-{
-	public partial interface ITryModifySyntax
-	{
-<#=		tryUpdateAsync.GenInterface() #>
-<#=		tryUpdate.GenInterface() #>
-	}
-}
-
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal partial class ModifyContext
-	{
-<#=		Methods.UpdateAsync.GenMethods() #>
-
-<#=		Methods.Update.GenMethods() #>
-
-<#=		tryUpdateAsync.GenMethods() #>
-
-<#=		tryUpdate.GenMethods() #>
-	}
-
 	internal partial class QueryContext
 	{
 <#=		Methods.AllKeysAsync.GenMethods() #>

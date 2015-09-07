@@ -21,6 +21,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
@@ -28,6 +29,9 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 <#=		Methods.PutAsync.GenInterface() #>
 <#=		Methods.Put.GenInterface() #>
+
+<#=		Methods.UpdateAsync.GenInterface() #>
+<#=		Methods.Update.GenInterface() #>
 
 <#=		Methods.DeleteAsync.GenInterface() #>
 <#=		Methods.Delete.GenInterface() #>

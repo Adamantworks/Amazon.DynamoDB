@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
@@ -24,6 +25,9 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		Task<bool> TryPutAsync(DynamoDBMap item);
 		Task<bool> TryPutAsync(DynamoDBMap item, CancellationToken cancellationToken);
 		bool TryPut(DynamoDBMap item);
+
+		ITryUpdateOnItemAsyncSyntax TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
+		ITryUpdateOnItemSyntax TryUpdate(UpdateExpression update, Values values);
 
 		ITryDeleteItemAsyncSyntax TryDeleteAsync(CancellationToken cancellationToken);
 		ITryDeleteItemSyntax TryDelete();

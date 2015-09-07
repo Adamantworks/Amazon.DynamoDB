@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
+using Adamantworks.Amazon.DynamoDB.Syntax.Update;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
@@ -25,6 +26,17 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem);
 		Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken);
 		DynamoDBMap Put(DynamoDBMap item);
+
+		IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update);
+		IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values);
+		IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue);
+		IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, UpdateReturnValue returnValue);
+		IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, CancellationToken cancellationToken);
+		IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
+		IUpdateOnItemAsyncSyntax UpdateAsync(UpdateExpression update, UpdateReturnValue returnValue, CancellationToken cancellationToken);
+		IUpdateOnItemSyntax Update(UpdateExpression update);
+		IUpdateOnItemSyntax Update(UpdateExpression update, Values values);
+		IUpdateOnItemSyntax Update(UpdateExpression update, UpdateReturnValue returnValue);
 
 		IDeleteItemAsyncSyntax DeleteAsync();
 		IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem);

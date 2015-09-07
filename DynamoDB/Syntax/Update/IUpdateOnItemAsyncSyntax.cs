@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Update
 {
-	// See Overloads.tt and Overloads.cs for more methods of this interface
-	public partial interface ITryModifySyntax : IModifySyntax
+	public partial interface IUpdateOnItemAsyncSyntax
 	{
-		Task<bool> TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
-		bool TryUpdate(UpdateExpression update, Values values);
+		Task<DynamoDBMap> OnItem(ItemKey key);
 	}
 }
