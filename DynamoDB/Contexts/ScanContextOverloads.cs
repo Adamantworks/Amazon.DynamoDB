@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax;
+using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {

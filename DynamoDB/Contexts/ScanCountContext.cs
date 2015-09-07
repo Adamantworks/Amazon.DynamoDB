@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
 using Aws = Amazon.DynamoDBv2.Model;
 using AwsEnums = Amazon.DynamoDBv2;
 

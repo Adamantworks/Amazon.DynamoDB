@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Scan
 {
-	public partial interface IPagedScanOptionsSyntax
+	public interface IScanLimitToOrPagedSyntax : IScanExclusiveStartKeySyntax
 	{
-		Task<ItemPage> AllAsync();
-
-		Task<ItemPage> SegmentAsync(int segment, int totalSegments);
+		IScanExclusiveStartKeySyntax LimitTo(int? limit);
+		IPagedScanOptionsSyntax Paged(int pageSize);
+		IPagedScanOptionsSyntax Paged(int pageSize, LastKey? exclusiveStartKey);
 	}
 }

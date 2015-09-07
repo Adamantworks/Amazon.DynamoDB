@@ -124,7 +124,12 @@
     <Compile Include="Syntax\IIndexConsistentSyntax.cs" />
     <Compile Include="Syntax\IForKeySyntax.cs" />
     <Compile Include="Syntax\IIndexReadSyntax.cs" />
-    <Compile Include="Syntax\IScanOptionsSyntaxOverloads.cs">
+    <Compile Include="Syntax\Query\IQueryRangeSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IQueryRangeSyntaxOverloads.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Syntax\Scan\IScanOptionsSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>IScanOptionsSyntaxOverloads.tt</DependentUpon>
@@ -142,13 +147,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IModifySyntaxOverloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="Syntax\IPagedQueryRangeSyntaxOverloads.cs">
+    <Compile Include="Syntax\Query\IPagedQueryRangeSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>IPagedQueryRangeSyntaxOverloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="Syntax\IPagedScanOptionsSyntax.cs" />
-    <Compile Include="Syntax\IPagedScanOptionsSyntaxOverloads.cs">
+    <Compile Include="Syntax\Scan\IPagedScanOptionsSyntax.cs" />
+    <Compile Include="Syntax\Scan\IPagedScanOptionsSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>IPagedScanOptionsSyntaxOverloads.tt</DependentUpon>
@@ -181,26 +186,26 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IPutSyntaxOverloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="Syntax\IQueryCountRangeSyntax.cs" />
-    <Compile Include="Syntax\IQueryCountRangeSyntaxOverloads.cs">
+    <Compile Include="Syntax\Query\IQueryCountRangeSyntax.cs" />
+    <Compile Include="Syntax\Query\IQueryCountRangeSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>IQueryCountRangeSyntaxOverloads.tt</DependentUpon>
     </Compile>
-    <Compile Include="Syntax\IQueryExclusiveStartKeySyntax.cs" />
-    <Compile Include="Syntax\IQueryLimitToOrPagedSyntax.cs" />
-    <Compile Include="Syntax\IQueryRangeSyntax.cs" />
-    <Compile Include="Syntax\IPagedQueryRangeSyntax.cs" />
-    <Compile Include="Syntax\IReverseSyntax.cs" />
+    <Compile Include="Syntax\Query\IQueryExclusiveStartKeySyntax.cs" />
+    <Compile Include="Syntax\Query\IQueryLimitToOrPagedSyntax.cs" />
+    <Compile Include="Syntax\Query\IQueryRangeSyntax.cs" />
+    <Compile Include="Syntax\Query\IPagedQueryRangeSyntax.cs" />
+    <Compile Include="Syntax\Query\IReverseSyntax.cs" />
     <Compile Include="Contexts\QueryContext.cs" />
     <Compile Include="Syntax\ITableConsistentSyntax.cs" />
     <Compile Include="Syntax\ITableReadSyntax.cs" />
-    <Compile Include="Syntax\IScanCountOptionsSyntax.cs" />
-    <Compile Include="Syntax\IScanOptionsSyntax.cs" />
+    <Compile Include="Syntax\Scan\IScanCountOptionsSyntax.cs" />
+    <Compile Include="Syntax\Scan\IScanOptionsSyntax.cs" />
     <Compile Include="Contexts\ModifyContext.cs" />
     <Compile Include="Contexts\WriteContext.cs" />
-    <Compile Include="Syntax\IScanExclusiveStartKeySyntax.cs" />
-    <Compile Include="Syntax\IScanLimitToOrPagedSyntax.cs" />
+    <Compile Include="Syntax\Scan\IScanExclusiveStartKeySyntax.cs" />
+    <Compile Include="Syntax\Scan\IScanLimitToOrPagedSyntax.cs" />
     <Compile Include="Syntax\IIndexReadSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -291,7 +296,11 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RegionOverloads.cs</LastGenOutput>
     </Content>
-    <Content Include="Syntax\IScanOptionsSyntaxOverloads.tt">
+    <Content Include="Syntax\Query\IQueryRangeSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IQueryRangeSyntaxOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\Scan\IScanOptionsSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IScanOptionsSyntaxOverloads.cs</LastGenOutput>
     </Content>
@@ -303,11 +312,11 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IModifySyntaxOverloads.cs</LastGenOutput>
     </Content>
-    <Content Include="Syntax\IPagedQueryRangeSyntaxOverloads.tt">
+    <Content Include="Syntax\Query\IPagedQueryRangeSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IPagedQueryRangeSyntaxOverloads.cs</LastGenOutput>
     </Content>
-    <Content Include="Syntax\IPagedScanOptionsSyntaxOverloads.tt">
+    <Content Include="Syntax\Scan\IPagedScanOptionsSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IPagedScanOptionsSyntaxOverloads.cs</LastGenOutput>
     </Content>
@@ -315,7 +324,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IPutSyntaxOverloads.cs</LastGenOutput>
     </Content>
-    <Content Include="Syntax\IQueryCountRangeSyntaxOverloads.tt">
+    <Content Include="Syntax\Query\IQueryCountRangeSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IQueryCountRangeSyntaxOverloads.cs</LastGenOutput>
     </Content>
@@ -328,10 +337,7 @@
       <LastGenOutput>TableOverloads.cs</LastGenOutput>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Syntax\Query\" />
-    <Folder Include="Syntax\Scan\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

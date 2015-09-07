@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Query
 {
-	public interface IReverseSyntax : IQueryLimitToOrPagedSyntax
+	public interface IQueryLimitToOrPagedSyntax : IQueryExclusiveStartKeySyntax
 	{
-		IQueryLimitToOrPagedSyntax Reverse();
+		IQueryExclusiveStartKeySyntax LimitTo(int? limit);
+		IPagedQueryRangeSyntax Paged(int pageSize);
+		IPagedQueryRangeSyntax Paged(int pageSize, LastKey? exclusiveStartKey);
 	}
 }

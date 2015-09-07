@@ -21,6 +21,7 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 using Amazon.DynamoDBv2;
 using Aws = Amazon.DynamoDBv2.Model;
 

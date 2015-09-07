@@ -46,6 +46,37 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			.Concat(Params.GenOverloads(true, Args.Table, Args.IndexNone, Args.ConsistentRead, Params.HashKeyObjectConverter, Params.ConverterSkipped, Params.Filter, Params.Values))
 			.Where(Params.NoValuesWithoutFilter));
 
+		// Query Range
+		public static readonly Method AllKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", Params.GenOverloads(Params.ReadAhead));
+		public static readonly Method RangeKeyBeginsWithAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBeginsWithAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
+		public static readonly Method RangeKeyBeginsWith = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBeginsWith",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyEqualsAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyEqualsAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
+		public static readonly Method RangeKeyEquals = new Method("IEnumerable<DynamoDBMap>", "RangeKeyEquals",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyLessThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
+		public static readonly Method RangeKeyLessThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThan",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyLessThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualToAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
+		public static readonly Method RangeKeyLessThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualTo",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyGreaterThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
+		public static readonly Method RangeKeyGreaterThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThan",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyGreaterThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualToAsync",
+			Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
+		public static readonly Method RangeKeyGreaterThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualTo",
+			Params.GenOverloads(false, Params.RangeKeyOverloads));
+		public static readonly Method RangeKeyBetweenAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBetweenAsync",
+			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.ReadAhead));
+		public static readonly Method RangeKeyBetween = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBetween",
+			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
+
 		// Query Count Range
 		public static readonly Method CountAllKeysAsync = new Method("Task<long>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
 		public static readonly Method CountRangeKeyBeginsWithAsync = new Method("Task<long>", "RangeKeyBeginsWithAsync",

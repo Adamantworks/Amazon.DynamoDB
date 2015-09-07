@@ -12,12 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
+using System.Threading.Tasks;
+
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Scan
 {
-	public interface IQueryLimitToOrPagedSyntax : IQueryExclusiveStartKeySyntax
+	public partial interface IPagedScanOptionsSyntax
 	{
-		IQueryExclusiveStartKeySyntax LimitTo(int? limit);
-		IPagedQueryRangeSyntax Paged(int pageSize);
-		IPagedQueryRangeSyntax Paged(int pageSize, LastKey? exclusiveStartKey);
+<#=		Methods.ScanAllAsyncPaged.GenInterface() #>
+
+<#=		Methods.ScanSegmentAsyncPaged.GenInterface() #>
 	}
 }

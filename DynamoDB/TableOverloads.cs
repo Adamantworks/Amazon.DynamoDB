@@ -21,6 +21,8 @@ using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Adamantworks.Amazon.DynamoDB.Syntax.Query;
+using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
 
 namespace Adamantworks.Amazon.DynamoDB
 {

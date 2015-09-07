@@ -12,26 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-<#@ template debug="true" hostSpecific="true" #>
-<#@ output extension=".cs" #>
-<#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
-<#@ Assembly Name="System.Core.dll" #>
-<#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
-using Adamantworks.Amazon.DynamoDB.Converters;
+using System.Collections.Generic;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax.Query;
-using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Scan
 {
-	public partial interface IIndexReadSyntax
+	public partial interface IScanOptionsSyntax
 	{
-<#=		Methods.Query.GenInterface() #>
+		IAsyncEnumerable<DynamoDBMap> AllAsync();
 
-<#=		Methods.QueryCount.GenInterface() #>
-
-<#=		Methods.Scan.GenInterface() #>
-
-<#=		Methods.ScanCount.GenInterface() #>
+		IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments);
 	}
 }

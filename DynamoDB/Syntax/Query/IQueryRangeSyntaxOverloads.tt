@@ -18,14 +18,34 @@
 <#@ Assembly Name="System.Core.dll" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 using System.Collections.Generic;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Query
 {
-	public partial interface IScanOptionsSyntax
+	public partial interface IQueryRangeSyntax
 	{
-<#=		Methods.ScanAllAsync.GenInterface() #>
+<#=		Methods.AllKeysAsync.GenInterface() #>
 
-<#=		Methods.ScanSegmentAsync.GenInterface() #>
+<#=		Methods.RangeKeyBeginsWithAsync.GenInterface() #>
+<#=		Methods.RangeKeyBeginsWith.GenInterface() #>
+
+<#=		Methods.RangeKeyEqualsAsync.GenInterface() #>
+<#=		Methods.RangeKeyEquals.GenInterface() #>
+
+<#=		Methods.RangeKeyLessThanAsync.GenInterface() #>
+<#=		Methods.RangeKeyLessThan.GenInterface() #>
+
+<#=		Methods.RangeKeyLessThanOrEqualToAsync.GenInterface() #>
+<#=		Methods.RangeKeyLessThanOrEqualTo.GenInterface() #>
+
+<#=		Methods.RangeKeyGreaterThanAsync.GenInterface() #>
+<#=		Methods.RangeKeyGreaterThan.GenInterface() #>
+
+<#=		Methods.RangeKeyGreaterThanOrEqualToAsync.GenInterface() #>
+<#=		Methods.RangeKeyGreaterThanOrEqualTo.GenInterface() #>
+
+<#=		Methods.RangeKeyBetweenAsync.GenInterface() #>
+<#=		Methods.RangeKeyBetween.GenInterface() #>
 	}
 }

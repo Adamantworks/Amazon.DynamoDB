@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Scan
 {
 	public interface IScanCountOptionsSyntax
 	{

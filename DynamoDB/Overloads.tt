@@ -27,75 +27,16 @@
 		Params.GenOverloads(Params.UpdateExp, Params.Values, Params.CancellationToken));
 	var tryUpdate = new Method("bool", "TryUpdate",
 		Params.GenOverloads(Params.UpdateExp, Params.Values));
-
-	// Query Range
-	var allKeysAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "AllKeysAsync", Params.GenOverloads(Params.ReadAhead));
-	var rangeKeyBeginsWithAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBeginsWithAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
-	var rangeKeyBeginsWith = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBeginsWith",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyEqualsAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyEqualsAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
-	var rangeKeyEquals = new Method("IEnumerable<DynamoDBMap>", "RangeKeyEquals",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyLessThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
-	var rangeKeyLessThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThan",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyLessThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualToAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
-	var rangeKeyLessThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyLessThanOrEqualTo",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyGreaterThanAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
-	var rangeKeyGreaterThan = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThan",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyGreaterThanOrEqualToAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualToAsync",
-		Params.GenOverloads(false, Params.RangeKeyOverloads, Params.ReadAhead));
-	var rangeKeyGreaterThanOrEqualTo = new Method("IEnumerable<DynamoDBMap>", "RangeKeyGreaterThanOrEqualTo",
-		Params.GenOverloads(false, Params.RangeKeyOverloads));
-	var rangeKeyBetweenAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "RangeKeyBetweenAsync",
-		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads, Params.ReadAhead));
-	var rangeKeyBetween = new Method("IEnumerable<DynamoDBMap>", "RangeKeyBetween",
-		Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
 #>
-using Adamantworks.Amazon.DynamoDB.Converters;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Syntax;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.Converters;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IQueryRangeSyntax
-	{
-<#=		allKeysAsync.GenInterface() #>
-
-<#=		rangeKeyBeginsWithAsync.GenInterface() #>
-<#=		rangeKeyBeginsWith.GenInterface() #>
-
-<#=		rangeKeyEqualsAsync.GenInterface() #>
-<#=		rangeKeyEquals.GenInterface() #>
-
-<#=		rangeKeyLessThanAsync.GenInterface() #>
-<#=		rangeKeyLessThan.GenInterface() #>
-
-<#=		rangeKeyLessThanOrEqualToAsync.GenInterface() #>
-<#=		rangeKeyLessThanOrEqualTo.GenInterface() #>
-
-<#=		rangeKeyGreaterThanAsync.GenInterface() #>
-<#=		rangeKeyGreaterThan.GenInterface() #>
-
-<#=		rangeKeyGreaterThanOrEqualToAsync.GenInterface() #>
-<#=		rangeKeyGreaterThanOrEqualTo.GenInterface() #>
-
-<#=		rangeKeyBetweenAsync.GenInterface() #>
-<#=		rangeKeyBetween.GenInterface() #>
-	}
-
 	public partial interface ITryModifySyntax
 	{
 <#=		tryUpdateAsync.GenInterface() #>
@@ -122,35 +63,35 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 
 	internal partial class QueryContext
 	{
-<#=		allKeysAsync.GenMethods() #>
+<#=		Methods.AllKeysAsync.GenMethods() #>
 
-<#=		rangeKeyBeginsWithAsync.GenMethods() #>
+<#=		Methods.RangeKeyBeginsWithAsync.GenMethods() #>
 
-<#=		rangeKeyBeginsWith.GenMethods() #>
+<#=		Methods.RangeKeyBeginsWith.GenMethods() #>
 
-<#=		rangeKeyEqualsAsync.GenMethods() #>
+<#=		Methods.RangeKeyEqualsAsync.GenMethods() #>
 
-<#=		rangeKeyEquals.GenMethods() #>
+<#=		Methods.RangeKeyEquals.GenMethods() #>
 
-<#=		rangeKeyLessThanAsync.GenMethods() #>
+<#=		Methods.RangeKeyLessThanAsync.GenMethods() #>
 
-<#=		rangeKeyLessThan.GenMethods() #>
+<#=		Methods.RangeKeyLessThan.GenMethods() #>
 
-<#=		rangeKeyLessThanOrEqualToAsync.GenMethods() #>
+<#=		Methods.RangeKeyLessThanOrEqualToAsync.GenMethods() #>
 
-<#=		rangeKeyLessThanOrEqualTo.GenMethods() #>
+<#=		Methods.RangeKeyLessThanOrEqualTo.GenMethods() #>
 
-<#=		rangeKeyGreaterThanAsync.GenMethods() #>
+<#=		Methods.RangeKeyGreaterThanAsync.GenMethods() #>
 
-<#=		rangeKeyGreaterThan.GenMethods() #>
+<#=		Methods.RangeKeyGreaterThan.GenMethods() #>
 
-<#=		rangeKeyGreaterThanOrEqualToAsync.GenMethods() #>
+<#=		Methods.RangeKeyGreaterThanOrEqualToAsync.GenMethods() #>
 
-<#=		rangeKeyGreaterThanOrEqualTo.GenMethods() #>
+<#=		Methods.RangeKeyGreaterThanOrEqualTo.GenMethods() #>
 
-<#=		rangeKeyBetweenAsync.GenMethods() #>
+<#=		Methods.RangeKeyBetweenAsync.GenMethods() #>
 
-<#=		rangeKeyBetween.GenMethods() #>
+<#=		Methods.RangeKeyBetween.GenMethods() #>
 
 <#=		Methods.AllKeysAsyncPaged.GenExplicitImplementations("IPagedQueryRangeSyntax") #>
 

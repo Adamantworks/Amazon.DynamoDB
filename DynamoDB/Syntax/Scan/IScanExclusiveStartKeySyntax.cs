@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Scan
 {
-	public interface IScanLimitToOrPagedSyntax : IScanExclusiveStartKeySyntax
+	public interface IScanExclusiveStartKeySyntax : IScanOptionsSyntax
 	{
-		IScanExclusiveStartKeySyntax LimitTo(int? limit);
-		IPagedScanOptionsSyntax Paged(int pageSize);
-		IPagedScanOptionsSyntax Paged(int pageSize, LastKey? exclusiveStartKey);
+		/// <summary>
+		/// Prefer .Paged() to this method.  This exists for unusual cases where
+		/// you are getting the exclusive start key by means other than pagining/
+		/// </summary>
+		IScanOptionsSyntax ExclusiveStartKey(LastKey key);
 	}
 }

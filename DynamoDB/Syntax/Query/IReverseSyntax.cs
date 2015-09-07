@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Query
 {
-	public partial interface IScanOptionsSyntax
+	public interface IReverseSyntax : IQueryLimitToOrPagedSyntax
 	{
-		IAsyncEnumerable<DynamoDBMap> AllAsync();
-
-		IAsyncEnumerable<DynamoDBMap> SegmentAsync(int segment, int totalSegments);
+		IQueryLimitToOrPagedSyntax Reverse();
 	}
 }
