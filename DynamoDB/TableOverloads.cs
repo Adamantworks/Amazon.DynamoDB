@@ -44,18 +44,18 @@ namespace Adamantworks.Amazon.DynamoDB
 		void UpdateTable(IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 		void UpdateTable(ProvisionedThroughput provisionedThroughput, IReadOnlyDictionary<string, ProvisionedThroughput> indexProvisionedThroughputs);
 
-		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey);
-		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, IValueConverter converter);
-		void Delete(IBatchWriteAsync batch, object hashKey);
-		void Delete(IBatchWriteAsync batch, object hashKey, IValueConverter converter);
-		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
-		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		void Delete(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey);
-		void Delete(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
-		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey);
-		void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter);
-		void Delete(IBatchWriteAsync batch, object hashKey, object rangeKey);
-		void Delete(IBatchWriteAsync batch, object hashKey, object rangeKey, IValueConverter converter);
+		void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey);
+		void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, IValueConverter converter);
+		void DeleteAsync(IBatchWriteAsync batch, object hashKey);
+		void DeleteAsync(IBatchWriteAsync batch, object hashKey, IValueConverter converter);
+		void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey);
+		void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
+		void DeleteAsync(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey);
+		void DeleteAsync(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter);
+		void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey);
+		void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter);
+		void DeleteAsync(IBatchWriteAsync batch, object hashKey, object rangeKey);
+		void DeleteAsync(IBatchWriteAsync batch, object hashKey, object rangeKey, IValueConverter converter);
 		void Delete(IBatchWrite batch, DynamoDBKeyValue hashKey);
 		void Delete(IBatchWrite batch, DynamoDBKeyValue hashKey, IValueConverter converter);
 		void Delete(IBatchWrite batch, object hashKey);
@@ -640,54 +640,54 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
-		#region Delete
-		public void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey)
+		#region DeleteAsync
+		public void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey)
 		{
-			Delete(batch, ItemKey.Create(hashKey));
+			DeleteAsync(batch, ItemKey.Create(hashKey));
 		}
-		public void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, IValueConverter converter)
+		public void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, IValueConverter converter)
 		{
-			Delete(batch, ItemKey.Create(hashKey, converter));
+			DeleteAsync(batch, ItemKey.Create(hashKey, converter));
 		}
-		public void Delete(IBatchWriteAsync batch, object hashKey)
+		public void DeleteAsync(IBatchWriteAsync batch, object hashKey)
 		{
-			Delete(batch, ItemKey.Create(hashKey));
+			DeleteAsync(batch, ItemKey.Create(hashKey));
 		}
-		public void Delete(IBatchWriteAsync batch, object hashKey, IValueConverter converter)
+		public void DeleteAsync(IBatchWriteAsync batch, object hashKey, IValueConverter converter)
 		{
-			Delete(batch, ItemKey.Create(hashKey, converter));
+			DeleteAsync(batch, ItemKey.Create(hashKey, converter));
 		}
-		public void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		public void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey));
 		}
-		public void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey, converter));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey, converter));
 		}
-		public void Delete(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey)
+		public void DeleteAsync(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey));
 		}
-		public void Delete(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		public void DeleteAsync(IBatchWriteAsync batch, object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey, converter));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey, converter));
 		}
-		public void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey)
+		public void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey));
 		}
-		public void Delete(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		public void DeleteAsync(IBatchWriteAsync batch, DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey, converter));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey, converter));
 		}
-		public void Delete(IBatchWriteAsync batch, object hashKey, object rangeKey)
+		public void DeleteAsync(IBatchWriteAsync batch, object hashKey, object rangeKey)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey));
 		}
-		public void Delete(IBatchWriteAsync batch, object hashKey, object rangeKey, IValueConverter converter)
+		public void DeleteAsync(IBatchWriteAsync batch, object hashKey, object rangeKey, IValueConverter converter)
 		{
-			Delete(batch, ItemKey.Create(hashKey, rangeKey, converter));
+			DeleteAsync(batch, ItemKey.Create(hashKey, rangeKey, converter));
 		}
 		#endregion
 

@@ -86,7 +86,7 @@
 		Params.GenOverloads(true, Args.This, Args.ReturnOldItemFalse));
 	var batchDelete = new Method("void", "Delete",
 		Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
-	var batchDeleteAsync = new Method("void", "Delete",
+	var batchDeleteAsync = new Method("void", "DeleteAsync",
 		Params.GenOverloads(false, Params.BatchWriteAsync, Params.KeyOverloads));
 #>
 using System;
