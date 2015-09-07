@@ -21,6 +21,7 @@ using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
 
@@ -414,55 +415,6 @@ namespace Adamantworks.Amazon.DynamoDB
 		}
 		#endregion
 
-		#region PutAsync
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
-		{
-			return writeContext.PutAsync(item, false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
-		{
-			return writeContext.PutAsync(item, returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
-		{
-			return writeContext.PutAsync(item, false, cancellationToken);
-		}
-		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken)
-		{
-			return writeContext.PutAsync(item, returnOldItem, cancellationToken);
-		}
-		#endregion
-
-		#region Put
-		public DynamoDBMap Put(DynamoDBMap item)
-		{
-			return writeContext.Put(item, false);
-		}
-		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
-		{
-			return writeContext.Put(item, returnOldItem);
-		}
-		#endregion
-
-		#region Update
-		public IForKeySyntax Update(UpdateExpression update)
-		{
-			return new UpdateContext(this, update, null, UpdateReturnValue.None);
-		}
-		public IForKeySyntax Update(UpdateExpression update, Values values)
-		{
-			return new UpdateContext(this, update, values, UpdateReturnValue.None);
-		}
-		public IForKeySyntax Update(UpdateExpression update, UpdateReturnValue returnValue)
-		{
-			return new UpdateContext(this, update, null, returnValue);
-		}
-		public IForKeySyntax Update(UpdateExpression update, Values values, UpdateReturnValue returnValue)
-		{
-			return new UpdateContext(this, update, values, returnValue);
-		}
-		#endregion
-
 		#region Query
 		public IReverseSyntax Query(DynamoDBKeyValue hashKey)
 		{
@@ -592,6 +544,115 @@ namespace Adamantworks.Amazon.DynamoDB
 		public IScanCountOptionsSyntax ScanCount(PredicateExpression filter, Values values)
 		{
 			return new ScanCountContext(this, null, false, filter, values);
+		}
+		#endregion
+
+		#region PutAsync
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item)
+		{
+			return putContext.PutAsync(item, false, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem)
+		{
+			return putContext.PutAsync(item, returnOldItem, CancellationToken.None);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, CancellationToken cancellationToken)
+		{
+			return putContext.PutAsync(item, false, cancellationToken);
+		}
+		public Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken)
+		{
+			return putContext.PutAsync(item, returnOldItem, cancellationToken);
+		}
+		#endregion
+
+		#region Put
+		public DynamoDBMap Put(DynamoDBMap item)
+		{
+			return putContext.Put(item, false);
+		}
+		public DynamoDBMap Put(DynamoDBMap item, bool returnOldItem)
+		{
+			return putContext.Put(item, returnOldItem);
+		}
+		#endregion
+
+		#region Update
+		public ISetSyntax Update(UpdateExpression update)
+		{
+			return new UpdateContext(this, update, null, UpdateReturnValue.None);
+		}
+		public ISetSyntax Update(UpdateExpression update, Values values)
+		{
+			return new UpdateContext(this, update, values, UpdateReturnValue.None);
+		}
+		public ISetSyntax Update(UpdateExpression update, UpdateReturnValue returnValue)
+		{
+			return new UpdateContext(this, update, null, returnValue);
+		}
+		public ISetSyntax Update(UpdateExpression update, Values values, UpdateReturnValue returnValue)
+		{
+			return new UpdateContext(this, update, values, returnValue);
+		}
+		#endregion
+
+		#region DeleteAsync
+		public IDeleteItemAsyncSyntax DeleteAsync()
+		{
+			return new WriteContext(this, null, null, false, CancellationToken.None);
+		}
+		public IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem)
+		{
+			return new WriteContext(this, null, null, returnOldItem, CancellationToken.None);
+		}
+		public IDeleteItemAsyncSyntax DeleteAsync(CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, null, null, false, cancellationToken);
+		}
+		public IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, null, null, returnOldItem, cancellationToken);
+		}
+		#endregion
+
+		#region Delete
+		public IDeleteItemSyntax Delete()
+		{
+			return new WriteContext(this, null, null, false);
+		}
+		public IDeleteItemSyntax Delete(bool returnOldItem)
+		{
+			return new WriteContext(this, null, null, returnOldItem);
+		}
+		#endregion
+
+		#region TryDeleteAsync
+		public ITryDeleteItemAsyncSyntax TryDeleteAsync()
+		{
+			return new WriteContext(this, null, null, false, CancellationToken.None);
+		}
+		public ITryDeleteItemAsyncSyntax TryDeleteAsync(bool returnOldItem)
+		{
+			return new WriteContext(this, null, null, returnOldItem, CancellationToken.None);
+		}
+		public ITryDeleteItemAsyncSyntax TryDeleteAsync(CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, null, null, false, cancellationToken);
+		}
+		public ITryDeleteItemAsyncSyntax TryDeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
+		{
+			return new WriteContext(this, null, null, returnOldItem, cancellationToken);
+		}
+		#endregion
+
+		#region TryDelete
+		public ITryDeleteItemSyntax TryDelete()
+		{
+			return new WriteContext(this, null, null, false);
+		}
+		public ITryDeleteItemSyntax TryDelete(bool returnOldItem)
+		{
+			return new WriteContext(this, null, null, returnOldItem);
 		}
 		#endregion
 

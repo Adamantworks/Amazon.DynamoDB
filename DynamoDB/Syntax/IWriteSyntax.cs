@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-<#@ template debug="true" hostSpecific="true" #>
-<#@ output extension=".cs" #>
-<#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
-<#@ Assembly Name="System.Core.dll" #>
-<#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using System.Threading;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IModifySyntax
+	public partial interface IWriteSyntax
 	{
-<#=		Methods.UpdateAsync.GenInterface() #>
-<#=		Methods.Update.GenInterface() #>
+		Task<DynamoDBMap> PutAsync(DynamoDBMap item, bool returnOldItem, CancellationToken cancellationToken);
+		DynamoDBMap Put(DynamoDBMap item, bool returnOldItem);
+
+		IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem, CancellationToken cancellationToken);
+		IDeleteItemSyntax Delete(bool returnOldItem);
 	}
 }

@@ -108,16 +108,6 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 		public static readonly Method CountRangeKeyBetween = new Method("long", "RangeKeyBetween",
 			Params.GenOverloads(false, Params.RangeKeyBetweenOverloads));
 
-		public static readonly Method UpdateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
-			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue, Params.CancellationToken));
-		public static readonly Method Update = new Method("DynamoDBMap", "Update",
-			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
-
-		public static readonly Method DeleteAsync = new Method("Task<DynamoDBMap>", "DeleteAsync",
-			Params.GenOverloads(Params.ReturnOldItem, Params.CancellationToken));
-		public static readonly Method Delete = new Method("DynamoDBMap", "Delete",
-			Params.GenOverloads(Params.ReturnOldItem));
-
 		// Query Range Paged
 		public static readonly Method AllKeysAsyncPaged = new Method("Task<ItemPage>", "AllKeysAsync", Params.GenOverloads(Params.CancellationToken));
 		public static readonly Method RangeKeyBeginsWithAsyncPaged = new Method("Task<ItemPage>", "RangeKeyBeginsWithAsync",
@@ -158,9 +148,34 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 		public static readonly Method ScanSegmentAsync = new Method("IAsyncEnumerable<DynamoDBMap>", "SegmentAsync",
 			Params.GenOverloads(Params.Segment, Params.TotalSegments, Params.ReadAhead));
 
+		// Put Methods
 		public static readonly Method PutAsync = new Method("Task<DynamoDBMap>", "PutAsync",
 		Params.GenOverloads(Params.Item, Params.ReturnOldItem, Params.CancellationToken));
 		public static readonly Method Put = new Method("DynamoDBMap", "Put",
 			Params.GenOverloads(Params.Item, Params.ReturnOldItem));
+
+		// Update Methods
+		public static readonly Method UpdateAsync = new Method("Task<DynamoDBMap>", "UpdateAsync",
+			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue, Params.CancellationToken));
+		public static readonly Method Update = new Method("DynamoDBMap", "Update",
+			Params.GenOverloads(Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
+
+		// Delete Methods
+		public static readonly Method DeleteAsync = new Method("IDeleteItemAsyncSyntax", "DeleteAsync",
+			Params.GenOverloads(false, Params.ReturnOldItem, Params.CancellationToken));
+		public static readonly Method DeleteItemAsync = new Method("Task<DynamoDBMap>", "Item",
+			Params.GenOverloads(false, Params.KeyOverloads));
+		public static readonly Method Delete = new Method("IDeleteItemSyntax", "Delete",
+			Params.GenOverloads(false, Params.ReturnOldItem));
+		public static readonly Method DeleteItem = new Method("DynamoDBMap", "Item",
+			Params.GenOverloads(false, Params.KeyOverloads));
+		public static readonly Method TryDeleteAsync = new Method("ITryDeleteItemAsyncSyntax", "TryDeleteAsync",
+			Params.GenOverloads(false, Params.CancellationToken));
+		public static readonly Method TryDeleteItemAsync = new Method("Task<bool>", "Item",
+			Params.GenOverloads(false, Params.KeyOverloads));
+		public static readonly Method TryDelete = new Method("ITryDeleteItemSyntax", "TryDelete",
+			Params.GenOverloads(false));
+		public static readonly Method TryDeleteItem = new Method("bool", "Item",
+			Params.GenOverloads(false, Params.KeyOverloads));
 	}
 }

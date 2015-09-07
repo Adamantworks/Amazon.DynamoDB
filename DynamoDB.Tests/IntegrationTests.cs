@@ -65,7 +65,6 @@ namespace Adamantworks.Amazon.DynamoDB.Tests
 		private async Task WithTableAsync(string test, Func<ITable, Task> actions)
 		{
 			var tableName = UniqueTableName(test);
-			;
 			var schema = TableSchema();
 			var table = await region.CreateTableAsync(tableName, schema);
 			await table.WaitUntilNotAsync(CollectionStatus.Creating);

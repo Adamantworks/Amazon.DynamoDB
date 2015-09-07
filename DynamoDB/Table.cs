@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Adamantworks.Amazon.DynamoDB.Contexts;
-using Adamantworks.Amazon.DynamoDB.Converters;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
-using Adamantworks.Amazon.DynamoDB.Internal;
-using Adamantworks.Amazon.DynamoDB.Schema;
-using Adamantworks.Amazon.DynamoDB.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.Contexts;
+using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Internal;
+using Adamantworks.Amazon.DynamoDB.Schema;
+using Adamantworks.Amazon.DynamoDB.Syntax;
 using Aws = Amazon.DynamoDBv2.Model;
-using AwsEnums = Amazon.DynamoDBv2;
 
 namespace Adamantworks.Amazon.DynamoDB
 {
-	public partial interface ITable : ITableConsistentSyntax, IPutSyntax
+	public partial interface ITable : ITableConsistentSyntax, IWriteSyntax
 	{
 		string Name { get; }
 		TableSchema Schema { get; }
@@ -55,8 +53,8 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		ITableFromSyntax Select(ProjectionExpression projection);
 
-		ITryPutSyntax If(PredicateExpression condition);
-		ITryPutSyntax If(PredicateExpression condition, Values values);
+		IWriteConditionallySyntax If(PredicateExpression condition);
+		IWriteConditionallySyntax If(PredicateExpression condition, Values values);
 
 		void PutAsync(IBatchWriteAsync batch, DynamoDBMap item);
 		void Put(IBatchWrite batch, DynamoDBMap item);
@@ -78,7 +76,7 @@ namespace Adamantworks.Amazon.DynamoDB
 		internal readonly Region Region;
 		private readonly TableReadContext consistentReadContext;
 		private readonly TableReadContext eventuallyConsistentReadContext;
-		private readonly WriteContext writeContext;
+		private readonly WriteContext putContext;
 		private readonly WriteContext insertContext;
 
 		public Table(Region region, Aws.TableDescription tableDescription)
@@ -87,8 +85,9 @@ namespace Adamantworks.Amazon.DynamoDB
 			UpdateTableDescription(tableDescription);
 			consistentReadContext = new TableReadContext(this, null, true);
 			eventuallyConsistentReadContext = new TableReadContext(this, null, false);
-			writeContext = new WriteContext(this, null, null);
-			insertContext = new WriteContext(this, new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name), null);
+			putContext = new WriteContext(this, null, null, false, CancellationToken.None);
+			var insertCondition = new PredicateExpression("attribute_not_exists(#key)", "key", Schema.Key.HashKey.Name);
+			insertContext = new WriteContext(this, insertCondition, null, false, CancellationToken.None);
 		}
 
 		private void UpdateTableDescription(Aws.TableDescription tableDescription)
@@ -279,11 +278,11 @@ namespace Adamantworks.Amazon.DynamoDB
 			return consistent ? consistentReadContext : eventuallyConsistentReadContext;
 		}
 
-		public ITryPutSyntax If(PredicateExpression condition)
+		public IWriteConditionallySyntax If(PredicateExpression condition)
 		{
 			return new WriteContext(this, condition, null);
 		}
-		public ITryPutSyntax If(PredicateExpression condition, Values values)
+		public IWriteConditionallySyntax If(PredicateExpression condition, Values values)
 		{
 			return new WriteContext(this, condition, values);
 		}

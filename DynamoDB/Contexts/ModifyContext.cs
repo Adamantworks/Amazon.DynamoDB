@@ -111,76 +111,76 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		}
 		#endregion
 
-		#region Delete
-		public async Task<DynamoDBMap> DeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
-		{
-			var request = BuildDeleteRequest(returnOldItem);
-			var response = await table.Region.DB.DeleteItemAsync(request, cancellationToken).ConfigureAwait(false);
-			if(!returnOldItem) return null;
-			return response.Attributes.ToMap();
-		}
+		//#region Delete
+		//public async Task<DynamoDBMap> DeleteAsync(bool returnOldItem, CancellationToken cancellationToken)
+		//{
+		//	var request = BuildDeleteRequest(returnOldItem);
+		//	var response = await table.Region.DB.DeleteItemAsync(request, cancellationToken).ConfigureAwait(false);
+		//	if(!returnOldItem) return null;
+		//	return response.Attributes.ToMap();
+		//}
 
-		public DynamoDBMap Delete(bool returnOldItem)
-		{
-			var request = BuildDeleteRequest(returnOldItem);
-			var response = table.Region.DB.DeleteItem(request);
-			if(!returnOldItem) return null;
-			return response.Attributes.ToMap();
-		}
+		//public DynamoDBMap Delete(bool returnOldItem)
+		//{
+		//	var request = BuildDeleteRequest(returnOldItem);
+		//	var response = table.Region.DB.DeleteItem(request);
+		//	if(!returnOldItem) return null;
+		//	return response.Attributes.ToMap();
+		//}
 
-		private Aws.DeleteItemRequest BuildDeleteRequest(bool returnOldItem)
-		{
-			var request = new Aws.DeleteItemRequest()
-			{
-				TableName = table.Name,
-				Key = key.ToAws(table.Schema.Key),
-				ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
-			};
-			if(condition != null)
-				request.ConditionExpression = condition.Expression;
-			request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, conditionValues);
-			return request;
-		}
-		#endregion
+		//private Aws.DeleteItemRequest BuildDeleteRequest(bool returnOldItem)
+		//{
+		//	var request = new Aws.DeleteItemRequest()
+		//	{
+		//		TableName = table.Name,
+		//		Key = key.ToAws(table.Schema.Key),
+		//		ReturnValues = returnOldItem ? AwsEnums.ReturnValue.ALL_OLD : AwsEnums.ReturnValue.NONE,
+		//	};
+		//	if(condition != null)
+		//		request.ConditionExpression = condition.Expression;
+		//	request.ExpressionAttributeValues = AwsAttributeValues.GetCombined(condition, conditionValues);
+		//	return request;
+		//}
+		//#endregion
 
-		#region TryDelete
-		public async Task<bool> TryDeleteAsync()
-		{
-			try
-			{
-				await DeleteAsync(false, CancellationToken.None).ConfigureAwait(false);
-				return true;
-			}
-			catch(Aws.ConditionalCheckFailedException)
-			{
-				return false;
-			}
-		}
-		public async Task<bool> TryDeleteAsync(CancellationToken cancellationToken)
-		{
-			try
-			{
-				await DeleteAsync(false, cancellationToken).ConfigureAwait(false);
-				return true;
-			}
-			catch(Aws.ConditionalCheckFailedException)
-			{
-				return false;
-			}
-		}
+		//#region TryDelete
+		//public async Task<bool> TryDeleteAsync()
+		//{
+		//	try
+		//	{
+		//		await DeleteAsync(false, CancellationToken.None).ConfigureAwait(false);
+		//		return true;
+		//	}
+		//	catch(Aws.ConditionalCheckFailedException)
+		//	{
+		//		return false;
+		//	}
+		//}
+		//public async Task<bool> TryDeleteAsync(CancellationToken cancellationToken)
+		//{
+		//	try
+		//	{
+		//		await DeleteAsync(false, cancellationToken).ConfigureAwait(false);
+		//		return true;
+		//	}
+		//	catch(Aws.ConditionalCheckFailedException)
+		//	{
+		//		return false;
+		//	}
+		//}
 
-		public bool TryDelete()
-		{
-			try
-			{
-				Delete(false);
-				return true;
-			}
-			catch(Aws.ConditionalCheckFailedException)
-			{
-				return false;
-			}
-		}
-		#endregion
+		//public bool TryDelete()
+		//{
+		//	try
+		//	{
+		//		Delete(false);
+		//		return true;
+		//	}
+		//	catch(Aws.ConditionalCheckFailedException)
+		//	{
+		//		return false;
+		//	}
+		//}
+		//#endregion
 	}
 }

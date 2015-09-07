@@ -20,7 +20,9 @@
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -29,5 +31,21 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#=		Methods.PutAsync.GenMethods() #>
 
 <#=		Methods.Put.GenMethods() #>
+
+<#=		Methods.DeleteAsync.GenMethods() #>
+
+<#=		Methods.DeleteItemAsync.GenExplicitImplementations("IDeleteItemAsyncSyntax") #>
+
+<#=		Methods.Delete.GenMethods() #>
+
+<#=		Methods.DeleteItem.GenExplicitImplementations("IDeleteItemSyntax") #>
+
+<#=		Methods.TryDeleteAsync.GenMethods() #>
+
+<#=		Methods.TryDeleteItemAsync.GenExplicitImplementations("ITryDeleteItemAsyncSyntax") #>
+
+<#=		Methods.TryDelete.GenMethods() #>
+
+<#=		Methods.TryDeleteItem.GenExplicitImplementations("ITryDeleteItemSyntax") #>
 	}
 }

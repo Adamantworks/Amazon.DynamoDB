@@ -60,8 +60,19 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			return overloads;
 		}
 
+		public static IEnumerable<IReadOnlyList<Parameter>> RemoveBaseKeyOverload(IEnumerable<IReadOnlyList<Parameter>> baseOverloads)
+		{
+			var overloads = baseOverloads.ToList();
+			var itemKeyOverloads = overloads.Where(o => o[0] == ItemKey && o.All(p => !p.IsArgument)).ToList();
+			var longestItemKeyOverloadLength = itemKeyOverloads.Max(o => o.Count);
+			var longestItemKeyOverload = itemKeyOverloads.Single(o => o.Count == longestItemKeyOverloadLength);
+			return overloads.Except(new[] { longestItemKeyOverload });
+		}
+
+		// must pass either provisionedThroughput or indexProvisionedThroughputs
+		public static readonly Func<IReadOnlyList<Parameter>, bool> HasThroughput = overload => overload.Contains(ProvisionedThroughput) || overload.Contains(IndexProvisionedThroughputs);
 		public static readonly Func<IReadOnlyList<Parameter>, bool> NoIndexThroughputWithoutTableThroughput = overload => !(overload.Contains(IndexProvisionedThroughputs) && !overload.Contains(ProvisionedThroughput));
-		public static readonly Func<IReadOnlyList<Parameter>, bool> NoValuesWithoutFilter = overload => !(overload.Contains(Params.Values) && !overload.Contains(Params.Filter));
+		public static readonly Func<IReadOnlyList<Parameter>, bool> NoValuesWithoutFilter = overload => !(overload.Contains(Values) && !overload.Contains(Filter));
 
 		public static readonly Parameter ReadAhead = Parameter.Of("ReadAhead", "readAhead", "ReadAhead.Some");
 		public static readonly Parameter TableNamePrefix = Parameter.Of("string", "tableNamePrefix");
@@ -141,14 +152,14 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			.ToList();
 
 		public static readonly IList<IReadOnlyList<Parameter>> RangeKeyBetweenOverloads =
-			GenOverloads(true, Params.StartInclusiveObjectConverter, Params.EndExclusiveObjectConverter, Params.ConverterSkipped)
-			.Concat(Params.GenOverloads(true, Params.StartInclusiveObject, Params.EndExclusiveObject))
-			.Concat(Params.GenOverloads(true, Params.StartInclusiveObjectConverter, Params.EndExclusive, Params.ConverterSkipped))
-			.Concat(Params.GenOverloads(true, Params.StartInclusiveObject, Params.EndExclusive))
-			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusiveObjectConverter, Params.ConverterSkipped))
-			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusiveObject))
-			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusive, Params.ConverterSkipped))
-			.Concat(Params.GenOverloads(true, Params.StartInclusive, Params.EndExclusive))
+			GenOverloads(true, StartInclusiveObjectConverter, EndExclusiveObjectConverter, ConverterSkipped)
+			.Concat(GenOverloads(true, StartInclusiveObject, EndExclusiveObject))
+			.Concat(GenOverloads(true, StartInclusiveObjectConverter, EndExclusive, ConverterSkipped))
+			.Concat(GenOverloads(true, StartInclusiveObject, EndExclusive))
+			.Concat(GenOverloads(true, StartInclusive, EndExclusiveObjectConverter, ConverterSkipped))
+			.Concat(GenOverloads(true, StartInclusive, EndExclusiveObject))
+			.Concat(GenOverloads(true, StartInclusive, EndExclusive, ConverterSkipped))
+			.Concat(GenOverloads(true, StartInclusive, EndExclusive))
 			.ToList();
 	}
 }

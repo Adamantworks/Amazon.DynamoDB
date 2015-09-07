@@ -33,6 +33,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
@@ -55,10 +56,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 <#=		tryUpdateAsync.GenMethods() #>
 
 <#=		tryUpdate.GenMethods() #>
-
-<#=		Methods.DeleteAsync.GenMethods() #>
-
-<#=		Methods.Delete.GenMethods() #>
 	}
 
 	internal partial class QueryContext

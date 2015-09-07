@@ -38,5 +38,7 @@
 		{
 			return new Parameter(null, null, null, value);
 		}
+
+		public bool IsArgument { get { return Name == null; } }
 	}
 }

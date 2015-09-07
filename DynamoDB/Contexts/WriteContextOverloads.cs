@@ -14,7 +14,9 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
@@ -39,6 +41,242 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public DynamoDBMap Put(DynamoDBMap item)
 		{
 			return Put(item, false);
+		}
+		#endregion
+
+		#region DeleteAsync
+		public IDeleteItemAsyncSyntax DeleteAsync()
+		{
+			return DeleteAsync(false, CancellationToken.None);
+		}
+		public IDeleteItemAsyncSyntax DeleteAsync(bool returnOldItem)
+		{
+			return DeleteAsync(returnOldItem, CancellationToken.None);
+		}
+		public IDeleteItemAsyncSyntax DeleteAsync(CancellationToken cancellationToken)
+		{
+			return DeleteAsync(false, cancellationToken);
+		}
+		#endregion
+
+		#region IDeleteItemAsyncSyntax.Item
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(object hashKey)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(object hashKey, IValueConverter converter)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(object hashKey, object rangeKey)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<DynamoDBMap> IDeleteItemAsyncSyntax.Item(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		#endregion
+
+		#region Delete
+		public IDeleteItemSyntax Delete()
+		{
+			return Delete(false);
+		}
+		#endregion
+
+		#region IDeleteItemSyntax.Item
+		DynamoDBMap IDeleteItemSyntax.Item(DynamoDBKeyValue hashKey)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(object hashKey)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(object hashKey, IValueConverter converter)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(object hashKey, object rangeKey)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		DynamoDBMap IDeleteItemSyntax.Item(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((IDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		#endregion
+
+		#region TryDeleteAsync
+		public ITryDeleteItemAsyncSyntax TryDeleteAsync()
+		{
+			return TryDeleteAsync(CancellationToken.None);
+		}
+		#endregion
+
+		#region ITryDeleteItemAsyncSyntax.Item
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(object hashKey)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(object hashKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(object hashKey, object rangeKey)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		Task<bool> ITryDeleteItemAsyncSyntax.Item(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemAsyncSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		#endregion
+
+		#region TryDelete
+		#endregion
+
+		#region ITryDeleteItemSyntax.Item
+		bool ITryDeleteItemSyntax.Item(DynamoDBKeyValue hashKey)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		bool ITryDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		bool ITryDeleteItemSyntax.Item(object hashKey)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey));
+		}
+		bool ITryDeleteItemSyntax.Item(object hashKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, converter));
+		}
+		bool ITryDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		bool ITryDeleteItemSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryDeleteItemSyntax.Item(object hashKey, DynamoDBKeyValue rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		bool ITryDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryDeleteItemSyntax.Item(DynamoDBKeyValue hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
+		}
+		bool ITryDeleteItemSyntax.Item(object hashKey, object rangeKey)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey));
+		}
+		bool ITryDeleteItemSyntax.Item(object hashKey, object rangeKey, IValueConverter converter)
+		{
+			return ((ITryDeleteItemSyntax)this).Item(ItemKey.Create(hashKey, rangeKey, converter));
 		}
 		#endregion
 	}

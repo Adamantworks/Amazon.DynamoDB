@@ -26,12 +26,10 @@
 		.Concat(Params.GenOverloads(Params.Status, Params.Timeout, Params.CancellationToken)));
 	var updateTableAsync = new Method("Task", "UpdateTableAsync",
 		Params.GenOverloads(true, Params.ProvisionedThroughput, Params.IndexProvisionedThroughputs, Params.CancellationToken)
-		// must pass either provisionedThroughput or indexProvisionedThroughputs
-		.Where(overload => overload.Contains(Params.ProvisionedThroughput) || overload.Contains(Params.IndexProvisionedThroughputs)));
+		.Where(Params.HasThroughput));
 	var updateTable = new Method("void", "UpdateTable",
 		Params.GenOverloads(true, Params.ProvisionedThroughput, Params.IndexProvisionedThroughputs)
-		// must pass either provisionedThroughput or indexProvisionedThroughputs
-		.Where(overload => overload.Contains(Params.ProvisionedThroughput) || overload.Contains(Params.IndexProvisionedThroughputs)));
+		.Where(Params.HasThroughput));
 	var getAsyncForwards = new Method("Task<DynamoDBMap>", "GetAsync", "eventuallyConsistentReadContext.GetAsync",
 		Params.GenOverloads(true, Params.KeyOverloads, Params.CancellationToken));
 	var getForwards = new Method("DynamoDBMap", "Get", "eventuallyConsistentReadContext.Get", Params.KeyOverloads);
@@ -46,11 +44,6 @@
 	var batchGetJoinForwards = new Method("IEnumerable<TResult>", "BatchGetJoin<T, TResult>", "eventuallyConsistentReadContext.BatchGetJoin",
 		Params.GenOverloads(true, Params.OuterItemsSync, Params.KeySelector, Params.ResultSelector));
 	var forKey = new Method("IIfSyntax", "ForKey", "new ModifyContext", Params.GenOverloads(true, Args.This,  Params.KeyOverloads));
-	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "writeContext.PutAsync",
-		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem, Params.CancellationToken));
-	var putForwards = new Method("DynamoDBMap", "Put", "writeContext.Put",
-		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem));
-	var update = new Method("IForKeySyntax", "Update", "new UpdateContext", Params.GenOverloads(true, Args.This, Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
 	var queryForwards = new Method("IReverseSyntax", "Query", "new QueryContext",
 		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Args.ConsistentNone, Params.HashKey, Params.Filter, Params.Values)
 		.Concat(Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ProjectionNone, Args.ConsistentNone, Params.HashKey, Params.ConverterSkipped, Params.Filter, Params.Values))
@@ -69,6 +62,19 @@
 	var scanCountForwards = new Method("IScanCountOptionsSyntax", "ScanCount", "new ScanCountContext",
 		Params.GenOverloads(true, Args.This, Args.IndexNone, Args.ConsistentNone, Params.Filter, Params.Values)
 		.Where(Params.NoValuesWithoutFilter));
+	var putAsyncForwards = new Method("Task<DynamoDBMap>", "PutAsync", "putContext.PutAsync",
+		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem, Params.CancellationToken));
+	var putForwards = new Method("DynamoDBMap", "Put", "putContext.Put",
+		Params.GenOverloads(true, Params.Item, Params.ReturnOldItem));
+	var update = new Method("ISetSyntax", "Update", "new UpdateContext", Params.GenOverloads(true, Args.This, Params.UpdateExp, Params.Values, Params.UpdateReturnValue));
+	var deleteAsyncForwards = new Method("IDeleteItemAsyncSyntax", "DeleteAsync", "new WriteContext",
+		Params.GenOverloads(true, Args.This, Args.ConditionNone, Args.ConditionValuesNone, Params.ReturnOldItem, Params.CancellationToken));
+	var deleteForwards = new Method("IDeleteItemSyntax", "Delete", "new WriteContext",
+		Params.GenOverloads(true, Args.This, Args.ConditionNone, Args.ConditionValuesNone, Params.ReturnOldItem));
+	var tryDeleteAsyncForwards = new Method("ITryDeleteItemAsyncSyntax", "TryDeleteAsync", "new WriteContext",
+		Params.GenOverloads(true, Args.This, Args.ConditionNone, Args.ConditionValuesNone, Params.ReturnOldItem, Params.CancellationToken));
+	var tryDeleteForwards = new Method("ITryDeleteItemSyntax", "TryDelete", "new WriteContext",
+		Params.GenOverloads(true, Args.This, Args.ConditionNone, Args.ConditionValuesNone, Params.ReturnOldItem));
 	var batchDelete = new Method("void", "Delete",
 		Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
 	var batchDeleteAsync = new Method("void", "Delete",
@@ -83,6 +89,7 @@ using Adamantworks.Amazon.DynamoDB.Contexts;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 using Adamantworks.Amazon.DynamoDB.Syntax.Scan;
 
@@ -127,12 +134,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#=		forKey.GenMethods() #>
 
-<#=		putAsyncForwards.GenMethods() #>
-
-<#=		putForwards.GenMethods() #>
-
-<#=		update.GenMethods() #>
-
 <#=		queryForwards.GenMethods() #>
 
 <#=		queryCountForwards.GenMethods() #>
@@ -140,6 +141,20 @@ namespace Adamantworks.Amazon.DynamoDB
 <#=		scanForwards.GenMethods() #>
 
 <#=		scanCountForwards.GenMethods() #>
+
+<#=		putAsyncForwards.GenMethods() #>
+
+<#=		putForwards.GenMethods() #>
+
+<#=		update.GenMethods() #>
+
+<#=		deleteAsyncForwards.GenMethods() #>
+
+<#=		deleteForwards.GenMethods() #>
+
+<#=		tryDeleteAsyncForwards.GenMethods() #>
+
+<#=		tryDeleteForwards.GenMethods() #>
 
 <#=		batchDeleteAsync.GenMethods() #>
 

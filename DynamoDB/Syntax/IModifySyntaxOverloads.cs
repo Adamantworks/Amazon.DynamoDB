@@ -30,10 +30,5 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 		DynamoDBMap Update(UpdateExpression update);
 		DynamoDBMap Update(UpdateExpression update, Values values);
 		DynamoDBMap Update(UpdateExpression update, UpdateReturnValue returnValue);
-
-		Task<DynamoDBMap> DeleteAsync();
-		Task<DynamoDBMap> DeleteAsync(bool returnOldItem);
-		Task<DynamoDBMap> DeleteAsync(CancellationToken cancellationToken);
-		DynamoDBMap Delete();
 	}
 }

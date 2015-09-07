@@ -11,6 +11,8 @@
 		public static readonly Parameter Projection = Parameter.Argument("projection");
 		public static readonly Parameter ConsistentNone = Parameter.Argument("false");
 		public static readonly Parameter ConsistentRead = Parameter.Argument("consistentRead ?? false");
+		public static readonly Parameter ConditionNone = Parameter.Argument("null");
+		public static readonly Parameter ConditionValuesNone = Parameter.Argument("null");
 		public static readonly Parameter This = Parameter.Argument("this");
 	}
 }

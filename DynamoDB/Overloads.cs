@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Adamantworks.Amazon.DynamoDB.Syntax.Query;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
@@ -99,28 +100,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 		public bool TryUpdate(UpdateExpression update)
 		{
 			return TryUpdate(update, null);
-		}
-		#endregion
-
-		#region DeleteAsync
-		public Task<DynamoDBMap> DeleteAsync()
-		{
-			return DeleteAsync(false, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(bool returnOldItem)
-		{
-			return DeleteAsync(returnOldItem, CancellationToken.None);
-		}
-		public Task<DynamoDBMap> DeleteAsync(CancellationToken cancellationToken)
-		{
-			return DeleteAsync(false, cancellationToken);
-		}
-		#endregion
-
-		#region Delete
-		public DynamoDBMap Delete()
-		{
-			return Delete(false);
 		}
 		#endregion
 	}

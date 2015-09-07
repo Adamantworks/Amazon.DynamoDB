@@ -2,7 +2,7 @@
 
 namespace Adamantworks.Amazon.DynamoDB.Contexts
 {
-	internal class UpdateContext : IForKeySyntax
+	internal class UpdateContext : ISetSyntax
 	{
 		private readonly Table table;
 		private readonly UpdateExpression update;
@@ -19,16 +19,6 @@ namespace Adamantworks.Amazon.DynamoDB.Contexts
 			this.update = update;
 			this.values = values;
 			this.returnValue = returnValue;
-		}
-
-		public bool TryForKey(ItemKey key)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		void IForKeySyntax.ForKey(ItemKey key)
-		{
-			throw new System.NotImplementedException();
 		}
 	}
 }

@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Delete
 {
-	public interface ITryPutSyntax : IPutSyntax
+	public partial interface ITryDeleteItemAsyncSyntax
 	{
-		Task<bool> TryPutAsync(DynamoDBMap item);
-		Task<bool> TryPutAsync(DynamoDBMap item, CancellationToken cancellationToken);
-		bool TryPut(DynamoDBMap item);
+		Task<bool> Item(ItemKey key);
 	}
 }

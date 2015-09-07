@@ -17,15 +17,14 @@
 <#@ Assembly Name="$(SolutionDir)DynamoDB.CodeGen\bin\Debug\Adamantworks.Amazon.DynamoDB.CodeGen.dll" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
-using System.Threading;
 using System.Threading.Tasks;
+using Adamantworks.Amazon.DynamoDB.Converters;
 using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 
-namespace Adamantworks.Amazon.DynamoDB.Syntax
+namespace Adamantworks.Amazon.DynamoDB.Syntax.Delete
 {
-	public partial interface IPutSyntax
+	public partial interface IDeleteItemAsyncSyntax
 	{
-<#=		Methods.PutAsync.GenInterface() #>
-<#=		Methods.Put.GenInterface() #>
+<#=		Methods.DeleteItemAsync.GenInterface() #>
 	}
 }

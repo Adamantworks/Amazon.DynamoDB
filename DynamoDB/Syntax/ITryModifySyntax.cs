@@ -22,9 +22,5 @@ namespace Adamantworks.Amazon.DynamoDB.Syntax
 	{
 		Task<bool> TryUpdateAsync(UpdateExpression update, Values values, CancellationToken cancellationToken);
 		bool TryUpdate(UpdateExpression update, Values values);
-
-		Task<bool> TryDeleteAsync();
-		Task<bool> TryDeleteAsync(CancellationToken cancellationToken);
-		bool TryDelete();
 	}
 }

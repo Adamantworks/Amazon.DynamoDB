@@ -18,14 +18,13 @@
 <#@ Assembly Name="System.Core.dll" #>
 <#@ import namespace="Adamantworks.Amazon.DynamoDB.CodeGen" #>
 using System.Threading;
-using System.Threading.Tasks;
-using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 
 namespace Adamantworks.Amazon.DynamoDB.Syntax
 {
-	public partial interface IModifySyntax
+	public partial interface IWriteConditionallySyntax
 	{
-<#=		Methods.UpdateAsync.GenInterface() #>
-<#=		Methods.Update.GenInterface() #>
+<#=		Methods.TryDeleteAsync.GenInterface() #>
+<#=		Methods.TryDelete.GenInterface() #>
 	}
 }
