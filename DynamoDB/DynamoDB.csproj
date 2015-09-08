@@ -85,6 +85,12 @@
     </Compile>
     <Compile Include="Contexts\ScanCountContext.cs" />
     <Compile Include="Contexts\ScanContext.cs" />
+    <Compile Include="Contexts\WriteBatchContext.cs" />
+    <Compile Include="Contexts\WriteBatchContextOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WriteBatchContextOverloads.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\WriteContextOverloads.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -119,6 +125,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RegionOverloads.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Syntax\Delete\IDeleteBatchItemSyntax.cs" />
+    <Compile Include="Syntax\Delete\IDeleteBatchItemSyntaxOverloads.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IDeleteBatchItemSyntaxOverloads.tt</DependentUpon>
     </Compile>
     <Compile Include="Syntax\Delete\IDeleteItemAsyncSyntaxOverloads.cs">
       <AutoGen>True</AutoGen>
@@ -325,6 +337,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>QueryCountContextOverloads.cs</LastGenOutput>
     </Content>
+    <Content Include="Contexts\WriteBatchContextOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>WriteBatchContextOverloads.cs</LastGenOutput>
+    </Content>
     <Content Include="Contexts\WriteContextOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>WriteContextOverloads.cs</LastGenOutput>
@@ -336,6 +352,10 @@
     <Content Include="RegionOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RegionOverloads.cs</LastGenOutput>
+    </Content>
+    <Content Include="Syntax\Delete\IDeleteBatchItemSyntaxOverloads.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IDeleteBatchItemSyntaxOverloads.cs</LastGenOutput>
     </Content>
     <Content Include="Syntax\Delete\IDeleteItemAsyncSyntaxOverloads.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

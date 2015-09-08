@@ -189,5 +189,7 @@ namespace Adamantworks.Amazon.DynamoDB.CodeGen
 			Params.GenOverloads(false));
 		public static readonly Method TryDeleteItem = new Method("bool", "Item",
 			Params.GenOverloads(false, Params.KeyOverloads));
+		public static readonly Method DeleteBatchItem = new Method("void", "Item",
+			Params.GenOverloads(false, Params.KeyOverloads));
 	}
 }

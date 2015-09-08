@@ -84,10 +84,6 @@
 		Params.GenOverloads(true, Args.This, Args.ReturnOldItemFalse, Params.CancellationToken));
 	var tryDeleteForwards = new Method("ITryDeleteItemSyntax", "TryDelete", "new WriteContext",
 		Params.GenOverloads(true, Args.This, Args.ReturnOldItemFalse));
-	var batchDelete = new Method("void", "Delete",
-		Params.GenOverloads(false, Params.BatchWrite, Params.KeyOverloads));
-	var batchDeleteAsync = new Method("void", "DeleteAsync",
-		Params.GenOverloads(false, Params.BatchWriteAsync, Params.KeyOverloads));
 #>
 using System;
 using System.Collections.Generic;
@@ -112,9 +108,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 <#=		updateTableAsync.GenInterface() #>
 <#=		updateTable.GenInterface() #>
-
-<#=		batchDeleteAsync.GenInterface() #>
-<#=		batchDelete.GenInterface() #>
 	}
 
 	internal partial class Table
@@ -166,9 +159,5 @@ namespace Adamantworks.Amazon.DynamoDB
 <#=		tryDeleteAsyncForwards.GenMethods() #>
 
 <#=		tryDeleteForwards.GenMethods() #>
-
-<#=		batchDeleteAsync.GenMethods() #>
-
-<#=		batchDelete.GenMethods() #>
 	}
 }

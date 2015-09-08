@@ -22,6 +22,7 @@ using Adamantworks.Amazon.DynamoDB.DynamoDBValues;
 using Adamantworks.Amazon.DynamoDB.Internal;
 using Adamantworks.Amazon.DynamoDB.Schema;
 using Adamantworks.Amazon.DynamoDB.Syntax;
+using Adamantworks.Amazon.DynamoDB.Syntax.Delete;
 using Aws = Amazon.DynamoDBv2.Model;
 
 namespace Adamantworks.Amazon.DynamoDB
@@ -67,8 +68,8 @@ namespace Adamantworks.Amazon.DynamoDB
 		Task<bool> TryInsertAsync(DynamoDBMap item, CancellationToken cancellationToken);
 		bool TryInsert(DynamoDBMap item);
 
-		void DeleteAsync(IBatchWriteAsync batch, ItemKey key);
-		void Delete(IBatchWrite batch, ItemKey key);
+		IDeleteBatchItemSyntax DeleteAsync(IBatchWriteAsync batch);
+		IDeleteBatchItemSyntax Delete(IBatchWrite batch);
 	}
 
 	internal partial class Table : ITable
@@ -357,14 +358,14 @@ namespace Adamantworks.Amazon.DynamoDB
 		#endregion
 
 		#region Delete
-		public void DeleteAsync(IBatchWriteAsync batch, ItemKey key)
+		public IDeleteBatchItemSyntax DeleteAsync(IBatchWriteAsync batch)
 		{
-			((IBatchWriteOperations)batch).Delete(this, key);
+			return new WriteBatchContext(this, (IBatchWriteOperations)batch);
 		}
 
-		public void Delete(IBatchWrite batch, ItemKey key)
+		public IDeleteBatchItemSyntax Delete(IBatchWrite batch)
 		{
-			((IBatchWriteOperations)batch).Delete(this, key);
+			return new WriteBatchContext(this, (IBatchWriteOperations)batch);
 		}
 		#endregion
 	}
