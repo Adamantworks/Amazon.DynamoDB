@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>Adamantworks.Amazon.DynamoDB</id>
-		<version>0.3.2</version>
+		<version>0.4.0-beta01</version>
 		<title>Adamantworks Amazon DynamoDB Alternate SDK</title>
 		<authors>Adamantworks LLC</authors>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -14,7 +14,7 @@
 		<tags>AWS Amazon cloud DynamoDB</tags>
 		<dependencies>
 			<!-- AWS SDK does NOT use SemVer (they had breaking changes in release 2.2.1) -->
-			<dependency id="AWSSDK.DynamoDBv2" version="3.1.0.0" />
+			<dependency id="AWSSDK.DynamoDBv2" version="3.1.1.1" />
 			<dependency id="Ix-Async" version="1.2.5" />
 			<dependency id="System.Collections.Immutable" version="1.1.37" />
 		</dependencies>
