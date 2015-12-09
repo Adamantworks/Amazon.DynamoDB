@@ -48,6 +48,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(credentials, region));
 		}
+		public static IDynamoDBRegion Connect(AWSCredentials credentials, AwsEnums.AmazonDynamoDBConfig config)
+		{
+			return new Region(new AwsEnums.AmazonDynamoDBClient(credentials, config));
+		}
 
 		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey)
 		{
@@ -56,6 +60,10 @@ namespace Adamantworks.Amazon.DynamoDB
 		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, RegionEndpoint region)
 		{
 			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey, region));
+		}
+		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, AwsEnums.AmazonDynamoDBConfig config)
+		{
+			return new Region(new AwsEnums.AmazonDynamoDBClient(accessKeyId, secretAccessKey, config));
 		}
 
 		public static IDynamoDBRegion Connect(string accessKeyId, string secretAccessKey, string awsSessionToken)
