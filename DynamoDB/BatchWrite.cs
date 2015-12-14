@@ -66,7 +66,6 @@ namespace Adamantworks.Amazon.DynamoDB
 
 		private IList<BatchWriteRequest> DequeueBatch(bool allowPartial)
 		{
-			// Pull out items for a batch (must be in lock so two people don't try to grab the same set
 			var currentRequests = new List<BatchWriteRequest>(Limits.BatchWriteSize);
 
 			if(!allowPartial && requests.Count < Limits.BatchWriteSize) return null;

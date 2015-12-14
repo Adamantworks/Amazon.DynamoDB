@@ -124,8 +124,20 @@ namespace Adamantworks.Amazon.DynamoDB
 			// Since we cancelled, hopefully won't take too long.
 			Task.WaitAll(tasks.ToArray());
 			var allExceptions = exceptions.ToArray();
-			if(allExceptions.Length == 1)
-				throw new Exception("Batch Write Failed: " + allExceptions[0].Message, allExceptions[0]);
+			var triggeringExceptions = allExceptions.Where(ex => !(ex is OperationCanceledException)).ToList();
+			if(triggeringExceptions.Count > 0)
+				ThrowException(triggeringExceptions);
+			else
+				ThrowException(allExceptions);
+		}
+
+		private static void ThrowException(ICollection<Exception> allExceptions)
+		{
+			if(allExceptions.Count == 1)
+			{
+				var ex = allExceptions.Single();
+				throw new Exception("Batch Write Failed: " + ex.Message, ex);
+			}
 
 			throw new AggregateException("Batch Write Failed", allExceptions);
 		}
@@ -159,6 +171,9 @@ namespace Adamantworks.Amazon.DynamoDB
 				if(tasks.TryDequeue(out responseTask))
 					await responseTask.ConfigureAwait(false);
 			} while(!cancellationToken.IsCancellationRequested && (!tasks.IsEmpty || !requests.IsEmpty));
+
+			// If we exited the loop because of the cancellation token there could be outstanding exceptions we need to report
+			ReportExceptions();
 		}
 	}
 }
